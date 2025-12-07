@@ -24,27 +24,28 @@ export default async function PostPage({
     notFound()
   }
 
-  const mdxSource = await serialize(post.content)
-
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       {/* 导航栏 */}
-      <nav className="border-b border-gray-200 dark:border-gray-800">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
+        <div className="max-w-5xl mx-auto px-6 sm:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link href="/" className="text-xl font-bold text-gray-900 dark:text-white">
-              我的博客
+            <Link 
+              href="/" 
+              className="text-lg font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              Jenny&apos;s Blog
             </Link>
-            <div className="flex space-x-4">
+            <div className="flex items-center space-x-6">
               <Link 
                 href="/" 
-                className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                className="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
               >
                 首页
               </Link>
               <Link 
                 href="/about" 
-                className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                className="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
               >
                 关于
               </Link>
@@ -54,27 +55,31 @@ export default async function PostPage({
       </nav>
 
       {/* 文章内容 */}
-      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <header className="mb-8">
+      <article className="max-w-4xl mx-auto px-6 sm:px-8 py-12 sm:py-16">
+        <header className="mb-10">
           <Link
             href="/"
-            className="text-blue-600 dark:text-blue-400 hover:underline mb-4 inline-block"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-6 inline-flex items-center gap-2 text-sm font-medium transition-colors"
           >
-            ← 返回首页
+            <span>←</span> 返回首页
           </Link>
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight">
             {post.title}
           </h1>
-          <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-            <time dateTime={post.date}>
+          <div className="flex items-center gap-4 flex-wrap text-sm">
+            <time 
+              dateTime={post.date}
+              className="text-gray-500 dark:text-gray-400"
+            >
               {format(new Date(post.date), 'yyyy年MM月dd日', { locale: zhCN })}
             </time>
             {post.tags && post.tags.length > 0 && (
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
                 {post.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded text-xs"
+                    className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 
+                             rounded-full text-xs font-medium"
                   >
                     {tag}
                   </span>
@@ -84,7 +89,7 @@ export default async function PostPage({
           </div>
         </header>
 
-        <div className="prose prose-lg dark:prose-invert max-w-none">
+        <div className="prose prose-lg max-w-none">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
             {post.content}
           </ReactMarkdown>
@@ -92,10 +97,10 @@ export default async function PostPage({
       </article>
 
       {/* 页脚 */}
-      <footer className="border-t border-gray-200 dark:border-gray-800 mt-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <footer className="border-t border-gray-200 dark:border-gray-800 mt-20">
+        <div className="max-w-5xl mx-auto px-6 sm:px-8 py-8">
           <p className="text-center text-gray-500 dark:text-gray-400 text-sm">
-            © {new Date().getFullYear()} 我的博客. 使用 Next.js 构建
+            © {new Date().getFullYear()} Jenny&apos;s Blog. Built with Next.js
           </p>
         </div>
       </footer>
