@@ -1,4 +1,6 @@
-# 个人博客
+# jenny_blog
+
+Jenny's blog.
 
 一个使用 Next.js 14 构建的现代化个人博客。
 
@@ -105,4 +107,3 @@ blog/
 ## 许可证
 
 MIT
-
