@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getPostBySlug, getAllPosts } from '@/lib/posts'
 import { format } from 'date-fns'
-import { zhCN } from 'date-fns/locale'
 import PostBody from './PostBody'
 
 export async function generateStaticParams() {
@@ -79,7 +78,7 @@ export default async function PostPage({
               className="text-gray-500 dark:text-gray-400"
               title="Blog publish date"
             >
-              📝 {format(new Date(post.date), 'yyyy年MM月dd日', { locale: zhCN })}
+              📝 {format(new Date(post.date), 'MMM d, yyyy')}
             </time>
             {post.paperDate && (
               <time
@@ -87,7 +86,7 @@ export default async function PostPage({
                 className="text-gray-500 dark:text-gray-400"
                 title="arxiv / venue date"
               >
-                📄 {format(new Date(post.paperDate), 'yyyy年MM月dd日', { locale: zhCN })}
+                📄 {format(new Date(post.paperDate), 'MMM d, yyyy')}
               </time>
             )}
             {post.tags && post.tags.length > 0 && (
