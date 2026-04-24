@@ -84,11 +84,11 @@ export default async function Home() {
                   <div className="flex items-center justify-between flex-wrap gap-3 text-sm">
                     <div className="flex items-center gap-3 flex-wrap text-gray-500 dark:text-gray-400">
                       <time dateTime={post.date} title="Blog publish date">
-                        📝 {format(new Date(post.date), 'MMM d, yyyy')}
+                        📝 {format(new Date(post.date), 'yyyy MMM d')}
                       </time>
                       {post.paperDate && (
                         <time dateTime={post.paperDate} title="arxiv / venue date">
-                          📄 {format(new Date(post.paperDate), 'MMM d, yyyy')}
+                          📄 {format(new Date(post.paperDate), 'yyyy MMM d')}
                         </time>
                       )}
                     </div>
