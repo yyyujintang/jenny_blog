@@ -3,8 +3,7 @@ import Link from 'next/link'
 import { getPostBySlug, getAllPosts } from '@/lib/posts'
 import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
+import PostBody from './PostBody'
 
 export async function generateStaticParams() {
   const posts = getAllPosts()
@@ -24,27 +23,33 @@ export default async function PostPage({
     notFound()
   }
 
+  const meta: Array<{ label: string; href?: string }> = []
+  if (post.paperVenue) meta.push({ label: post.paperVenue })
+  if (post.paperAuthors) meta.push({ label: post.paperAuthors })
+  if (post.paperLink) meta.push({ label: 'arxiv', href: post.paperLink })
+  if (post.paperCode) meta.push({ label: 'code', href: post.paperCode })
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       {/* 导航栏 */}
       <nav className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-5xl mx-auto px-6 sm:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="text-lg font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
               Jenny&apos;s Blog
             </Link>
             <div className="flex items-center space-x-6">
-              <Link 
-                href="/" 
+              <Link
+                href="/"
                 className="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
               >
                 首页
               </Link>
-              <Link 
-                href="/about" 
+              <Link
+                href="/about"
                 className="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
               >
                 关于
@@ -67,7 +72,7 @@ export default async function PostPage({
             {post.title}
           </h1>
           <div className="flex items-center gap-4 flex-wrap text-sm">
-            <time 
+            <time
               dateTime={post.date}
               className="text-gray-500 dark:text-gray-400"
             >
@@ -78,7 +83,7 @@ export default async function PostPage({
                 {post.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 
+                    className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400
                              rounded-full text-xs font-medium"
                   >
                     {tag}
@@ -87,13 +92,31 @@ export default async function PostPage({
               </div>
             )}
           </div>
+
+          {meta.length > 0 && (
+            <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-600 dark:text-gray-400">
+              {meta.map((m, i) => (
+                <span key={i} className="inline-flex items-center gap-3">
+                  {i > 0 && <span aria-hidden="true">·</span>}
+                  {m.href ? (
+                    <a
+                      href={m.href}
+                      target="_blank"
+                      rel="noopener"
+                      className="text-blue-600 dark:text-blue-400 hover:underline"
+                    >
+                      {m.label}
+                    </a>
+                  ) : (
+                    <span>{m.label}</span>
+                  )}
+                </span>
+              ))}
+            </div>
+          )}
         </header>
 
-        <div className="prose prose-lg max-w-none">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {post.content}
-          </ReactMarkdown>
-        </div>
+        <PostBody zh={post.contentZh} en={post.contentEn} />
       </article>
 
       {/* 页脚 */}
@@ -107,4 +130,3 @@ export default async function PostPage({
     </div>
   )
 }
-

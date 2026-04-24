@@ -1,0 +1,139 @@
+---
+title: "From RAG to Memory: Non-Parametric Continual Learning for Large Language Models  (HippoRAG 2)"
+date: 2025-02-20
+excerpt: "HippoRAG 2通过深度整合passage和更有效的在线LLM使用，全面提升了RAG在事实、理解和联想记忆任务上的表现"
+excerpt_en: "HippoRAG 2 comprehensively improves RAG performance on factual, sense-making, and associative memory tasks through deeper passage integration and effective online LLM use."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Internal
+  - Prompt-based
+  - Semantic
+paper_id: from-rag-to-memory-non-parametric-continual-learning-for-large-language-models-h
+paper_venue: "ICML25"
+paper_link: "https://arxiv.org/abs/2502.14802"
+paper_code: "https://github.com/OSU-NLP-Group/HippoRAG"
+auto_generated: true
+notes_hash: 56858b6f059d1d4c
+---
+
+## Motivation
+
+人类智能的一个关键特征是能够持续获取、组织和利用知识，这也是AI系统要充分发挥潜力所必须近似的能力。在LLM的持续学习方面存在挑战，因此RAG已成为引入新信息的主要方式。然而，RAG对向量检索的依赖限制了其模仿人类长期记忆动态和互联性质的能力。
+
+最近的RAG方法通过知识图谱等各种结构增强了向量嵌入，以解决部分不足，例如意义构建（sense-making）和联想性（associativity）。然而，它们在更基本的事实记忆任务上的表现却显著低于标准RAG。本研究旨在解决这种意外的性能下降。
+
+## Contribution
+
+HippoRAG 2是一个新颖的框架，它在事实、意义构建和联想记忆任务上全面超越了标准RAG。它在联想记忆任务上比最先进的嵌入模型提高了7%，同时在事实知识和意义构建记忆能力方面也表现出色。
+
+该工作为LLM的非参数持续学习铺平了道路。HippoRAG 2通过解决现有结构增强RAG方法在基本事实记忆任务上的性能下降问题，实现了更接近人类长期记忆的有效性。
+
+## Method
+
+HippoRAG 2建立在HippoRAG中使用的Personalized PageRank算法之上，并对其进行了增强。
+
+主要改进包括：
+*   **深度passage整合（deeper passage integration）**：这可能涉及更细致地处理检索到的文本片段，使其与现有知识结构更紧密地结合。
+*   **更有效的在线LLM使用（more effective online use of an LLM）**：这意味着LLM在检索和生成过程中扮演了更积极、更智能的角色，可能用于动态地构建、更新或查询记忆结构。
+*   这种组合旨在将RAG系统推向更接近人类长期记忆的有效性，从而实现更全面的记忆能力。
+
+*(基于标题与领域常识推断,未读全文)*
+
+## Comparison with Previous Work
+
+HippoRAG 2与多种RAG方法进行了比较，包括简单的基线方法（如BM25、Contriever）、大型嵌入模型（如GTE-Qwen2-7B-Instruct、NV-Embed-v2）以及其他结构增强型RAG方法（如RAPTOR、GraphRAG、LightRAG和HippoRAG）。
+
+与标准RAG相比，HippoRAG 2在保持甚至提升事实记忆能力的同时，显著改善了意义构建和联想记忆任务的表现。此前的结构增强RAG方法在提升联想能力的同时，往往会在事实记忆任务上出现性能下降，而HippoRAG 2成功解决了这一权衡问题。
+
+## Experiments
+
+**Table.** 使用Llama-3.3-70B-Instruct作为QA阅读器时，RAG基准测试上的QA性能（F1分数）。
+
+| | Simple QA | Multi-Hop QA | Discourse Understanding | | | | | |
+|---|---|---|---|---|---|---|---|---|
+| Retrieval | NQ | PopQA | MuSiQue | 2Wiki | HotpotQA | LV-Eval | NarrativeQA | Avg |
+| Simple Baselines | | | | | | | | |
+| None | 54.9 | 32.5 | 26.1 | 42.8 | 47.3 | 6.0 | 12.9 | 38.4 |
+| Contriever (Izacard et al., 2022) | 58.9 | 53.1 | 31.3 | 41.9 | 62.3 | 8.1 | 19.7 | 46.9 |
+| BM25 (Robertson & Walker, 1994) | 59.0 | 49.9 | 28.8 | 51.2 | 63.4 | 5.9 | 18.3 | 47.7 |
+| GTR (T5-base) (Ni et al., 2022) | 59.9 | 56.2 | 34.6 | 52.8 | 62.8 | 7.1 | 19.9 | 50.4 |
+| Large Embedding Models | | | | | | | | |
+| GTE-Qwen2-7B-Instruct (Li et al., 2023) | 62.0 | 56.3 | 40.9 | 60.0 | 71.0 | 7.1 | 21.3 | 54.9 |
+| GritLM-7B (Muennighoff et al., 2025) | 61.3 | 55.8 | 44.8 | 60.6 | 73.3 | 9.8 | 23.9 | 56.1 |
+| NV-Embed-v2 (7B) (Lee et al., 2025) | 61.9 | 55.7 | 45.7 | 61.5 | 75.3 | 9.8 | 25.7 | 57.0 |
+| Structure-Augmented RAG | | | | | | | | |
+| RAPTOR (Sarthi et al., 2024) | 50.7 | 56.2 | 28.9 | 52.1 | 69.5 | 5.0 | 21.4 | 48.8 |
+| GraphRAG (Edge et al., 2024) | 46.9 | 48.1 | 38.5 | 58.6 | 68.6 | 11.2 | 23.0 | 49.6 |
+| LightRAG (Guo et al., 2024) | 16.6 | 2.4 | 1.6 | 11.6 | 2.4 | 1.0 | 3.7 | 6.6 |
+| HippoRAG (Gutiérrez et al., 2024) | 55.3 | 55.9 | 35.1 | 71.8 | 63.5 | 8.4 | 16.3 | 53.1 |
+| HippoRAG 2 | 63.3† | 56.2 | 48.6† | 71.0† | 75.5 | 12.9† | 25.9 | 59.8 |
+
+实验结果表明，HippoRAG 2在多个RAG基准测试上取得了显著的性能提升。在F1分数上，HippoRAG 2的平均得分达到59.8，优于所有基线方法，包括大型嵌入模型和先前的结构增强RAG方法。
+
+具体来看：
+*   在Simple QA任务（如NQ）上，HippoRAG 2以63.3的F1分数超越了所有基线。
+*   在Multi-Hop QA任务（如MuSiQue）和Discourse Understanding任务（如LV-Eval）中，HippoRAG 2也展现出卓越的性能，分别获得48.6和12.9的F1分数，并且在这些任务上显著优于其他结构增强RAG方法。
+*   特别值得注意的是，HippoRAG 2在保持甚至超越标准RAG在事实记忆任务上的表现的同时，显著提升了联想记忆和意义构建任务的能力，解决了现有结构增强RAG方法的痛点。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+The continuous acquisition, organization, and leveraging of knowledge are hallmarks of human intelligence that AI systems must approximate to unlock their full potential. Given the challenges in continual learning with large language models (LLMs), retrieval-augmented generation (RAG) has emerged as the dominant method for introducing new information. However, RAG's reliance on vector retrieval inherently limits its ability to mimic the dynamic and interconnected nature of human long-term memory.
+
+Recent RAG approaches have attempted to augment vector embeddings with various structures, such as knowledge graphs, to address gaps in sense-making and associativity. Nevertheless, these methods often exhibit a considerable drop in performance on more basic factual memory tasks compared to standard RAG. This research aims to resolve this unintended deterioration in performance.
+
+## Contribution
+
+HippoRAG 2 is a novel framework that comprehensively outperforms standard RAG across factual, sense-making, and associative memory tasks. It achieves a 7% improvement in associative memory tasks over the state-of-the-art embedding model, while also demonstrating superior factual knowledge and sense-making memory capabilities.
+
+This work paves the way for non-parametric continual learning for LLMs. By addressing the performance degradation of existing structure-augmented RAG methods on fundamental factual memory tasks, HippoRAG 2 brings RAG systems closer to the effectiveness of human long-term memory.
+
+## Method
+
+HippoRAG 2 builds upon the Personalized PageRank algorithm, which was a core component of its predecessor, HippoRAG, and introduces significant enhancements.
+
+Key methodological improvements include:
+*   **Deeper passage integration**: This likely involves more sophisticated mechanisms for incorporating retrieved text passages into the existing knowledge structure, ensuring a richer and more interconnected representation of information.
+*   **More effective online use of an LLM**: The LLM plays a more active and intelligent role throughout the retrieval and generation process. This could involve dynamic knowledge graph construction, real-time query refinement, or adaptive memory updating based on the LLM's understanding.
+*   This combination is designed to push the RAG system closer to the effectiveness of human long-term memory, enabling a more comprehensive range of memory capabilities.
+
+*(Inferred from title/venue; full paper not read.)*
+
+## Comparison with Previous Work
+
+HippoRAG 2 is benchmarked against a diverse set of RAG methodologies, including simple baselines (e.g., BM25, Contriever), large embedding models (e.g., GTE-Qwen2-7B-Instruct, NV-Embed-v2), and other structure-augmented RAG approaches (e.g., RAPTOR, GraphRAG, LightRAG, and the original HippoRAG).
+
+A key distinction of HippoRAG 2 is its ability to significantly improve performance on sense-making and associative memory tasks while maintaining or even enhancing factual memory capabilities, unlike previous structure-augmented RAG methods that often suffered performance drops on factual tasks. HippoRAG 2 successfully navigates this trade-off, offering a more balanced and robust memory system.
+
+## Experiments
+
+**Table.** QA performance (F1 scores) on RAG benchmarks using Llama-3.3-70B-Instruct as the QA reader.
+
+| | Simple QA | Multi-Hop QA | Discourse Understanding | | | | | |
+|---|---|---|---|---|---|---|---|---|
+| Retrieval | NQ | PopQA | MuSiQue | 2Wiki | HotpotQA | LV-Eval | NarrativeQA | Avg |
+| Simple Baselines | | | | | | | | |
+| None | 54.9 | 32.5 | 26.1 | 42.8 | 47.3 | 6.0 | 12.9 | 38.4 |
+| Contriever (Izacard et al., 2022) | 58.9 | 53.1 | 31.3 | 41.9 | 62.3 | 8.1 | 19.7 | 46.9 |
+| BM25 (Robertson & Walker, 1994) | 59.0 | 49.9 | 28.8 | 51.2 | 63.4 | 5.9 | 18.3 | 47.7 |
+| GTR (T5-base) (Ni et al., 2022) | 59.9 | 56.2 | 34.6 | 52.8 | 62.8 | 7.1 | 19.9 | 50.4 |
+| Large Embedding Models | | | | | | | | |
+| GTE-Qwen2-7B-Instruct (Li et al., 2023) | 62.0 | 56.3 | 40.9 | 60.0 | 71.0 | 7.1 | 21.3 | 54.9 |
+| GritLM-7B (Muennighoff et al., 2025) | 61.3 | 55.8 | 44.8 | 60.6 | 73.3 | 9.8 | 23.9 | 56.1 |
+| NV-Embed-v2 (7B) (Lee et al., 2025) | 61.9 | 55.7 | 45.7 | 61.5 | 75.3 | 9.8 | 25.7 | 57.0 |
+| Structure-Augmented RAG | | | | | | | | |
+| RAPTOR (Sarthi et al., 2024) | 50.7 | 56.2 | 28.9 | 52.1 | 69.5 | 5.0 | 21.4 | 48.8 |
+| GraphRAG (Edge et al., 2024) | 46.9 | 48.1 | 38.5 | 58.6 | 68.6 | 11.2 | 23.0 | 49.6 |
+| LightRAG (Guo et al., 2024) | 16.6 | 2.4 | 1.6 | 11.6 | 2.4 | 1.0 | 3.7 | 6.6 |
+| HippoRAG (Gutiérrez et al., 2024) | 55.3 | 55.9 | 35.1 | 71.8 | 63.5 | 8.4 | 16.3 | 53.1 |
+| HippoRAG 2 | 63.3† | 56.2 | 48.6† | 71.0† | 75.5 | 12.9† | 25.9 | 59.8 |
+
+The experimental results demonstrate that HippoRAG 2 achieves significant performance improvements across various RAG benchmarks. With an average F1 score of 59.8, HippoRAG 2 outperforms all baseline methods, including large embedding models and previous structure-augmented RAG approaches.
+
+Specifically:
+*   On Simple QA tasks (e.g., NQ), HippoRAG 2 achieves an F1 score of 63.3, surpassing all baselines.
+*   For Multi-Hop QA tasks (e.g., MuSiQue) and Discourse Understanding tasks (e.g., LV-Eval), HippoRAG 2 also shows superior performance, scoring 48.6 and 12.9 F1 respectively, and significantly outperforming other structure-augmented RAG methods in these categories.
+*   Notably, HippoRAG 2 successfully enhances associative memory and sense-making capabilities while maintaining or exceeding the performance of standard RAG on factual memory tasks, addressing a critical limitation of existing structure-augmented RAG methods.

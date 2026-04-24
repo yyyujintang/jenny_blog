@@ -3,68 +3,76 @@ import path from 'path'
 import matter from 'gray-matter'
 
 const postsDirectory = path.join(process.cwd(), 'content/posts')
+const LANG_EN_MARKER = '<!-- LANG:EN -->'
 
 export interface Post {
   slug: string
   title: string
   date: string
   excerpt: string
+  excerptEn?: string
   content: string
+  contentZh: string
+  contentEn?: string
   tags?: string[]
+  paperVenue?: string
+  paperAuthors?: string
+  paperLink?: string
+  paperCode?: string
+}
+
+function splitBilingual(raw: string): { zh: string; en?: string } {
+  const idx = raw.indexOf(LANG_EN_MARKER)
+  if (idx === -1) return { zh: raw.trim() }
+  return {
+    zh: raw.slice(0, idx).trim(),
+    en: raw.slice(idx + LANG_EN_MARKER.length).trim() || undefined,
+  }
+}
+
+function normalizeDate(d: unknown): string {
+  if (!d) return new Date().toISOString().slice(0, 10)
+  if (d instanceof Date) return d.toISOString().slice(0, 10)
+  return String(d)
+}
+
+function buildPost(slug: string, raw: string): Post {
+  const { data, content } = matter(raw)
+  const { zh, en } = splitBilingual(content)
+  return {
+    slug,
+    title: data.title || 'Untitled',
+    date: normalizeDate(data.date),
+    excerpt: data.excerpt || zh.substring(0, 150) + '...',
+    excerptEn: data.excerpt_en || undefined,
+    content: zh,
+    contentZh: zh,
+    contentEn: en,
+    tags: data.tags || [],
+    paperVenue: data.paper_venue || undefined,
+    paperAuthors: data.paper_authors || undefined,
+    paperLink: data.paper_link || undefined,
+    paperCode: data.paper_code || undefined,
+  }
 }
 
 export function getAllPosts(): Post[] {
-  if (!fs.existsSync(postsDirectory)) {
-    return []
-  }
+  if (!fs.existsSync(postsDirectory)) return []
 
   const fileNames = fs.readdirSync(postsDirectory)
-  const allPostsData = fileNames
+  const posts = fileNames
     .filter((fileName) => fileName.endsWith('.mdx'))
     .map((fileName) => {
       const slug = fileName.replace(/\.mdx$/, '')
-      const fullPath = path.join(postsDirectory, fileName)
-      const fileContents = fs.readFileSync(fullPath, 'utf8')
-      const { data, content } = matter(fileContents)
-
-      return {
-        slug,
-        title: data.title || 'Untitled',
-        date: data.date || new Date().toISOString(),
-        excerpt: data.excerpt || content.substring(0, 150) + '...',
-        content,
-        tags: data.tags || [],
-      } as Post
+      const raw = fs.readFileSync(path.join(postsDirectory, fileName), 'utf8')
+      return buildPost(slug, raw)
     })
 
-  return allPostsData.sort((a, b) => {
-    if (a.date < b.date) {
-      return 1
-    } else {
-      return -1
-    }
-  })
+  return posts.sort((a, b) => (a.date < b.date ? 1 : -1))
 }
 
 export function getPostBySlug(slug: string): Post | null {
-  try {
-    const fullPath = path.join(postsDirectory, `${slug}.mdx`)
-    if (!fs.existsSync(fullPath)) {
-      return null
-    }
-    const fileContents = fs.readFileSync(fullPath, 'utf8')
-    const { data, content } = matter(fileContents)
-
-    return {
-      slug,
-      title: data.title || 'Untitled',
-      date: data.date || new Date().toISOString(),
-      excerpt: data.excerpt || content.substring(0, 150) + '...',
-      content,
-      tags: data.tags || [],
-    } as Post
-  } catch (error) {
-    return null
-  }
+  const fullPath = path.join(postsDirectory, `${slug}.mdx`)
+  if (!fs.existsSync(fullPath)) return null
+  return buildPost(slug, fs.readFileSync(fullPath, 'utf8'))
 }
-
