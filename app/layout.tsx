@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: '我的个人博客',
-  description: '分享技术、生活和思考',
+  title: "Jenny Tang's Blog",
+  description: '分享技术、研究和生活思考 · Thoughts on technology, research, and life',
 }
 
 export default function RootLayout({

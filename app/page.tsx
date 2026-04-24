@@ -16,21 +16,23 @@ export default async function Home() {
               href="/" 
               className="text-lg font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
-              Jenny&apos;s Blog
+              Jenny Tang&apos;s Blog
             </Link>
             <div className="flex items-center space-x-6">
-              <Link 
-                href="/" 
+              <Link
+                href="/"
                 className="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
               >
-                首页
+                Home
               </Link>
-              <Link 
-                href="/about" 
+              <a
+                href="https://yyyujintang.github.io/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
               >
-                关于
-              </Link>
+                About
+              </a>
             </div>
           </div>
         </div>
@@ -41,10 +43,13 @@ export default async function Home() {
         {/* 欢迎区域 */}
         <div className="mb-16 text-center sm:text-left">
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight">
-            Jenny&apos;s Blog
+            Jenny Tang&apos;s Blog
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl">
             分享技术、研究和生活思考
+          </p>
+          <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400 max-w-2xl mt-1">
+            Thoughts on technology, research, and life
           </p>
         </div>
 
@@ -113,7 +118,7 @@ export default async function Home() {
       <footer className="border-t border-[var(--border-color)] mt-20">
         <div className="max-w-5xl mx-auto px-6 sm:px-8 py-8">
           <p className="text-center text-gray-500 dark:text-gray-400 text-sm">
-            © {new Date().getFullYear()} Jenny&apos;s Blog. Built with Next.js
+            © {new Date().getFullYear()} Jenny Tang&apos;s Blog. Built with Next.js
           </p>
         </div>
       </footer>

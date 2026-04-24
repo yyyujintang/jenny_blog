@@ -39,21 +39,23 @@ export default async function PostPage({
               href="/"
               className="text-lg font-semibold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
-              Jenny&apos;s Blog
+              Jenny Tang&apos;s Blog
             </Link>
             <div className="flex items-center space-x-6">
               <Link
                 href="/"
                 className="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
               >
-                首页
+                Home
               </Link>
-              <Link
-                href="/about"
+              <a
+                href="https://yyyujintang.github.io/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
               >
-                关于
-              </Link>
+                About
+              </a>
             </div>
           </div>
         </div>
@@ -133,7 +135,7 @@ export default async function PostPage({
       <footer className="border-t border-gray-200 dark:border-gray-800 mt-20">
         <div className="max-w-5xl mx-auto px-6 sm:px-8 py-8">
           <p className="text-center text-gray-500 dark:text-gray-400 text-sm">
-            © {new Date().getFullYear()} Jenny&apos;s Blog. Built with Next.js
+            © {new Date().getFullYear()} Jenny Tang&apos;s Blog. Built with Next.js
           </p>
         </div>
       </footer>
