@@ -78,12 +78,16 @@ export default async function Home() {
                     {post.excerpt}
                   </p>
                   <div className="flex items-center justify-between flex-wrap gap-3 text-sm">
-                    <time 
-                      dateTime={post.date}
-                      className="text-gray-500 dark:text-gray-400"
-                    >
-                      {format(new Date(post.date), 'yyyy年MM月dd日', { locale: zhCN })}
-                    </time>
+                    <div className="flex items-center gap-3 flex-wrap text-gray-500 dark:text-gray-400">
+                      <time dateTime={post.date} title="Blog publish date">
+                        📝 {format(new Date(post.date), 'yyyy年MM月dd日', { locale: zhCN })}
+                      </time>
+                      {post.paperDate && (
+                        <time dateTime={post.paperDate} title="arxiv / venue date">
+                          📄 {format(new Date(post.paperDate), 'yyyy年MM月dd日', { locale: zhCN })}
+                        </time>
+                      )}
+                    </div>
                     {post.tags && post.tags.length > 0 && (
                       <div className="flex gap-2 flex-wrap">
                         {post.tags.map((tag) => (

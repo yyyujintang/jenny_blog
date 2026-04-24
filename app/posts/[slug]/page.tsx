@@ -75,9 +75,19 @@ export default async function PostPage({
             <time
               dateTime={post.date}
               className="text-gray-500 dark:text-gray-400"
+              title="Blog publish date"
             >
-              {format(new Date(post.date), 'yyyy年MM月dd日', { locale: zhCN })}
+              📝 {format(new Date(post.date), 'yyyy年MM月dd日', { locale: zhCN })}
             </time>
+            {post.paperDate && (
+              <time
+                dateTime={post.paperDate}
+                className="text-gray-500 dark:text-gray-400"
+                title="arxiv / venue date"
+              >
+                📄 {format(new Date(post.paperDate), 'yyyy年MM月dd日', { locale: zhCN })}
+              </time>
+            )}
             {post.tags && post.tags.length > 0 && (
               <div className="flex gap-2 flex-wrap">
                 {post.tags.map((tag) => (

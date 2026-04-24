@@ -8,7 +8,8 @@ const LANG_EN_MARKER = '<!-- LANG:EN -->'
 export interface Post {
   slug: string
   title: string
-  date: string
+  date: string                // blog publish date (drives listing sort)
+  paperDate?: string          // arxiv / venue date
   excerpt: string
   excerptEn?: string
   content: string
@@ -43,6 +44,7 @@ function buildPost(slug: string, raw: string): Post {
     slug,
     title: data.title || 'Untitled',
     date: normalizeDate(data.date),
+    paperDate: data.paper_date ? normalizeDate(data.paper_date) : undefined,
     excerpt: data.excerpt || zh.substring(0, 150) + '...',
     excerptEn: data.excerpt_en || undefined,
     content: zh,
@@ -68,7 +70,12 @@ export function getAllPosts(): Post[] {
       return buildPost(slug, raw)
     })
 
-  return posts.sort((a, b) => (a.date < b.date ? 1 : -1))
+  return posts.sort((a, b) => {
+    if (a.date !== b.date) return a.date < b.date ? 1 : -1
+    const ad = a.paperDate || ''
+    const bd = b.paperDate || ''
+    return ad < bd ? 1 : ad > bd ? -1 : 0
+  })
 }
 
 export function getPostBySlug(slug: string): Post | null {

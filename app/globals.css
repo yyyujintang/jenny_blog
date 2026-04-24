@@ -117,3 +117,34 @@ body {
   @apply my-8 border-gray-200 dark:border-gray-800;
 }
 
+/* tables (results tables from papers) */
+.prose table {
+  @apply w-full my-6 text-sm border-collapse;
+  display: block;
+  overflow-x: auto;
+}
+.prose thead {
+  @apply bg-gray-50 dark:bg-gray-900;
+}
+.prose th,
+.prose td {
+  @apply border px-3 py-2 align-top;
+  border-color: var(--border-color);
+}
+.prose th {
+  @apply font-semibold text-left;
+  color: var(--foreground);
+}
+.prose tbody tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.02);
+}
+@media (prefers-color-scheme: dark) {
+  .prose tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.02);
+  }
+}
+.prose td {
+  color: var(--foreground);
+  opacity: 0.9;
+}
+
