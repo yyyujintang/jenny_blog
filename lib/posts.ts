@@ -5,6 +5,8 @@ import matter from 'gray-matter'
 const postsDirectory = path.join(process.cwd(), 'content/posts')
 const LANG_EN_MARKER = '<!-- LANG:EN -->'
 
+export type PostKind = 'ai' | 'human'
+
 export interface Post {
   slug: string
   title: string
@@ -16,6 +18,7 @@ export interface Post {
   contentZh: string
   contentEn?: string
   tags?: string[]
+  kind: PostKind              // 'ai' = auto_generated paper note, 'human' = hand-written
   paperVenue?: string
   paperAuthors?: string
   paperLink?: string
@@ -51,6 +54,7 @@ function buildPost(slug: string, raw: string): Post {
     contentZh: zh,
     contentEn: en,
     tags: data.tags || [],
+    kind: data.auto_generated === true ? 'ai' : 'human',
     paperVenue: data.paper_venue || undefined,
     paperAuthors: data.paper_authors || undefined,
     paperLink: data.paper_link || undefined,
