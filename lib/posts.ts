@@ -19,6 +19,7 @@ export interface Post {
   contentEn?: string
   tags?: string[]
   kind: PostKind              // 'ai' = auto_generated paper note, 'human' = hand-written
+  category: string            // top-level topic, e.g. "Agent Memory", "Vibe Coding"
   paperVenue?: string
   paperAuthors?: string
   paperLink?: string
@@ -55,6 +56,7 @@ function buildPost(slug: string, raw: string): Post {
     contentEn: en,
     tags: data.tags || [],
     kind: data.auto_generated === true ? 'ai' : 'human',
+    category: typeof data.category === 'string' && data.category.trim() ? data.category.trim() : 'Agent Memory',
     paperVenue: data.paper_venue || undefined,
     paperAuthors: data.paper_authors || undefined,
     paperLink: data.paper_link || undefined,

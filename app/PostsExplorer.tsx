@@ -17,6 +17,20 @@ const KIND_OPTIONS: { key: KindFilter; label: string; icon: string }[] = [
 ]
 
 // ----------------------------------------------------------------------
+// Top-level categories — fixed list, preserved order
+// ----------------------------------------------------------------------
+const CATEGORIES: { key: string; label: string; icon: string }[] = [
+  { key: 'agent-memory', label: 'Agent Memory', icon: '🧠' },
+  { key: 'reinforcement-learning', label: 'Reinforcement Learning', icon: '🎯' },
+  { key: 'multimodal-learning', label: 'Multimodal Learning', icon: '🌐' },
+  { key: 'technical-report', label: 'Technical Report', icon: '📑' },
+  { key: 'vibe-coding', label: 'Vibe Coding', icon: '💻' },
+  { key: 'agi-2030', label: 'AGI2030', icon: '🚀' },
+]
+const CATEGORY_LABEL_TO_KEY: Record<string, string> = {}
+for (const c of CATEGORIES) CATEGORY_LABEL_TO_KEY[c.label] = c.key
+
+// ----------------------------------------------------------------------
 // Tag taxonomy (mirrors scripts/tag_papers.py controlled vocabulary)
 // ----------------------------------------------------------------------
 type TagGroupKey = 'category' | 'benchmark_type' | 'storage' | 'learning' | 'memory_type'
@@ -99,17 +113,28 @@ function sortPosts(posts: Post[], key: SortKey): Post[] {
 // ----------------------------------------------------------------------
 // URL state sync
 // ----------------------------------------------------------------------
+const DEFAULT_CATEGORY = CATEGORIES[0].key  // 'agent-memory'
+
 function readState(sp: URLSearchParams) {
   const tags = (sp.get('tags') || '').split(',').filter(Boolean)
   const q = sp.get('q') || ''
   const sort = (sp.get('sort') as SortKey) || 'blog'
   const kindRaw = (sp.get('kind') || 'all') as KindFilter
   const kind: KindFilter = KIND_OPTIONS.some(o => o.key === kindRaw) ? kindRaw : 'all'
-  return { tags: new Set(tags), q, sort: SORT_OPTIONS.some(o => o.key === sort) ? sort : ('blog' as SortKey), kind }
+  const categoryRaw = sp.get('category') || DEFAULT_CATEGORY
+  const category = CATEGORIES.some(c => c.key === categoryRaw) ? categoryRaw : DEFAULT_CATEGORY
+  return {
+    tags: new Set(tags),
+    q,
+    sort: SORT_OPTIONS.some(o => o.key === sort) ? sort : ('blog' as SortKey),
+    kind,
+    category,
+  }
 }
 
-function buildQuery(tags: Set<string>, q: string, sort: SortKey, kind: KindFilter): string {
+function buildQuery(tags: Set<string>, q: string, sort: SortKey, kind: KindFilter, category: string): string {
   const params = new URLSearchParams()
+  if (category !== DEFAULT_CATEGORY) params.set('category', category)
   if (kind !== 'all') params.set('kind', kind)
   if (tags.size) params.set('tags', [...tags].join(','))
   if (q) params.set('q', q)
@@ -131,29 +156,46 @@ export default function PostsExplorer({ posts }: { posts: Post[] }) {
   const [query, setQuery] = useState<string>(initial.q)
   const [sort, setSort] = useState<SortKey>(initial.sort)
   const [kind, setKind] = useState<KindFilter>(initial.kind)
+  const [category, setCategory] = useState<string>(initial.category)
   const [filtersOpen, setFiltersOpen] = useState(false)
 
   // sync state → URL
   useEffect(() => {
-    const newQuery = buildQuery(selected, query, sort, kind)
+    const newQuery = buildQuery(selected, query, sort, kind, category)
     const current = (searchParams.toString() ? '?' + searchParams.toString() : '')
     if (newQuery !== current) {
       router.replace(`${pathname}${newQuery}`, { scroll: false })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected, query, sort, kind])
+  }, [selected, query, sort, kind, category])
 
-  // Counts per kind (always over all posts, drives the segmented-control labels).
-  const kindCounts = useMemo(() => {
-    const c = { all: posts.length, ai: 0, human: 0 }
-    for (const p of posts) c[p.kind]++
+  // Per-category counts (over all posts) — drives the top pill labels.
+  const categoryCounts = useMemo(() => {
+    const c: Record<string, number> = Object.fromEntries(CATEGORIES.map((cat) => [cat.key, 0]))
+    for (const p of posts) {
+      const k = CATEGORY_LABEL_TO_KEY[p.category]
+      if (k && k in c) c[k]++
+    }
     return c
   }, [posts])
 
-  // Posts visible to the current zone (kind filter applied first).
+  // Posts in the active category (top filter).
+  const inCategory = useMemo(() => {
+    const activeLabel = CATEGORIES.find((c) => c.key === category)?.label || ''
+    return posts.filter((p) => p.category === activeLabel)
+  }, [posts, category])
+
+  // Counts per kind (within the active category).
+  const kindCounts = useMemo(() => {
+    const c = { all: inCategory.length, ai: 0, human: 0 }
+    for (const p of inCategory) c[p.kind]++
+    return c
+  }, [inCategory])
+
+  // Posts visible to the current zone (kind filter applied after category).
   const inZone = useMemo(
-    () => (kind === 'all' ? posts : posts.filter((p) => p.kind === kind)),
-    [posts, kind]
+    () => (kind === 'all' ? inCategory : inCategory.filter((p) => p.kind === kind)),
+    [inCategory, kind]
   )
 
   // Tag counts react to the current zone so disabled tags don't mislead.
@@ -196,10 +238,48 @@ export default function PostsExplorer({ posts }: { posts: Post[] }) {
     setKind('all')
   }, [])
 
+  // Switching category clears any tag filters that may not apply to the new bucket.
+  const onCategoryChange = useCallback((newKey: string) => {
+    setCategory(newKey)
+    setSelected(new Set())
+  }, [])
+
   const filtersDirty = selected.size > 0 || query !== '' || sort !== 'blog' || kind !== 'all'
 
   const sidebarBody = (
     <div className="space-y-5">
+      {/* Zone toggle (AI / Hand-written / All) */}
+      <div>
+        <div className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">
+          Zone
+        </div>
+        <div className="flex flex-col gap-1">
+          {KIND_OPTIONS.map((o) => {
+            const active = kind === o.key
+            const count = kindCounts[o.key]
+            return (
+              <button
+                key={o.key}
+                type="button"
+                onClick={() => setKind(o.key)}
+                className={`flex items-center justify-between px-2.5 py-1.5 rounded-md text-sm transition-colors ${
+                  active
+                    ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                }`}
+                aria-pressed={active}
+              >
+                <span className="flex items-center gap-1.5">
+                  <span aria-hidden>{o.icon}</span>
+                  {o.label}
+                </span>
+                <span className="text-xs text-gray-400 dark:text-gray-500">{count}</span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
       {TAG_GROUPS.map((g) => {
         const visible = g.values.filter((v) => tagCounts.has(v))
         if (!visible.length) return null
@@ -231,6 +311,39 @@ export default function PostsExplorer({ posts }: { posts: Post[] }) {
   )
 
   return (
+    <>
+      {/* Top-level category pills */}
+      <div className="mb-8 -mx-1 px-1 overflow-x-auto">
+        <div className="flex gap-2 min-w-max">
+          {CATEGORIES.map((c) => {
+            const active = category === c.key
+            const count = categoryCounts[c.key] || 0
+            const empty = count === 0
+            return (
+              <button
+                key={c.key}
+                type="button"
+                onClick={() => onCategoryChange(c.key)}
+                className={`group inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium border transition-all duration-150 ${
+                  active
+                    ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 border-gray-900 dark:border-white shadow-sm'
+                    : empty
+                    ? 'bg-white dark:bg-gray-900 text-gray-400 dark:text-gray-600 border-gray-200 dark:border-gray-800 hover:text-gray-700 dark:hover:text-gray-300'
+                    : 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600'
+                }`}
+                aria-pressed={active}
+              >
+                <span aria-hidden>{c.icon}</span>
+                <span>{c.label}</span>
+                <span className={`text-xs ${active ? 'text-gray-300 dark:text-gray-500' : 'text-gray-400 dark:text-gray-500'}`}>
+                  {count}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
     <div className="lg:flex lg:gap-8">
       {/* Sidebar (lg+) / collapsible (mobile) */}
       <aside className="lg:w-64 lg:shrink-0">
@@ -264,33 +377,6 @@ export default function PostsExplorer({ posts }: { posts: Post[] }) {
 
       {/* Main column */}
       <main className="flex-1 min-w-0">
-        {/* Zone tabs (AI / Hand-written / All) */}
-        <div className="mb-5 inline-flex p-1 rounded-xl bg-gray-100 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-800">
-          {KIND_OPTIONS.map((o) => {
-            const active = kind === o.key
-            const count = kindCounts[o.key]
-            return (
-              <button
-                key={o.key}
-                type="button"
-                onClick={() => setKind(o.key)}
-                className={`px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all duration-150 ${
-                  active
-                    ? 'bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm'
-                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-                }`}
-                aria-pressed={active}
-              >
-                <span className="mr-1.5" aria-hidden>{o.icon}</span>
-                {o.label}
-                <span className={`ml-1.5 text-xs ${active ? 'text-gray-500 dark:text-gray-400' : 'text-gray-400 dark:text-gray-500'}`}>
-                  {count}
-                </span>
-              </button>
-            )
-          })}
-        </div>
-
         {/* Search + sort */}
         <div className="flex flex-col sm:flex-row gap-3 mb-5">
           <div className="relative flex-1">
@@ -353,6 +439,7 @@ export default function PostsExplorer({ posts }: { posts: Post[] }) {
         )}
       </main>
     </div>
+    </>
   )
 }
 
