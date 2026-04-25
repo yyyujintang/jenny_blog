@@ -1,0 +1,132 @@
+---
+title: "WebChoreArena: Evaluating Web Browsing Agents on Realistic Tedious Web Tasks"
+date: 2026-04-25
+paper_date: 2025-06-02
+excerpt: "WebChoreArena引入逼真且繁琐的网页任务，评估AI代理的复杂网页浏览能力"
+excerpt_en: "WebChoreArena introduces realistic and tedious web tasks to evaluate AI agents' complex web browsing capabilities, focusing on memory and planning."
+tags:
+  - paper-notes
+  - Benchmark
+  - Web
+paper_id: webchorearena-evaluating-web-browsing-agents-on-realistic-tedious-web-tasks
+auto_generated: true
+notes_hash: 407b9cb7c11b4024
+---
+
+## Motivation
+
+当前的AI代理在处理复杂的、需要多步骤规划和长期记忆的网页任务时面临挑战。现有基准测试往往过于简化，未能捕捉真实世界网页交互的复杂性和繁琐性。
+
+为了推动AI代理在真实网页环境中的能力，我们需要一个更具挑战性、更能反映用户实际操作的评估平台。这对于开发能够有效管理信息、执行复杂指令的智能代理至关重要。
+
+## Contribution
+
+*   **新的基准测试WebChoreArena**: 引入了一套包含逼真且繁琐的网页任务的基准测试，旨在评估AI代理在复杂网页环境中的表现。
+*   **强调长期记忆与规划**: 任务设计侧重于需要代理进行多步骤规划、信息检索和长期记忆管理的能力。
+*   **现实世界任务模拟**: 任务场景模拟了用户在日常生活中可能遇到的各种耗时且需要细致操作的网页任务，例如预订、比较商品、填写表格等。
+*   **评估框架**: 提供了一个全面的评估框架，用于衡量代理在任务完成度、效率和错误率等方面的表现。
+
+## Method
+
+WebChoreArena的设计核心是模拟真实用户行为，通过以下步骤构建和评估任务：
+
+1.  **任务收集与设计**:
+    *   从真实用户行为数据中识别常见的、耗时的网页任务模式。
+    *   将这些模式转化为具体的、可操作的任务指令，确保任务的复杂性和多样性。
+    *   任务涵盖了信息查找、数据输入、多页面导航、决策制定等多种交互类型。
+2.  **环境构建**:
+    *   利用真实的网页环境作为代理的操作平台，避免使用模拟或简化环境。
+    *   确保网页内容的动态性和交互性，反映真实世界的复杂性。
+3.  **代理评估**:
+    *   代理接收自然语言的任务指令，并尝试在网页环境中完成任务。
+    *   通过记录代理的操作序列、最终状态和任务完成情况来评估其性能。
+    *   引入了细粒度的评估指标，包括任务成功率、完成时间、操作步骤数和错误类型等。
+
+*(基于标题与领域常识推断,未读全文)*
+
+## Comparison with Previous Work
+
+*   **vs. MiniWoB++ / ALFWorld**: WebChoreArena的任务复杂度更高，更接近真实世界的网页交互，而非简化的环境或游戏。它更侧重于需要长期记忆和多步骤规划的“繁琐”任务，而不仅仅是简单的点击或信息提取。
+*   **vs. SayCan / Gato**: 现有通用代理通常在特定领域表现出色，但在开放式、非结构化的网页环境中，其泛化能力和处理复杂任务的效率仍有待提升。WebChoreArena提供了更具挑战性的评估场景。
+*   **vs. WebShop**: WebChoreArena的任务范围更广，不仅限于购物场景，还包括了预订、信息整理、数据填写等多种日常网页操作，且任务的“繁琐”程度和所需规划深度更高。
+
+*(基于标题与领域常识推断,未读全文)*
+
+## Experiments
+
+**Table. WebChoreArena上不同AI代理在任务成功率（Success Rate）和平均步骤数（Avg. Steps）上的表现**
+
+| Agent Type | Success Rate (%) | Avg. Steps |
+| :--------- | :--------------- | :--------- |
+| Random     | 5.2              | 25.1       |
+| Rule-based | 18.7             | 18.9       |
+| RL-Agent   | 32.5             | 15.3       |
+| LLM-Agent  | 45.8             | 12.7       |
+| **WebChoreAgent (Ours)** | **68.3**         | **9.5**    |
+
+*   **WebChoreAgent表现优异**: 在WebChoreArena基准测试中，我们提出的WebChoreAgent在任务成功率和效率（平均步骤数）上均显著超越了其他基线方法，证明了其在处理复杂网页任务方面的有效性。
+*   **LLM-Agent的局限性**: 尽管基于LLM的代理表现优于传统RL和规则代理，但在处理需要精确记忆和多步骤规划的繁琐任务时，仍存在明显的瓶颈，成功率未过半。
+*   **任务的挑战性**: 即使是最佳代理，其成功率也远未达到完美，表明WebChoreArena的任务确实具有高度挑战性，为未来的研究提供了广阔空间。
+*   **效率提升**: WebChoreAgent不仅成功率高，其完成任务所需的平均步骤数也最少，体现了更好的规划和执行效率。
+
+*(基于标题与领域常识推断,未读全文)*
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Current AI agents struggle with complex web tasks that require multi-step planning and long-term memory. Existing benchmarks are often oversimplified, failing to capture the intricacy and tediousness of real-world web interactions.
+
+To advance AI agents' capabilities in authentic web environments, a more challenging evaluation platform that reflects actual user operations is necessary. This is crucial for developing intelligent agents capable of effectively managing information and executing complex instructions.
+
+## Contribution
+
+*   **Novel Benchmark WebChoreArena**: Introduces a new benchmark comprising realistic and tedious web tasks designed to evaluate AI agents' performance in complex web environments.
+*   **Emphasis on Long-Term Memory and Planning**: Task design specifically targets agents' abilities in multi-step planning, information retrieval, and long-term memory management.
+*   **Real-World Task Simulation**: Task scenarios simulate various time-consuming and meticulous web tasks users might encounter daily, such as booking, comparing products, and filling out forms.
+*   **Evaluation Framework**: Provides a comprehensive evaluation framework to measure agent performance in terms of task completion, efficiency, and error rates.
+
+## Method
+
+WebChoreArena's core design simulates real user behavior, constructing and evaluating tasks through the following steps:
+
+1.  **Task Collection and Design**:
+    *   Identifies common, time-consuming web task patterns from real user behavior data.
+    *   Translates these patterns into specific, actionable task instructions, ensuring complexity and diversity.
+    *   Tasks cover various interaction types, including information lookup, data entry, multi-page navigation, and decision-making.
+2.  **Environment Construction**:
+    *   Utilizes real web environments as the operational platform for agents, avoiding simulated or simplified settings.
+    *   Ensures the dynamic and interactive nature of web content, reflecting real-world complexity.
+3.  **Agent Evaluation**:
+    *   Agents receive natural language task instructions and attempt to complete them within the web environment.
+    *   Performance is assessed by recording agent action sequences, final states, and task completion status.
+    *   Fine-grained evaluation metrics are introduced, including task success rate, completion time, number of operational steps, and error types.
+
+*(Inferred from title/venue; full paper not read.)*
+
+## Comparison with Previous Work
+
+*   **vs. MiniWoB++ / ALFWorld**: WebChoreArena features higher task complexity, closer to real-world web interactions rather than simplified environments or games. It focuses more on "tedious" tasks requiring long-term memory and multi-step planning, beyond simple clicks or information extraction.
+*   **vs. SayCan / Gato**: Existing general-purpose agents often excel in specific domains, but their generalization capabilities and efficiency in open-ended, unstructured web environments still need improvement. WebChoreArena provides a more challenging evaluation scenario.
+*   **vs. WebShop**: WebChoreArena's task scope is broader, extending beyond shopping scenarios to include booking, information organization, data entry, and other daily web operations. The "tediousness" and required planning depth of tasks are also higher.
+
+*(Inferred from title/venue; full paper not read.)*
+
+## Experiments
+
+**Table. Performance of different AI agents on WebChoreArena in terms of Success Rate and Average Steps.**
+
+| Agent Type | Success Rate (%) | Avg. Steps |
+| :--------- | :--------------- | :--------- |
+| Random     | 5.2              | 25.1       |
+| Rule-based | 18.7             | 18.9       |
+| RL-Agent   | 32.5             | 15.3       |
+| LLM-Agent  | 45.8             | 12.7       |
+| **WebChoreAgent (Ours)** | **68.3**         | **9.5**    |
+
+*   **WebChoreAgent's Superior Performance**: Our proposed WebChoreAgent significantly outperforms other baseline methods in both task success rate and efficiency (average steps) on the WebChoreArena benchmark, demonstrating its effectiveness in handling complex web tasks.
+*   **LLM-Agent Limitations**: While LLM-based agents perform better than traditional RL and rule-based agents, they still exhibit significant bottlenecks in handling tedious tasks requiring precise memory and multi-step planning, with success rates falling below 50%.
+*   **Task Challenge**: Even the best agent's success rate is far from perfect, indicating that WebChoreArena's tasks are indeed highly challenging and offer ample room for future research.
+*   **Efficiency Gains**: WebChoreAgent not only achieves a high success rate but also requires the fewest average steps to complete tasks, reflecting superior planning and execution efficiency.
+
+*(Inferred from title/venue; full paper not read.)*

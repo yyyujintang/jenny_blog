@@ -1,0 +1,129 @@
+---
+title: "CAPTURe: Evaluating Spatial Reasoning in Vision Language Models via Occluded Object Counting"
+date: 2026-04-24
+paper_date: 2025-04-21
+excerpt: "引入CAPTURe任务评估VLM在遮挡场景下对物体模式的识别与空间推理能力"
+excerpt_en: "Introducing CAPTURe, a novel task to evaluate VLMs' ability to recognize object patterns and perform spatial reasoning in occluded scenes."
+tags:
+  - paper-notes
+  - Benchmark
+  - Embodied
+paper_id: capture-evaluating-spatial-reasoning-in-vision-language-models-via-occluded-obje
+paper_venue: "ICCV25"
+paper_authors: "Mohit Bansal"
+paper_link: "https://arxiv.org/abs/2504.15485"
+auto_generated: true
+notes_hash: 6030520a10acafc1
+---
+
+## Motivation
+
+视觉场景中物体遮挡现象普遍存在，这给AI模型理解视觉信息带来了挑战。
+现有模型在处理部分或完全遮挡的物体时，往往难以进行准确的识别和推理。
+本研究旨在通过一个新颖的任务来评估视觉语言模型（VLMs）在遮挡情境下的空间推理能力。
+
+## Contribution
+
+- **新颖任务CAPTURe**: 引入了一个名为“Counting Amodally for Patterns Through Unseen REgions (CAPTURe)”的新任务，用于评估VLM在遮挡场景下对物体模式的计数和空间推理能力。
+- **双重数据集**: CAPTURe包含两个部分：
+    - **CAPTURe-real**: 包含真实世界中手动筛选的带图案物体图像，旨在测试模型在自然场景下的表现。
+    - **CAPTURe-synthetic**: 包含受控生成的带图案图像，用于诊断性评估，排除混淆因素。
+- **VLM性能评估**: 首次对GPT-4o、Intern-VL2、Molmo和Qwen2-VL等主流VLM在遮挡模式识别和计数任务上的表现进行了系统评估。
+- **人类表现对比**: 对比了人类在CAPTURe任务上的表现，发现人类在此类任务中错误率极低，远优于现有VLM。
+- **辅助信息分析**: 发现提供遮挡物体位置的辅助信息可以显著提升模型性能，揭示了模型误差来源于对遮挡的处理能力不足以及图像计数本身的困难。
+
+## Method
+
+### CAPTURe任务设计
+CAPTURe任务要求模型通过推断遮挡物后面图案的延续性来计数按特定模式排列的物体。这需要模型同时具备视觉模式识别和空间推理能力。
+
+### 数据集构建
+1.  **CAPTURe-real**: 从真实世界图像中手动筛选出包含按模式排列的物体的图像，并确保存在遮挡。
+2.  **CAPTURe-synthetic**: 通过生成方式创建受控图像，其中物体以明确的模式排列，并引入不同程度的遮挡，用于诊断性分析。
+
+### 评估指标
+使用sMAPE（Symmetric Mean Absolute Percentage Error）作为主要评估指标，该指标能有效衡量计数任务中的误差。
+
+## Comparison with Previous Work
+
+- **vs. 传统物体计数**: 现有物体计数任务通常关注可见物体的准确计数，而CAPTURe则更进一步，要求模型推理并计数被遮挡的物体。
+- **vs. 遮挡检测**: 传统的遮挡检测任务主要关注识别遮挡的存在和位置，CAPTURe则要求模型在识别遮挡的基础上，进一步进行高级的空间推理来补全缺失信息。
+- **vs. 现有VLM基准测试**: 许多VLM基准测试侧重于语言理解、常识推理或开放世界视觉理解，而CAPTURe专门针对VLM在复杂遮挡场景下的空间推理和“世界模型”构建能力进行评估。
+
+## Experiments
+
+**Table. VLM在CAPTURe所有子集上的结果，以sMAPE（越低越好）衡量。**
+
+| Model | Error (%) [] | | | |
+| --- | --- | --- | --- | --- |
+| CAPTURe^real | CAPTURe^synthetic | | | |
+| Original | w/ Occlusion () | Original | w/ Occlusion () | |
+| GPT-4o | 13.34 | 14.75 (+1.41) | 5.90 | 9.71 (+3.81) |
+| InternVL2 | 26.17 | 32.90 (+6.73) | 16.44 | 17.57 (+1.13) |
+| Molmo | 25.90 | 32.49 (+6.59) | 8.40 | 17.73 (+9.33) |
+| Qwen2VL | 18.96 | 29.33 (+10.37) | 6.63 | 11.74 (+5.11) |
+| MiniCPM-o 2.6 | 23.84 | 30.08 (+6.24) | 17.06 | 19.00 (+1.94) |
+| Kimi-VL-A3B | 23.48 | 25.96 (+2.48) | 16.91 | 18.07 (+1.16) |
+| Avg. of 6 VLMs | 21.95 | 27.59 (+5.64) | 11.89 | 15.64 (+3.75) |
+
+- **VLM在遮挡下表现显著下降**: 实验结果表明，所有评估的VLM在存在遮挡的情况下，计数误差均显著增加，即使是GPT-4o等最强模型也未能幸免。
+- **人类表现远超VLM**: 与VLM形成鲜明对比的是，人类在CAPTURe任务上几乎没有错误，这突出显示了当前VLM在空间推理能力上的巨大差距。
+- **辅助信息的重要性**: 提供遮挡物体位置的辅助信息可以有效降低模型的计数误差，这表明模型在处理遮挡和图像计数本身都存在困难。
+- **模型“世界模型”的缺陷**: VLM在遮挡模式计数上的不足，暗示了它们在构建能够填充缺失信息的“世界模型”方面存在缺陷。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Occlusions are a frequent occurrence in real-world visual scenes, posing significant challenges for AI models in understanding visual information.
+Existing models often struggle with accurate recognition and reasoning when objects are partially or fully hidden.
+This research aims to evaluate the spatial reasoning capabilities of Vision-Language Models (VLMs) in occluded contexts through a novel task.
+
+## Contribution
+
+- **Novel CAPTURe Task**: Introduced a new task, "Counting Amodally for Patterns Through Unseen REgions (CAPTURe)," designed to evaluate VLMs' ability to count objects in patterns and perform spatial reasoning in occluded scenes.
+- **Dual Dataset Components**: CAPTURe comprises two parts:
+    - **CAPTURe-real**: Features manually filtered images of real objects arranged in patterns, testing models in naturalistic settings.
+    - **CAPTURe-synthetic**: Consists of controlled, generated patterned images for diagnostic evaluation, free from confounders.
+- **VLM Performance Evaluation**: Systematically evaluated the performance of leading VLMs (GPT-4o, Intern-VL2, Molmo, and Qwen2-VL) on occluded pattern recognition and counting tasks.
+- **Human Performance Benchmark**: Compared VLM performance against human capabilities on CAPTURe, revealing that humans achieve very low error rates, significantly outperforming current VLMs.
+- **Auxiliary Information Analysis**: Found that providing auxiliary information about occluded object locations substantially improves model performance, indicating that model errors stem from both an inability to handle occlusion and general difficulties in image counting.
+
+## Method
+
+### CAPTURe Task Design
+The CAPTURe task requires models to count objects arranged in a pattern by inferring how the pattern continues behind an occluder. This necessitates both visual pattern recognition and spatial reasoning skills.
+
+### Dataset Construction
+1.  **CAPTURe-real**: Manually curated images from real-world scenarios containing objects arranged in patterns, ensuring the presence of occlusions.
+2.  **CAPTURe-synthetic**: Programmatically generated controlled images with clear object patterns and varying degrees of occlusion for diagnostic analysis.
+
+### Evaluation Metric
+The Symmetric Mean Absolute Percentage Error (sMAPE) is used as the primary evaluation metric, effectively measuring error in counting tasks.
+
+## Comparison with Previous Work
+
+- **vs. Traditional Object Counting**: Existing object counting tasks typically focus on accurately counting visible objects, whereas CAPTURe extends this by requiring models to infer and count occluded objects.
+- **vs. Occlusion Detection**: Traditional occlusion detection primarily aims to identify the presence and location of occlusions. CAPTURe goes further, demanding higher-level spatial reasoning to fill in missing information based on detected occlusions.
+- **vs. Existing VLM Benchmarks**: Many VLM benchmarks emphasize language understanding, common-sense reasoning, or open-world visual comprehension. CAPTURe specifically evaluates VLMs' spatial reasoning and "world model" construction capabilities in complex occluded scenarios.
+
+## Experiments
+
+**Table. Results across VLMs on all splits of CAPTURe, with average error for each column. Metric: sMAPE (lower is better).**
+
+| Model | Error (%) [] | | | |
+| --- | --- | --- | --- | --- |
+| CAPTURe^real | CAPTURe^synthetic | | | |
+| Original | w/ Occlusion () | Original | w/ Occlusion () | |
+| GPT-4o | 13.34 | 14.75 (+1.41) | 5.90 | 9.71 (+3.81) |
+| InternVL2 | 26.17 | 32.90 (+6.73) | 16.44 | 17.57 (+1.13) |
+| Molmo | 25.90 | 32.49 (+6.59) | 8.40 | 17.73 (+9.33) |
+| Qwen2VL | 18.96 | 29.33 (+10.37) | 6.63 | 11.74 (+5.11) |
+| MiniCPM-o 2.6 | 23.84 | 30.08 (+6.24) | 17.06 | 19.00 (+1.94) |
+| Kimi-VL-A3B | 23.48 | 25.96 (+2.48) | 16.91 | 18.07 (+1.16) |
+| Avg. of 6 VLMs | 21.95 | 27.59 (+5.64) | 11.89 | 15.64 (+3.75) |
+
+- **Significant Performance Drop with Occlusion**: Experimental results show that all evaluated VLMs exhibit a substantial increase in counting error when occlusions are present, including top models like GPT-4o.
+- **Human Superiority**: In stark contrast to VLMs, humans achieve near-perfect performance on the CAPTURe task, highlighting a significant gap in current VLM spatial reasoning capabilities.
+- **Importance of Auxiliary Information**: Providing auxiliary information about occluded object locations significantly reduces model counting errors, suggesting that models struggle with both handling occlusion and the inherent difficulty of counting in images.
+- **Deficiencies in VLM "World Models"**: The poor performance of VLMs on occluded pattern counting implies a deficiency in their ability to form "world models" that would allow them to fill in missing information.

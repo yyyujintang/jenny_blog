@@ -1,0 +1,135 @@
+---
+title: "The BrowserGym Ecosystem for Web Agent Research"
+date: 2026-04-24
+paper_date: 2024-12-06
+excerpt: "BrowserGym生态系统提供统一的Web代理评估框架，并引入AgentLab辅助代理创建、测试和分析"
+excerpt_en: "The BrowserGym ecosystem offers a unified framework for web agent evaluation, introducing AgentLab for agent creation, testing, and analysis"
+tags:
+  - paper-notes
+  - Benchmark
+  - Web
+paper_id: the-browsergym-ecosystem-for-web-agent-research
+paper_link: "https://arxiv.org/abs/2412.05467"
+auto_generated: true
+notes_hash: be7454bd58706664
+---
+
+## Motivation
+
+现有Web代理基准测试存在碎片化和评估方法不一致的问题，这使得可靠的比较和可复现的结果难以实现。
+
+特别是在利用自动化和LLM的Web代理领域，对高效评估和基准测试的需求日益增长。
+
+Drouin et al. (2024) 提出的BrowserGym旨在通过提供统一的gym-like环境来解决这些问题。
+
+## Contribution
+
+- **统一的Web代理评估生态系统**: 扩展了BrowserGym，提供了一个统一的、gym-like环境，具有明确的观察和动作空间，促进跨不同基准的标准化评估。
+- **AgentLab框架**: 引入了一个互补的框架AgentLab，旨在辅助Web代理的创建、测试和分析，简化开发流程。
+- **基准统一与整合**: 整合了现有文献中的多个Web代理基准，确保了评估的一致性和全面的实验管理。
+- **大规模多基准实验**: 首次进行了大规模、多基准的Web代理实验，比较了6个SOTA LLM在6个流行基准上的性能。
+- **性能差距揭示**: 发现OpenAI和Anthropic最新模型之间存在显著性能差异，Claude-3.5-Sonnet在大多数基准上表现领先，而GPT-4o在视觉相关任务上更优。
+
+## Method
+
+### BrowserGym核心环境
+1.  **统一接口**: BrowserGym提供了一个统一的gym-like接口，用于与Web环境交互，定义了标准的observation和action spaces。
+2.  **Web环境抽象**: 将复杂的Web环境抽象为可控的RL环境，允许代理通过结构化的动作与页面元素交互。
+
+### AgentLab框架
+1.  **代理创建**: AgentLab提供工具和API，简化Web代理的开发和配置。
+2.  **测试与调试**: 支持代理在BrowserGym环境中的测试，提供调试工具和日志记录功能。
+3.  **分析与可视化**: 帮助研究人员分析代理行为和性能，提供可视化工具以理解代理决策。
+
+### 基准整合
+1.  **现有基准统一**: 将MiniWoB(++), WebArena, VisualWebArena, WorkArena (L1, L2, L3), WebLINX, Assistant Bench等多个流行Web代理基准整合到BrowserGym生态系统中。
+2.  **标准化评估**: 通过统一的接口和评估指标，确保跨不同基准的评估一致性和可比性。
+
+## Comparison with Previous Work
+
+- **vs. 现有碎片化基准**: 现有基准测试通常缺乏统一的评估方法和接口，导致结果难以比较。BrowserGym通过提供统一的gym-like环境和标准化的观察/动作空间，解决了这一问题。
+- **vs. 单一基准评估**: 许多研究仅在一个或少数几个基准上评估Web代理。本文通过整合多个流行基准并进行大规模实验，提供了更全面和可靠的性能比较。
+- **vs. Drouin et al. (2024) BrowserGym**: 本文是Drouin et al. (2024) 工作的扩展，不仅提供了BrowserGym的统一环境，还引入了AgentLab框架，进一步辅助代理的创建、测试和分析，形成了更完整的生态系统。
+- **vs. 缺乏代理开发工具**: 现有Web代理研究通常侧重于模型本身，而缺乏辅助代理创建、测试和分析的系统性框架。AgentLab填补了这一空白。
+
+## Experiments
+
+**Table.** 6个SOTA LLM在BrowserGym中6个流行Web代理基准上的性能比较。
+
+| Benchmark | # Ep. | Claude-3.5 | GPT-4o | GPT-4o | Lama-3.1 | Lama-3.1 | o1 Mini | Claude-3.5-Sonnet |  |  |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| -Sonnet | Mini | 70B | 405B | Cost | Steps |  |  |  |  |  |  |  |  |  |  |
+| MiniWoB | 625 | \DeclareFontSeriesDefault[rm]bfb69.8 | 1.8 | 63.8 | 1.9 | 56.6 | 2.0 | 57.6 | 2.0 | 64.6 | 1.9 | 67.8 | 1.9 | 23.11 | 3.7 |
+| WorkArena L1 | 330 | 56.4 | 2.7 | 45.5 | 2.7 | 27.0 | 2.4 | 27.9 | 2.5 | 43.3 | 2.7 | \DeclareFontSeriesDefault[rm]bfb56.7 | 2.7 | 100.03 | 9.0 |
+| WorkArena L2 | 235 | \DeclareFontSeriesDefault[rm]bfb39.1 | 3.2 | 8.5 | 1.8 | 1.3 | 0.7 | 2.1 | 0.9 | 7.2 | 1.7 | 14.9 | 2.3 | 299.44 | 33.8 |
+| WorkArena L3 | 235 | \DeclareFontSeriesDefault[rm]bfb0.4 | 0.4 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 191.50 | 25.0 |
+| WebLINX | 2,650 | \DeclareFontSeriesDefault[rm]bfb13.7 | 0.6 | 12.5 | 0.6 | 11.6 | 0.6 | 8.9 | 0.5 | 7.9 | 0.5 | 12.5 | 0.6 | 104.62 | 1.0 |
+| WebArena | 812 | \DeclareFontSeriesDefault[rm]bfb36.2 | 1.7 | 31.4 | 1.6 | 17.4 | 1.3 | 18.4 | 1.4 | 24.0 | 1.5 | 28.6 | 1.6 | 138.76 | 6.8 |
+| VisualWebArena | 910 | 21.0 | 1.3 | \DeclareFontSeriesDefault[rm]bfb26.7 | 1.5 | 16.9 | 1.2 |  | - |  | - |  | - | 134.69 | 4.7 |
+| AssistantBench | 181 | 5.2 | 1.5 | 4.8 | 2.4 | 2.1 | 1.0 | 2.8 | 1.1 | 3.9 | 1.0 | 6.9 | 2.2 | 37.33 | 7.5 |
+
+- **Claude-3.5-Sonnet表现卓越**: 在MiniWoB, WorkArena L1/L2/L3, WebLINX, WebArena和AssistantBench等大多数基准上，Claude-3.5-Sonnet取得了最佳性能。
+- **GPT-4o在视觉任务上领先**: GPT-4o在VisualWebArena基准上表现优于Claude-3.5-Sonnet，表明其在视觉相关Web任务中具有优势。
+- **模型间存在显著性能差异**: 实验结果揭示了OpenAI和Anthropic最新模型之间存在较大的性能差距，突显了不同LLM在Web代理任务上的能力差异。
+- **Web代理仍面临挑战**: 尽管取得了进展，但结果强调，由于真实世界Web环境的固有复杂性和当前模型的局限性，构建鲁棒高效的Web代理仍然是一个重大挑战。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Existing web agent benchmarks suffer from fragmentation and inconsistent evaluation methodologies, making it challenging to achieve reliable comparisons and reproducible results.
+
+There is a growing need for efficient evaluation and benchmarking of web agents, particularly those leveraging automation and Large Language Models (LLMs).
+
+An earlier work by Drouin et al. (2024) introduced BrowserGym, aiming to solve these issues by providing a unified, gym-like environment.
+
+## Contribution
+
+- **Unified Web Agent Evaluation Ecosystem**: Extends BrowserGym to provide a unified, gym-like environment with well-defined observation and action spaces, facilitating standardized evaluation across diverse benchmarks.
+- **AgentLab Framework**: Introduces AgentLab, a complementary framework that aids in agent creation, testing, and analysis, simplifying the development process.
+- **Benchmark Unification and Integration**: Unifies existing web agent benchmarks from the literature, ensuring consistent evaluation and comprehensive experiment management.
+- **Large-Scale Multi-Benchmark Experiment**: Conducts the first large-scale, multi-benchmark web agent experiment, comparing the performance of 6 state-of-the-art LLMs across 6 popular web agent benchmarks.
+- **Discrepancy in Model Performance**: Highlights a large discrepancy between OpenAI and Anthropic's latest models, with Claude-3.5-Sonnet leading on almost all benchmarks, except on vision-related tasks where GPT-4o is superior.
+
+## Method
+
+### BrowserGym Core Environment
+1.  **Unified Interface**: BrowserGym provides a unified, gym-like interface for interacting with web environments, defining standard observation and action spaces.
+2.  **Web Environment Abstraction**: It abstracts complex web environments into controllable RL environments, allowing agents to interact with page elements through structured actions.
+
+### AgentLab Framework
+1.  **Agent Creation**: AgentLab offers tools and APIs to streamline the development and configuration of web agents.
+2.  **Testing and Debugging**: Supports agent testing within the BrowserGym environment, providing debugging tools and logging capabilities.
+3.  **Analysis and Visualization**: Helps researchers analyze agent behavior and performance, offering visualization tools to understand agent decisions.
+
+### Benchmark Integration
+1.  **Unification of Existing Benchmarks**: Integrates several popular web agent benchmarks, including MiniWoB(++), WebArena, VisualWebArena, WorkArena (L1, L2, L3), WebLINX, and Assistant Bench, into the BrowserGym ecosystem.
+2.  **Standardized Evaluation**: Ensures consistent and comparable evaluation across different benchmarks through unified interfaces and metrics.
+
+## Comparison with Previous Work
+
+- **vs. Fragmented Existing Benchmarks**: Current benchmarks often lack unified evaluation methodologies and interfaces, making results difficult to compare. BrowserGym addresses this by providing a unified gym-like environment with standardized observation/action spaces.
+- **vs. Single Benchmark Evaluation**: Many studies evaluate web agents on only one or a few benchmarks. This paper provides a more comprehensive and reliable performance comparison by integrating multiple popular benchmarks and conducting large-scale experiments.
+- **vs. Drouin et al. (2024) BrowserGym**: This work extends Drouin et al. (2024) by not only providing the unified BrowserGym environment but also introducing the AgentLab framework, further assisting in agent creation, testing, and analysis, forming a more complete ecosystem.
+- **vs. Lack of Agent Development Tools**: Existing web agent research often focuses on the models themselves, lacking systematic frameworks to aid in agent creation, testing, and analysis. AgentLab fills this gap.
+
+## Experiments
+
+**Table.** Performance comparison of 6 state-of-the-art LLMs across 6 popular web agent benchmarks in BrowserGym.
+
+| Benchmark | # Ep. | Claude-3.5 | GPT-4o | GPT-4o | Lama-3.1 | Lama-3.1 | o1 Mini | Claude-3.5-Sonnet |  |  |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| -Sonnet | Mini | 70B | 405B | Cost | Steps |  |  |  |  |  |  |  |  |  |  |
+| MiniWoB | 625 | \DeclareFontSeriesDefault[rm]bfb69.8 | 1.8 | 63.8 | 1.9 | 56.6 | 2.0 | 57.6 | 2.0 | 64.6 | 1.9 | 67.8 | 1.9 | 23.11 | 3.7 |
+| WorkArena L1 | 330 | 56.4 | 2.7 | 45.5 | 2.7 | 27.0 | 2.4 | 27.9 | 2.5 | 43.3 | 2.7 | \DeclareFontSeriesDefault[rm]bfb56.7 | 2.7 | 100.03 | 9.0 |
+| WorkArena L2 | 235 | \DeclareFontSeriesDefault[rm]bfb39.1 | 3.2 | 8.5 | 1.8 | 1.3 | 0.7 | 2.1 | 0.9 | 7.2 | 1.7 | 14.9 | 2.3 | 299.44 | 33.8 |
+| WorkArena L3 | 235 | \DeclareFontSeriesDefault[rm]bfb0.4 | 0.4 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 191.50 | 25.0 |
+| WebLINX | 2,650 | \DeclareFontSeriesDefault[rm]bfb13.7 | 0.6 | 12.5 | 0.6 | 11.6 | 0.6 | 8.9 | 0.5 | 7.9 | 0.5 | 12.5 | 0.6 | 104.62 | 1.0 |
+| WebArena | 812 | \DeclareFontSeriesDefault[rm]bfb36.2 | 1.7 | 31.4 | 1.6 | 17.4 | 1.3 | 18.4 | 1.4 | 24.0 | 1.5 | 28.6 | 1.6 | 138.76 | 6.8 |
+| VisualWebArena | 910 | 21.0 | 1.3 | \DeclareFontSeriesDefault[rm]bfb26.7 | 1.5 | 16.9 | 1.2 |  | - |  | - |  | - | 134.69 | 4.7 |
+| AssistantBench | 181 | 5.2 | 1.5 | 4.8 | 2.4 | 2.1 | 1.0 | 2.8 | 1.1 | 3.9 | 1.0 | 6.9 | 2.2 | 37.33 | 7.5 |
+
+- **Claude-3.5-Sonnet's Superior Performance**: Claude-3.5-Sonnet achieved the best performance on most benchmarks, including MiniWoB, WorkArena L1/L2/L3, WebLINX, WebArena, and AssistantBench.
+- **GPT-4o Leads on Vision Tasks**: GPT-4o outperformed Claude-3.5-Sonnet on the VisualWebArena benchmark, indicating its superiority in vision-related web tasks.
+- **Significant Performance Discrepancy**: The results highlight a large discrepancy in performance between OpenAI and Anthropic's latest models, underscoring the varying capabilities of different LLMs for web agent tasks.
+- **Web Agent Challenges Remain**: Despite advancements, the results emphasize that building robust and efficient web agents remains a significant challenge due to the inherent complexity of real-world web environments and the limitations of current models.

@@ -1,0 +1,124 @@
+---
+title: "VisMem: Latent Vision Memory Unlocks Potential of Vision-Language Models"
+date: 2026-04-25
+paper_date: 2025-11-14
+excerpt: "VisMem通过引入动态潜在视觉记忆，为VLM解决了视觉处理瓶颈，提升了复杂视觉任务表现"
+excerpt_en: "VisMem addresses the visual processing bottleneck in VLMs by introducing dynamic latent vision memories, significantly boosting performance on complex visual tasks."
+tags:
+  - paper-notes
+  - Method
+  - Internal
+  - SFT
+  - Multimodal
+paper_id: vismem-latent-vision-memory-unlocks-potential-of-vision-language-models
+paper_authors: "Shuicheng Yan"
+paper_link: "https://arxiv.org/abs/2511.11007"
+auto_generated: true
+notes_hash: 41aa3fba82702e36
+---
+
+## Motivation
+
+尽管视觉语言模型（VLMs）取得了显著成功，但在处理复杂视觉任务时，它们常因“视觉处理瓶颈”而受限。
+
+这种瓶颈表现为在长时间生成过程中，模型容易失去对视觉证据的 grounding，并缺乏上下文感知的视觉经验。
+
+本文从人类认知记忆理论中汲取灵感，该理论区分了以视觉为主的短期记忆和以语义为主的长期记忆。
+
+## Contribution
+
+- **认知对齐的记忆框架（cognitively-aligned framework）**: 提出了VisMem，一个受人类认知记忆启发的框架，旨在解决VLM的视觉处理瓶颈。
+- **动态潜在视觉记忆（dynamic latent vision memories）**: 为VLM配备了动态的潜在视觉记忆，包括用于精细感知保留的短期模块和用于抽象语义整合的长期模块。
+- **无缝记忆调用（seamless memory invocation）**: 记忆模块在推理过程中被无缝调用，使VLM在思考和生成过程中都能保持感知保真度和语义一致性。
+- **性能显著提升（significant performance boost）**: 在多样的视觉基准测试中，VisMem相对于 vanilla 模型平均性能提升了11.0%，并超越了所有现有方法。
+
+## Method
+
+VisMem框架为VLM配备了动态潜在视觉记忆，其核心在于模拟人类的短期和长期记忆机制。
+
+1.  **短期记忆模块（Short-term Module）**:
+    *   专注于精细的感知信息保留。
+    *   在处理当前视觉输入时，捕获并存储高分辨率、细节丰富的视觉特征。
+    *   这有助于模型在短期内维持对视觉证据的精确 grounding。
+
+2.  **长期记忆模块（Long-term Module）**:
+    *   负责抽象语义的整合和存储。
+    *   从历史交互和经验中提取并巩固更高级别的语义概念和模式。
+    *   这使得模型能够建立上下文感知的视觉经验，并在长时间生成中保持语义一致性。
+
+3.  **记忆无缝调用（Seamless Memory Invocation）**:
+    *   在VLM的推理和生成过程中，这两个记忆模块被动态地、无缝地调用。
+    *   短期记忆提供即时的感知细节，而长期记忆提供宏观的语义上下文。
+    *   这种协同作用确保了模型在处理复杂视觉任务时，既能保持对视觉细节的忠实度，又能维持整体的语义连贯性。
+
+## Comparison with Previous Work
+
+- **vs. Vanilla VLMs**: 传统的VLM在长时间生成中容易出现“视觉处理瓶颈”，即失去视觉 grounding 和缺乏上下文视觉经验。VisMem通过引入动态记忆模块直接解决了这一核心问题。
+- **vs. 其他内存增强方法**: VisMem的独特之处在于其认知对齐的设计，区分了短期视觉主导记忆和长期语义主导记忆，这与现有的大多数通用记忆增强方法不同，后者可能没有如此精细的视觉-语义记忆区分。
+- **vs. RAG-based VLMs**: 尽管RAG（Retrieval-Augmented Generation）可以为VLM提供外部知识，但VisMem专注于模型内部的视觉记忆和上下文整合，而非仅仅是外部知识检索。VisMem的记忆是动态生成的，并与视觉处理深度融合。*(基于标题与领域常识推断,未读全文)*
+
+## Experiments
+
+**Table. 在12个基准测试上的结果，用于评估视觉理解、推理和生成能力。最佳和次佳值已加粗，并计算了特定能力和总体结果的平均值。**
+
+|  | _E_P(x,M_s/l)[S()-(p_type+p_neg)], |  | (8) |
+| --- | --- | --- | --- |
+
+*   VisMem在视觉理解、推理和生成等多样化的视觉基准测试中表现出色。
+*   相对于 vanilla 模型，VisMem实现了显著的平均性能提升，高达11.0%。
+*   VisMem在所有比较方法中均表现最佳，为潜在空间记忆增强树立了新范式。
+*   实验结果表明，VisMem能够有效解决VLM的视觉处理瓶颈，提升其在复杂视觉任务上的表现。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Despite the remarkable success of Vision-Language Models (VLMs), their performance on a range of complex visual tasks is often hindered by a "visual processing bottleneck."
+
+This bottleneck manifests as a propensity to lose grounding in visual evidence and exhibit a deficit in contextualized visual experience during prolonged generation.
+
+Drawing inspiration from human cognitive memory theory, which distinguishes short-term visually-dominant memory and long-term semantically-dominant memory, this paper proposes a new framework.
+
+## Contribution
+
+- **Cognitively-Aligned Framework**: Introduces VisMem, a framework inspired by human cognitive memory theory, designed to address the visual processing bottleneck in VLMs.
+- **Dynamic Latent Vision Memories**: Equips VLMs with dynamic latent vision memories, featuring a short-term module for fine-grained perceptual retention and a long-term module for abstract semantic consolidation.
+- **Seamless Memory Invocation**: These memory modules are seamlessly invoked during inference, enabling VLMs to maintain both perceptual fidelity and semantic consistency across thinking and generation.
+- **Significant Performance Boost**: VisMem delivers a substantial average performance boost of 11.0% relative to the vanilla model across diverse visual benchmarks, outperforming all counterparts.
+
+## Method
+
+The VisMem framework equips VLMs with dynamic latent vision memories, centrally mimicking human short-term and long-term memory mechanisms.
+
+1.  **Short-term Module**:
+    *   Focuses on fine-grained perceptual retention.
+    *   Captures and stores high-resolution, detail-rich visual features when processing current visual input.
+    *   This helps the model maintain precise grounding in visual evidence over short durations.
+
+2.  **Long-term Module**:
+    *   Responsible for the consolidation and storage of abstract semantics.
+    *   Extracts and solidifies higher-level semantic concepts and patterns from historical interactions and experiences.
+    *   This enables the model to build contextualized visual experiences and maintain semantic consistency during prolonged generation.
+
+3.  **Seamless Memory Invocation**:
+    *   During the VLM's inference and generation processes, these two memory modules are dynamically and seamlessly invoked.
+    *   The short-term memory provides immediate perceptual details, while the long-term memory offers macroscopic semantic context.
+    *   This synergistic interaction ensures that the model maintains both fidelity to visual details and overall semantic coherence when handling complex visual tasks.
+
+## Comparison with Previous Work
+
+- **vs. Vanilla VLMs**: Traditional VLMs suffer from a "visual processing bottleneck" during prolonged generation, leading to a loss of visual grounding and a lack of contextual visual experience. VisMem directly addresses this core issue by introducing dynamic memory modules.
+- **vs. Other Memory Enhancement Methods**: VisMem's unique aspect lies in its cognitively-aligned design, distinguishing between short-term visually-dominant memory and long-term semantically-dominant memory. This differs from most existing general memory enhancement methods, which may not have such a fine-grained visual-semantic memory distinction.
+- **vs. RAG-based VLMs**: While RAG (Retrieval-Augmented Generation) can provide external knowledge to VLMs, VisMem focuses on internal visual memory and contextual integration within the model, rather than solely external knowledge retrieval. VisMem's memories are dynamically generated and deeply integrated with visual processing. *(Inferred from title/venue; full paper not read.)*
+
+## Experiments
+
+**Table. Table 1: Results on 12 benchmarks to evaluate visual understanding, reasoning and generation abilities. The best and second best values are emphasized, and the average values are calculated for both specific capabilities and overall results.**
+
+|  | _E_P(x,M_s/l)[S()-(p_type+p_neg)], |  | (8) |
+| --- | --- | --- | --- |
+
+*   VisMem demonstrates superior performance across diverse visual benchmarks for understanding, reasoning, and generation.
+*   It achieves a significant average performance boost of 11.0% relative to the vanilla model.
+*   VisMem outperforms all counterparts, establishing a new paradigm for latent-space memory enhancement.
+*   The experimental results confirm VisMem's effectiveness in addressing the visual processing bottleneck of VLMs and improving their performance on complex visual tasks.

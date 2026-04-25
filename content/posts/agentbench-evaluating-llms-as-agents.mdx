@@ -1,0 +1,179 @@
+---
+title: "AgentBench: Evaluating LLMs as Agents"
+date: 2026-04-24
+paper_date: 2023-08-07
+excerpt: "AgentBench是一个多维基准，用于评估LLM作为智能体在交互式环境中的推理和决策能力"
+excerpt_en: "AgentBench is a multi-dimensional benchmark evaluating LLMs' reasoning and decision-making as agents in interactive environments."
+tags:
+  - paper-notes
+  - Benchmark
+  - Long-Horizon
+paper_id: agentbench-evaluating-llms-as-agents
+paper_venue: "ICLR24"
+paper_link: "https://arxiv.org/abs/2308.03688"
+paper_code: "https://github.com/THUDM/AgentBench"
+auto_generated: true
+notes_hash: 6552f24bdd6273cc
+---
+
+## Motivation
+
+大型语言模型（LLM）作为智能体的潜力已得到广泛认可。然而，目前缺乏一个全面的、定量的方法来评估LLM在复杂交互式环境中的智能体能力。
+
+现有的评估方法往往侧重于单一任务或特定领域，未能充分捕捉LLM作为智能体所需的长期推理、决策制定和指令遵循等关键能力。
+
+## Contribution
+
+- **多维基准AgentBench**: 提出了一个包含8个不同环境的多维基准，用于评估LLM作为智能体的推理和决策能力。
+- **广泛的LLM评估**: 对API-based和开源LLM进行了广泛测试，揭示了顶级商业LLM与许多开源模型之间的显著性能差距。
+- **识别失败原因**: 明确了LLM作为智能体失败的典型原因，包括糟糕的长期推理、决策制定和指令遵循能力。
+- **提供改进方向**: 提出了通过改进指令遵循和高质量多轮对齐数据训练来提升智能体性能的建议。
+- **开源资源**: 发布了AgentBench的数据集、环境和集成评估包，促进社区研究。
+
+## Method
+
+AgentBench通过在8个不同的交互式环境中评估LLM作为智能体的表现来衡量其能力。
+
+### 环境设计
+1.  **多样的任务类型**: 包含操作系统、数据库、知识图谱、数字卡牌游戏、横向思维谜题、家务管理、网络购物和网络浏览等八种环境。
+2.  **交互式挑战**: 每个环境都设计为需要LLM进行多轮交互、长期推理和复杂决策才能完成任务。
+3.  **真实世界模拟**: 任务旨在模拟真实世界的复杂场景，测试LLM在不确定和动态环境中的适应性。
+
+### 评估指标
+1.  **成功率 (Success Rate)**: 衡量LLM完成任务的整体能力。
+2.  **F1分数**: 在某些任务中用于评估答案的准确性。
+3.  **奖励 (Reward)**: 根据任务完成情况和效率给予的评分。
+4.  **游戏进度 (Game Progress)**: 在游戏类任务中衡量LLM的进展。
+5.  **步长成功率 (Step SR)**: 评估每一步操作的正确性。
+
+### 评估流程
+1.  **指令输入**: 向LLM提供任务指令和初始环境状态。
+2.  **多轮交互**: LLM根据环境反馈生成行动，并持续与环境交互直到任务完成或失败。
+3.  **性能记录**: 记录LLM在每个环境中的表现，并计算相应的评估指标。
+
+## Comparison with Previous Work
+
+- **vs. 现有单一任务基准**: AgentBench超越了专注于单一任务或特定领域的现有基准，提供了一个更全面、多维度的评估框架，涵盖了更广泛的智能体能力。
+- **vs. 缺乏交互性评估**: 许多现有LLM评估侧重于静态文本生成或问答，而AgentBench则强调LLM在动态、多轮交互环境中的推理和决策能力。
+- **vs. 仅关注语言能力**: AgentBench不仅评估LLM的语言理解和生成能力，更深入地考察其作为智能体的规划、执行和适应复杂环境的实际能力。
+- **vs. 缺乏失败原因分析**: 本研究不仅提供性能分数，还深入分析了LLM作为智能体失败的典型原因，为未来的模型改进提供了具体方向。
+
+## Experiments
+
+**Table.** AgentBench在不同任务上对各种LLM的评估结果。
+
+| LLM | Type | Operating System | Database | Knowledge Graph | Digital Card Game | Lateral Thinking Puzzle | House Holding | Web Shopping | Web Browsing |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| gpt-4 | API | 4.01 | 42.4 | 32.0 | 58.8 | 74.5 | 16.6 | 78.0 | 61.1 |
+| claude-3 | API | \ul3.11 | 22.9 | 51.7 | 34.6 | 44.5 | \ul14.3 | \ul70.0 | 27.9 |
+| glm-4 | API | 2.89 | 29.2 | \ul42.3 | \ul46.3 | 34.1 | 14.2 | 34.0 | 61.6 |
+| claude-2 | API | 2.49 | 18.1 | 27.3 | 41.3 | \ul55.5 | 8.4 | 54.0 | 61.4 |
+| claude | API | 2.44 | 9.7 | 22.0 | 38.9 | 40.9 | 8.2 | 58.0 | 55.7 |
+| gpt-3.5-turbo | API | 2.32 | \ul32.6 | 36.7 | 25.9 | 33.7 | 10.5 | 16.0 | 64.1 |
+| text-davinci-003 | API | 1.71 | 20.1 | 16.3 | 34.9 | 3.0 | 7.1 | 20.0 | \ul61.7 |
+| claude-instant | API | 1.60 | 16.7 | 18.0 | 20.8 | 5.9 | 12.6 | 30.0 | 49.7 |
+| chat-bison-001 | API | 1.39 | 9.7 | 19.7 | 23.0 | 16.6 | 4.4 | 18.0 | 60.5 |
+| text-davinci-002 | API | 1.25 | 8.3 | 16.7 | 41.5 | 11.8 | 0.5 | 16.0 | 56.3 |
+| guanaco-65b | OSS (Large) | \ul0.54 | \ul8.3 | 14.7 | \ul1.9 | \ul0.1 | 1.5 | 12.0 | \ul10.0 |
+| vicuna-33b | OSS (Medium) | \ul0.73 | 15.3 | 11.0 | 1.2 | 16.3 | \ul1.0 | 6.0 | \ul7.0 |
+| wizardlm-30b | OSS (Medium) | 0.46 | \ul13.9 | \ul12.7 | 2.9 | 0.3 | 1.8 | 6.0 | 1.0 |
+| guanaco-33b | OSS (Medium) | 0.39 | 11.1 | 9.3 | \ul3.2 | 0.3 | 0.0 | 6.0 | 5.0 |
+| llama-2-13b | OSS (Small) | \ul0.77 | 4.2 | 11.7 | 3.6 | 26.4 | 0.0 | 6.0 | 13.0 |
+| openchat-13b | OSS (Small) | 0.70 | 15.3 | \ul12.3 | 5.5 | 0.1 | 0.0 | 0.0 | 46.9 |
+| wizardlm-13b | OSS (Small) | 0.66 | 9.0 | 12.7 | 1.7 | 1.9 | 0.0 | 10.0 | 43.7 |
+| vicuna-7b | OSS (Small) | 0.56 | 9.7 | 8.7 | 2.5 | 0.3 | \ul6.4 | 0.0 | 9.0 |
+| codellama-13b | OSS (Small) | 0.56 | 3.5 | 9.7 | 10.4 | 0.0 | 0.0 | 0.0 | \ul14.0 |
+| codellama-7b | OSS (Small) | 0.50 | 4.9 | 12.7 | 8.2 | 0.0 | 0.0 | 2.0 | 12.0 |
+| koala-13b | OSS (Small) | 0.34 | 3.5 | 5.0 | 0.4 | 0.1 | 4.4 | 0.0 | 7.0 |
+| llama-2-7b | OSS (Small) | 0.34 | 4.2 | 8.0 | 2.1 | \ul6.9 | 0.0 | 0.0 | 7.0 |
+| codegeex2-6b | OSS (Small) | 0.27 | 1.4 | 0.0 | 4.8 | 0.3 | 0.0 | 0.0 | 11.0 |
+| dolly-12b | OSS (Small) | 0.14 | 0.0 | 0.0 | 0.1 | 1.2 | 0.0 | 0.4 | 9.0 |
+| chatglm-6b | OSS (Small) | 0.11 | 4.9 | 0.3 | 0.0 | 0.0 | 0.0 | 0.5 | 4.9 |
+| oasst-12b | OSS (Small) | 0.03 | 1.4 | 0.0 | 0.0 | 0.0 | 0.0 | 0.3 | 1.0 |
+
+- **商业LLM表现强劲**: 顶级商业LLM（如gpt-4, claude-3）在AgentBench的复杂环境中展现出强大的智能体能力，尤其在Operating System, Web Shopping等任务上表现突出。
+- **开源LLM差距显著**: 开源LLM，特别是70B以下的模型，与商业LLM之间存在显著的性能差距。
+- **失败原因分析**: 实验结果表明，LLM在长期推理、决策制定和指令遵循方面的不足是成为可用智能体的主要障碍。
+- **代码训练影响复杂**: 与现有假设不同，代码训练对不同的智能体任务产生了复杂的影响，并非总是积极的。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+The potential of Large Language Models (LLMs) to act as agents has been widely recognized. However, there is a pressing need for a comprehensive and quantitative method to evaluate LLMs' agentic capabilities in complex interactive environments.
+
+Existing evaluation methods often focus on single tasks or specific domains, failing to fully capture critical agent skills such as long-term reasoning, decision-making, and instruction following, which are essential for LLMs acting as agents.
+
+## Contribution
+
+- **Multi-dimensional Benchmark AgentBench**: Introduced a multi-dimensional benchmark consisting of 8 distinct environments to assess LLM-as-Agent's reasoning and decision-making abilities.
+- **Extensive LLM Evaluation**: Conducted extensive tests on both API-based and open-source LLMs, revealing a significant performance disparity between top commercial LLMs and many open-source competitors.
+- **Identification of Failure Reasons**: Identified typical reasons for failures in LLMs acting as agents, highlighting poor long-term reasoning, decision-making, and instruction following as major obstacles.
+- **Directions for Improvement**: Suggested that improving instruction following and training on high-quality multi-round alignment data could enhance agent performance.
+- **Open-source Resources**: Released datasets, environments, and an integrated evaluation package for AgentBench to foster community research.
+
+## Method
+
+AgentBench evaluates LLMs' capabilities as agents by assessing their performance across 8 distinct interactive environments.
+
+### Environment Design
+1.  **Diverse Task Types**: Includes eight environments such as Operating System, Database, Knowledge Graph, Digital Card Game, Lateral Thinking Puzzle, House Holding, Web Shopping, and Web Browsing.
+2.  **Interactive Challenges**: Each environment is designed to require multi-round interaction, long-term reasoning, and complex decision-making from the LLM to complete tasks.
+3.  **Real-world Simulation**: Tasks aim to simulate complex real-world scenarios, testing the LLM's adaptability in uncertain and dynamic settings.
+
+### Evaluation Metrics
+1.  **Success Rate (SR)**: Measures the overall ability of the LLM to complete tasks.
+2.  **F1 Score**: Used in some tasks to evaluate the accuracy of answers.
+3.  **Reward**: A score given based on task completion and efficiency.
+4.  **Game Progress**: Measures the LLM's advancement in game-like tasks.
+5.  **Step Success Rate (Step SR)**: Evaluates the correctness of each individual action.
+
+### Evaluation Process
+1.  **Instruction Input**: The LLM is provided with task instructions and the initial environment state.
+2.  **Multi-round Interaction**: The LLM generates actions based on environmental feedback and continuously interacts with the environment until the task is completed or fails.
+3.  **Performance Recording**: The LLM's performance in each environment is recorded, and corresponding evaluation metrics are calculated.
+
+## Comparison with Previous Work
+
+- **vs. Existing Single-Task Benchmarks**: AgentBench goes beyond existing benchmarks that focus on single tasks or specific domains, offering a more comprehensive, multi-dimensional evaluation framework that covers a broader range of agent capabilities.
+- **vs. Lack of Interactive Evaluation**: Many current LLM evaluations emphasize static text generation or question answering, whereas AgentBench highlights LLMs' reasoning and decision-making abilities in dynamic, multi-round interactive environments.
+- **vs. Sole Focus on Linguistic Abilities**: AgentBench not only assesses LLMs' language understanding and generation but also delves into their practical abilities as agents for planning, execution, and adapting to complex environments.
+- **vs. Absence of Failure Cause Analysis**: This study not only provides performance scores but also deeply analyzes the typical reasons for LLM agent failures, offering concrete directions for future model improvements.
+
+## Experiments
+
+**Table.** Evaluation results of various LLMs on different tasks in AgentBench.
+
+| LLM | Type | Operating System | Database | Knowledge Graph | Digital Card Game | Lateral Thinking Puzzle | House Holding | Web Shopping | Web Browsing |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| gpt-4 | API | 4.01 | 42.4 | 32.0 | 58.8 | 74.5 | 16.6 | 78.0 | 61.1 |
+| claude-3 | API | \ul3.11 | 22.9 | 51.7 | 34.6 | 44.5 | \ul14.3 | \ul70.0 | 27.9 |
+| glm-4 | API | 2.89 | 29.2 | \ul42.3 | \ul46.3 | 34.1 | 14.2 | 34.0 | 61.6 |
+| claude-2 | API | 2.49 | 18.1 | 27.3 | 41.3 | \ul55.5 | 8.4 | 54.0 | 61.4 |
+| claude | API | 2.44 | 9.7 | 22.0 | 38.9 | 40.9 | 8.2 | 58.0 | 55.7 |
+| gpt-3.5-turbo | API | 2.32 | \ul32.6 | 36.7 | 25.9 | 33.7 | 10.5 | 16.0 | 64.1 |
+| text-davinci-003 | API | 1.71 | 20.1 | 16.3 | 34.9 | 3.0 | 7.1 | 20.0 | \ul61.7 |
+| claude-instant | API | 1.60 | 16.7 | 18.0 | 20.8 | 5.9 | 12.6 | 30.0 | 49.7 |
+| chat-bison-001 | API | 1.39 | 9.7 | 19.7 | 23.0 | 16.6 | 4.4 | 18.0 | 60.5 |
+| text-davinci-002 | API | 1.25 | 8.3 | 16.7 | 41.5 | 11.8 | 0.5 | 16.0 | 56.3 |
+| guanaco-65b | OSS (Large) | \ul0.54 | \ul8.3 | 14.7 | \ul1.9 | \ul0.1 | 1.5 | 12.0 | \ul10.0 |
+| vicuna-33b | OSS (Medium) | \ul0.73 | 15.3 | 11.0 | 1.2 | 16.3 | \ul1.0 | 6.0 | \ul7.0 |
+| wizardlm-30b | OSS (Medium) | 0.46 | \ul13.9 | \ul12.7 | 2.9 | 0.3 | 1.8 | 6.0 | 1.0 |
+| guanaco-33b | OSS (Medium) | 0.39 | 11.1 | 9.3 | \ul3.2 | 0.3 | 0.0 | 6.0 | 5.0 |
+| llama-2-13b | OSS (Small) | \ul0.77 | 4.2 | 11.7 | 3.6 | 26.4 | 0.0 | 6.0 | 13.0 |
+| openchat-13b | OSS (Small) | 0.70 | 15.3 | \ul12.3 | 5.5 | 0.1 | 0.0 | 0.0 | 46.9 |
+| wizardlm-13b | OSS (Small) | 0.66 | 9.0 | 12.7 | 1.7 | 1.9 | 0.0 | 10.0 | 43.7 |
+| vicuna-7b | OSS (Small) | 0.56 | 9.7 | 8.7 | 2.5 | 0.3 | \ul6.4 | 0.0 | 9.0 |
+| codellama-13b | OSS (Small) | 0.56 | 3.5 | 9.7 | 10.4 | 0.0 | 0.0 | 0.0 | \ul14.0 |
+| codellama-7b | OSS (Small) | 0.50 | 4.9 | 12.7 | 8.2 | 0.0 | 0.0 | 2.0 | 12.0 |
+| koala-13b | OSS (Small) | 0.34 | 3.5 | 5.0 | 0.4 | 0.1 | 4.4 | 0.0 | 7.0 |
+| llama-2-7b | OSS (Small) | 0.34 | 4.2 | 8.0 | 2.1 | \ul6.9 | 0.0 | 0.0 | 7.0 |
+| codegeex2-6b | OSS (Small) | 0.27 | 1.4 | 0.0 | 4.8 | 0.3 | 0.0 | 0.0 | 11.0 |
+| dolly-12b | OSS (Small) | 0.14 | 0.0 | 0.0 | 0.1 | 1.2 | 0.0 | 0.4 | 9.0 |
+| chatglm-6b | OSS (Small) | 0.11 | 4.9 | 0.3 | 0.0 | 0.0 | 0.0 | 0.5 | 4.9 |
+| oasst-12b | OSS (Small) | 0.03 | 1.4 | 0.0 | 0.0 | 0.0 | 0.0 | 0.3 | 1.0 |
+
+- **Strong Performance of Commercial LLMs**: Top commercial LLMs (e.g., gpt-4, claude-3) demonstrate strong agent capabilities in AgentBench's complex environments, particularly excelling in tasks like Operating System and Web Shopping.
+- **Significant Gap for Open-Source LLMs**: There is a notable performance disparity between open-source LLMs, especially models under 70B, and their commercial counterparts.
+- **Analysis of Failure Causes**: Experimental results indicate that deficiencies in long-term reasoning, decision-making, and instruction following are major impediments for LLMs to become usable agents.
+- **Complex Impact of Code Training**: Contrary to existing assumptions, training on code has ambivalent impacts on different agent tasks, not always yielding positive results.

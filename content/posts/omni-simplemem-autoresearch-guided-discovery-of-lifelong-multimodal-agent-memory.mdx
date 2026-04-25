@@ -1,0 +1,178 @@
+---
+title: "Omni-SimpleMem: Autoresearch-Guided Discovery of Lifelong Multimodal Agent Memory"
+date: 2026-04-25
+paper_date: 2026-04-01
+excerpt: "本文提出Omni-SimpleMem，一个由自主研究流程发现的终身多模态AI智能体记忆框架，显著提升了记忆性能"
+excerpt_en: "This paper introduces Omni-SimpleMem, a lifelong multimodal AI agent memory framework discovered by an autonomous research pipeline, significantly boosting memory performance"
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Episodic
+  - Multimodal
+  - Procedural
+  - Semantic
+paper_id: omni-simplemem-autoresearch-guided-discovery-of-lifelong-multimodal-agent-memory
+paper_link: "https://arxiv.org/abs/2604.01007"
+auto_generated: true
+notes_hash: cd3854dee6a71eef
+---
+
+## Motivation
+
+AI智能体在长时间跨度内运行的能力日益增强，但它们保留、组织和回忆多模态经验的能力仍然是一个关键瓶颈。
+构建有效的终身记忆需要在一个庞大的设计空间中进行探索，包括架构、检索策略、prompt engineering和数据管道。这个空间过于庞大且相互关联，无法通过手动探索或传统的AutoML有效探索。
+
+## Contribution
+
+- **自主研究流程**: 部署一个自主研究管道，从一个朴素的基线开始，无需人工干预内循环，自动执行约50个实验，诊断故障模式，提出架构修改，并修复数据管道bug。
+- **Omni-SimpleMem框架**: 发现并提出了一个统一的多模态记忆框架Omni-SimpleMem，用于终身AI智能体。
+- **性能显著提升**: 在LoCoMo基准测试上将F1分数提高了+411% (0.117$\to$0.598)，在Mem-Gallery上提高了+214% (0.254$\to$0.797)。
+- **超越传统AutoML**: 证明了bug修复、架构更改和prompt engineering的贡献远超超参数调整，展示了超越传统AutoML的能力。
+- **发现类型分类和适用性分析**: 提供了六种发现类型的分类，并确定了使多模态记忆特别适合自主研究的四个特性，为将自主研究管道应用于其他AI系统领域提供了指导。
+
+## Method
+
+本文部署了一个自主研究管道来发现Omni-SimpleMem。
+1.  **初始配置**: 从一个朴素的基线（在LoCoMo上F1=0.117）开始。
+2.  **实验执行**: 管道自主执行约50个实验，涵盖两个基准测试。
+3.  **故障诊断**: 自动识别并诊断系统中的故障模式。
+4.  **修改建议**: 提出架构修改建议以改进性能。
+5.  **Bug修复**: 自动识别并修复数据管道中的bug。
+6.  **迭代优化**: 在整个过程中，无需人工干预内循环，持续迭代优化系统。
+7.  **发现类型**: 识别了六种主要发现类型，包括bug修复、架构更改、prompt engineering、格式对齐、数据修复和超参数调整。
+
+## Comparison with Previous Work
+
+- **vs. 手动探索**: 传统的手动探索无法有效导航庞大且相互关联的设计空间，而本文的自主研究管道能够系统地探索并发现关键改进。
+- **vs. 传统AutoML**: 传统的AutoML主要侧重于超参数调整，而本文研究表明，bug修复、架构更改和prompt engineering的贡献远超超参数调整，展示了传统AutoML无法企及的能力。
+- **vs. 现有记忆模型 (如MemVerse, MemGPT, SimpleMem)**: Omni-SimpleMem在两个基准测试上均显著超越了包括SimpleMem在内的现有SOTA模型，例如在LoCoMo上F1分数提升了+411%，在Mem-Gallery上提升了+214%。
+
+## Experiments
+
+**Table.** LoCoMo (左) 和 Mem-Gallery (右) 上五种LLM骨干的比较。
+
+| | | LoCoMo | Mem-Gallery | | | | | | | | | |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Backbone | Method | MH | SH | Tmp | Open | Adv | All | F1 | EM | B | B-1 | B-2 |
+| GPT-4o | MemVerse | 0.260 | 0.157 | 0.196 | 0.192 | 0.944 | 0.365 | 0.505 | 0.330 | 0.270 | 0.440 | 0.355 |
+| | Mem0 | 0.309 | 0.156 | 0.217 | 0.295 | 0.857 | 0.397 | 0.298 | 0.192 | 0.182 | 0.268 | 0.224 |
+| | Claude-Mem | 0.294 | 0.153 | 0.167 | 0.243 | 0.915 | 0.383 | 0.210 | 0.148 | 0.148 | 0.194 | 0.170 |
+| | A-MEM | 0.295 | 0.174 | 0.200 | 0.266 | 0.898 | 0.394 | 0.370 | 0.252 | 0.240 | 0.332 | 0.285 |
+| | MemGPT | 0.305 | 0.188 | 0.246 | 0.305 | 0.843 | 0.404 | 0.435 | 0.298 | 0.275 | 0.390 | 0.335 |
+| | SimpleMem | 0.318 | 0.195 | 0.235 | 0.308 | 0.802 | 0.432 | 0.535 | 0.348 | 0.310 | 0.468 | 0.390 |
+| | Omni-SimpleMem | 0.556 | 0.365 | 0.255 | 0.641 | 0.835 | 0.598 | 0.797 | 0.449 | 0.366 | 0.627 | 0.505 |
+| GPT-4o-mini | MemVerse | 0.147 | 0.074 | 0.106 | 0.093 | 0.747 | 0.290 | 0.450 | 0.295 | 0.248 | 0.395 | 0.330 |
+| | Mem0 | 0.285 | 0.112 | 0.179 | 0.297 | 0.761 | 0.364 | 0.291 | 0.188 | 0.185 | 0.265 | 0.223 |
+| | Claude-Mem | 0.245 | 0.102 | 0.122 | 0.215 | 0.845 | 0.338 | 0.272 | 0.175 | 0.172 | 0.245 | 0.210 |
+| | A-MEM | 0.278 | 0.091 | 0.163 | 0.260 | 0.823 | 0.357 | 0.330 | 0.222 | 0.205 | 0.298 | 0.252 |
+| | MemGPT | 0.283 | 0.113 | 0.182 | 0.289 | 0.776 | 0.364 | 0.398 | 0.262 | 0.242 | 0.355 | 0.298 |
+| | SimpleMem | 0.300 | 0.128 | 0.178 | 0.312 | 0.891 | 0.404 | 0.498 | 0.318 | 0.290 | 0.435 | 0.368 |
+| | Omni-SimpleMem | 0.544 | 0.196 | 0.177 | 0.588 | 0.779 | 0.519 | 0.749 | 0.403 | 0.334 | 0.583 | 0.465 |
+| GPT-4.1-nano | MemVerse | 0.146 | 0.061 | 0.169 | 0.115 | 0.711 | 0.256 | 0.470 | 0.308 | 0.255 | 0.410 | 0.340 |
+| | Mem0 | 0.290 | 0.134 | 0.194 | 0.277 | 0.537 | 0.310 | 0.268 | 0.176 | 0.156 | 0.238 | 0.199 |
+| | Claude-Mem | 0.087 | 0.029 | 0.119 | 0.047 | 0.705 | 0.246 | 0.303 | 0.194 | 0.172 | 0.268 | 0.223 |
+| | A-MEM | 0.045 | 0.016 | 0.142 | 0.050 | 0.747 | 0.216 | 0.365 | 0.242 | 0.225 | 0.325 | 0.275 |
+| | MemGPT | 0.287 | 0.130 | 0.234 | 0.279 | 0.556 | 0.316 | 0.360 | 0.238 | 0.218 | 0.318 | 0.268 |
+| | SimpleMem | 0.298 | 0.145 | 0.210 | 0.285 | 0.648 | 0.342 | 0.518 | 0.338 | 0.300 | 0.452 | 0.380 |
+| | Omni-SimpleMem | 0.477 | 0.216 | 0.244 | 0.583 | 0.722 | 0.492 | 0.780 | 0.430 | 0.353 | 0.610 | 0.488 |
+| GPT-5.1 | MemVerse | 0.287 | 0.173 | 0.277 | 0.297 | 0.780 | 0.383 | 0.478 | 0.312 | 0.262 | 0.418 | 0.345 |
+| | Mem0 | 0.292 | 0.160 | 0.261 | 0.298 | 0.819 | 0.390 | 0.270 | 0.175 | 0.157 | 0.240 | 0.200 |
+| | Claude-Mem | 0.289 | 0.171 | 0.264 | 0.292 | 0.814 | 0.388 | 0.305 | 0.203 | 0.188 | 0.279 | 0.230 |
+| | A-MEM | 0.287 | 0.164 | 0.246 | 0.284 | 0.826 | 0.385 | 0.408 | 0.268 | 0.242 | 0.365 | 0.302 |
+| | MemGPT | 0.288 | 0.165 | 0.249 | 0.294 | 0.806 | 0.385 | 0.425 | 0.275 | 0.250 | 0.378 | 0.315 |
+| | SimpleMem | 0.305 | 0.178 | 0.272 | 0.305 | 0.807 | 0.418 | 0.538 | 0.350 | 0.312 | 0.470 | 0.395 |
+| | Omni-SimpleMem | 0.598 | 0.367 | 0.307 | 0.676 | 0.747 | 0.613 | 0.810 | 0.460 | 0.374 | 0.639 | 0.515 |
+| GPT-5-nano | MemVerse | 0.208 | 0.203 | 0.168 | 0.252 | 0.741 | 0.366 | 0.478 | 0.315 | 0.262 | 0.420 | 0.345 |
+| | Mem0 | 0.264 | 0.143 | 0.237 | 0.270 | 0.737 | 0.352 | 0.283 | 0.176 | 0.165 | 0.250 | 0.210 |
+| | Claude-Mem | 0.091 | 0.063 | 0.092 | 0.088 | 0.736 | 0.275 | 0.350 | 0.249 | 0.217 | 0.315 | 0.264 |
+| | A-MEM | 0.260 | 0.149 | 0.223 | 0.257 | 0.745 | 0.348 | 0.505 | 0.332 | 0.290 | 0.445 | 0.368 |
+| | MemGPT | 0.267 | 0.151 | 0.226 | 0.271 | 0.744 | 0.355 | 0.388 | 0.255 | 0.230 | 0.345 | 0.288 |
+| | SimpleMem | 0.278 | 0.200 | 0.245 | 0.282 | 0.824 | 0.388 | 0.522 | 0.340 | 0.302 | 0.458 | 0.385 |
+| | Omni-SimpleMem | 0.357 | 0.371 | 0.253 | 0.561 | 0.719 | 0.522 | 0.787 | 0.437 | 0.357 | 0.617 | 0.494 |
+
+- **SOTA性能**: Omni-SimpleMem在LoCoMo和Mem-Gallery两个基准测试上均达到了SOTA性能，F1分数分别提升了+411%和+214%。
+- **发现类型的重要性**: 实验结果表明，bug修复（+175%）、架构更改（+44%）和prompt engineering（特定类别上+188%）的贡献单独超过了所有超参数调整的累积贡献。
+- **自主研究的有效性**: 自主研究管道在LoCoMo上成功发现了7项改进并正确回滚了2项失败实验，在Mem-Gallery上经历了7个优化阶段，证明了其在复杂设计空间中进行有效探索的能力。
+- **跨LLM骨干的鲁棒性**: Omni-SimpleMem在不同LLM骨干（如GPT-4o, GPT-4o-mini, GPT-4.1-nano, GPT-5.1, GPT-5-nano）上均表现出显著的性能提升，显示了其通用性和鲁棒性。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+AI agents are increasingly operating over extended time horizons, yet their ability to retain, organize, and recall multimodal experiences remains a critical bottleneck.
+Building effective lifelong memory requires navigating a vast design space spanning architecture, retrieval strategies, prompt engineering, and data pipelines. This space is too large and interconnected for manual exploration or traditional AutoML to explore effectively.
+
+## Contribution
+
+- **Autonomous Research Pipeline**: Deployed an autonomous research pipeline that, starting from a naive baseline, autonomously executes approximately 50 experiments across two benchmarks, diagnosing failure modes, proposing architectural modifications, and repairing data pipeline bugs, all without human intervention in the inner loop.
+- **Omni-SimpleMem Framework**: Discovered and proposed Omni-SimpleMem, a unified multimodal memory framework for lifelong AI agents.
+- **Significant Performance Improvement**: Achieved state-of-the-art on both benchmarks, improving F1 by +411% on LoCoMo (0.117$\to$0.598) and +214% on Mem-Gallery (0.254$\to$0.797).
+- **Beyond Traditional AutoML**: Demonstrated that bug fixes, architectural changes, and prompt engineering contributions individually exceed the cumulative contribution of all hyperparameter tuning, showcasing capabilities fundamentally beyond the reach of traditional AutoML.
+- **Taxonomy of Discovery Types and Applicability Analysis**: Provided a taxonomy of six discovery types and identified four properties that make multimodal memory particularly suited for autoresearch, offering guidance for applying autonomous research pipelines to other AI system domains.
+
+## Method
+
+This paper deploys an autonomous research pipeline to discover Omni-SimpleMem.
+1.  **Initial Configuration**: Starting from a naive baseline (F1=0.117 on LoCoMo).
+2.  **Experiment Execution**: The pipeline autonomously executes approximately 50 experiments across two benchmarks.
+3.  **Failure Diagnosis**: Automatically identifies and diagnoses failure modes within the system.
+4.  **Architectural Modification Proposal**: Proposes architectural modifications to improve performance.
+5.  **Bug Repair**: Automatically identifies and repairs data pipeline bugs.
+6.  **Iterative Optimization**: Continuously iterates and optimizes the system without human intervention in the inner loop.
+7.  **Discovery Types**: Identifies six main discovery types, including bug fixes, architectural changes, prompt engineering, format alignment, data repair, and hyperparameter tuning.
+
+## Comparison with Previous Work
+
+- **vs. Manual Exploration**: Traditional manual exploration cannot effectively navigate the vast and interconnected design space, whereas the autonomous research pipeline systematically explores and discovers critical improvements.
+- **vs. Traditional AutoML**: Traditional AutoML primarily focuses on hyperparameter tuning. This research demonstrates that bug fixes, architectural changes, and prompt engineering contribute far more than hyperparameter tuning, showcasing capabilities beyond traditional AutoML.
+- **vs. Existing Memory Models (e.g., MemVerse, MemGPT, SimpleMem)**: Omni-SimpleMem significantly outperforms existing SOTA models, including SimpleMem, on both benchmarks, with F1 scores improving by +411% on LoCoMo and +214% on Mem-Gallery.
+
+## Experiments
+
+**Table.** Comparison across five LLM backbones on LoCoMo (left) and Mem-Gallery (right).
+
+| | | LoCoMo | Mem-Gallery | | | | | | | | | |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Backbone | Method | MH | SH | Tmp | Open | Adv | All | F1 | EM | B | B-1 | B-2 |
+| GPT-4o | MemVerse | 0.260 | 0.157 | 0.196 | 0.192 | 0.944 | 0.365 | 0.505 | 0.330 | 0.270 | 0.440 | 0.355 |
+| | Mem0 | 0.309 | 0.156 | 0.217 | 0.295 | 0.857 | 0.397 | 0.298 | 0.192 | 0.182 | 0.268 | 0.224 |
+| | Claude-Mem | 0.294 | 0.153 | 0.167 | 0.243 | 0.915 | 0.383 | 0.210 | 0.148 | 0.148 | 0.194 | 0.170 |
+| | A-MEM | 0.295 | 0.174 | 0.200 | 0.266 | 0.898 | 0.394 | 0.370 | 0.252 | 0.240 | 0.332 | 0.285 |
+| | MemGPT | 0.305 | 0.188 | 0.246 | 0.305 | 0.843 | 0.404 | 0.435 | 0.298 | 0.275 | 0.390 | 0.335 |
+| | SimpleMem | 0.318 | 0.195 | 0.235 | 0.308 | 0.802 | 0.432 | 0.535 | 0.348 | 0.310 | 0.468 | 0.390 |
+| | Omni-SimpleMem | 0.556 | 0.365 | 0.255 | 0.641 | 0.835 | 0.598 | 0.797 | 0.449 | 0.366 | 0.627 | 0.505 |
+| GPT-4o-mini | MemVerse | 0.147 | 0.074 | 0.106 | 0.093 | 0.747 | 0.290 | 0.450 | 0.295 | 0.248 | 0.395 | 0.330 |
+| | Mem0 | 0.285 | 0.112 | 0.179 | 0.297 | 0.761 | 0.364 | 0.291 | 0.188 | 0.185 | 0.265 | 0.223 |
+| | Claude-Mem | 0.245 | 0.102 | 0.122 | 0.215 | 0.845 | 0.338 | 0.272 | 0.175 | 0.172 | 0.245 | 0.210 |
+| | A-MEM | 0.278 | 0.091 | 0.163 | 0.260 | 0.823 | 0.357 | 0.330 | 0.222 | 0.205 | 0.298 | 0.252 |
+| | MemGPT | 0.283 | 0.113 | 0.182 | 0.289 | 0.776 | 0.364 | 0.398 | 0.262 | 0.242 | 0.355 | 0.298 |
+| | SimpleMem | 0.300 | 0.128 | 0.178 | 0.312 | 0.891 | 0.404 | 0.498 | 0.318 | 0.290 | 0.435 | 0.368 |
+| | Omni-SimpleMem | 0.544 | 0.196 | 0.177 | 0.588 | 0.779 | 0.519 | 0.749 | 0.403 | 0.334 | 0.583 | 0.465 |
+| GPT-4.1-nano | MemVerse | 0.146 | 0.061 | 0.169 | 0.115 | 0.711 | 0.256 | 0.470 | 0.308 | 0.255 | 0.410 | 0.340 |
+| | Mem0 | 0.290 | 0.134 | 0.194 | 0.277 | 0.537 | 0.310 | 0.268 | 0.176 | 0.156 | 0.238 | 0.199 |
+| | Claude-Mem | 0.087 | 0.029 | 0.119 | 0.047 | 0.705 | 0.246 | 0.303 | 0.194 | 0.172 | 0.268 | 0.223 |
+| | A-MEM | 0.045 | 0.016 | 0.142 | 0.050 | 0.747 | 0.216 | 0.365 | 0.242 | 0.225 | 0.325 | 0.275 |
+| | MemGPT | 0.287 | 0.130 | 0.234 | 0.279 | 0.556 | 0.316 | 0.360 | 0.238 | 0.218 | 0.318 | 0.268 |
+| | SimpleMem | 0.298 | 0.145 | 0.210 | 0.285 | 0.648 | 0.342 | 0.518 | 0.338 | 0.300 | 0.452 | 0.380 |
+| | Omni-SimpleMem | 0.477 | 0.216 | 0.244 | 0.583 | 0.722 | 0.492 | 0.780 | 0.430 | 0.353 | 0.610 | 0.488 |
+| GPT-5.1 | MemVerse | 0.287 | 0.173 | 0.277 | 0.297 | 0.780 | 0.383 | 0.478 | 0.312 | 0.262 | 0.418 | 0.345 |
+| | Mem0 | 0.292 | 0.160 | 0.261 | 0.298 | 0.819 | 0.390 | 0.270 | 0.175 | 0.157 | 0.240 | 0.200 |
+| | Claude-Mem | 0.289 | 0.171 | 0.264 | 0.292 | 0.814 | 0.388 | 0.305 | 0.203 | 0.188 | 0.279 | 0.230 |
+| | A-MEM | 0.287 | 0.164 | 0.246 | 0.284 | 0.826 | 0.385 | 0.408 | 0.268 | 0.242 | 0.365 | 0.302 |
+| | MemGPT | 0.288 | 0.165 | 0.249 | 0.294 | 0.806 | 0.385 | 0.425 | 0.275 | 0.250 | 0.378 | 0.315 |
+| | SimpleMem | 0.305 | 0.178 | 0.272 | 0.305 | 0.807 | 0.418 | 0.538 | 0.350 | 0.312 | 0.470 | 0.395 |
+| | Omni-SimpleMem | 0.598 | 0.367 | 0.307 | 0.676 | 0.747 | 0.613 | 0.810 | 0.460 | 0.374 | 0.639 | 0.515 |
+| GPT-5-nano | MemVerse | 0.208 | 0.203 | 0.168 | 0.252 | 0.741 | 0.366 | 0.478 | 0.315 | 0.262 | 0.420 | 0.345 |
+| | Mem0 | 0.264 | 0.143 | 0.237 | 0.270 | 0.737 | 0.352 | 0.283 | 0.176 | 0.165 | 0.250 | 0.210 |
+| | Claude-Mem | 0.091 | 0.063 | 0.092 | 0.088 | 0.736 | 0.275 | 0.350 | 0.249 | 0.217 | 0.315 | 0.264 |
+| | A-MEM | 0.260 | 0.149 | 0.223 | 0.257 | 0.745 | 0.348 | 0.505 | 0.332 | 0.290 | 0.445 | 0.368 |
+| | MemGPT | 0.267 | 0.151 | 0.226 | 0.271 | 0.744 | 0.355 | 0.388 | 0.255 | 0.230 | 0.345 | 0.288 |
+| | SimpleMem | 0.278 | 0.200 | 0.245 | 0.282 | 0.824 | 0.388 | 0.522 | 0.340 | 0.302 | 0.458 | 0.385 |
+| | Omni-SimpleMem | 0.357 | 0.371 | 0.253 | 0.561 | 0.719 | 0.522 | 0.787 | 0.437 | 0.357 | 0.617 | 0.494 |
+
+- **SOTA Performance**: Omni-SimpleMem achieves state-of-the-art performance on both LoCoMo and Mem-Gallery benchmarks, with F1 scores improving by +411% and +214% respectively.
+- **Importance of Discovery Types**: Experimental results show that bug fixes (+175%), architectural changes (+44%), and prompt engineering (+188% on specific categories) individually exceed the cumulative contribution of all hyperparameter tuning.
+- **Effectiveness of Autoresearch**: The autonomous research pipeline successfully discovered 7 successive improvements and correctly reverted 2 failed experiments on LoCoMo, and underwent 7 optimization phases on Mem-Gallery, demonstrating its ability to effectively explore complex design spaces.
+- **Robustness Across LLM Backbones**: Omni-SimpleMem shows significant performance improvements across various LLM backbones (e.g., GPT-4o, GPT-4o-mini, GPT-4.1-nano, GPT-5.1, GPT-5-nano), indicating its generality and robustness.

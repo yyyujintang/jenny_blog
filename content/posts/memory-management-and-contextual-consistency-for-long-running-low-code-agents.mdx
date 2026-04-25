@@ -1,0 +1,148 @@
+---
+title: "Memory Management and Contextual Consistency for Long-Running Low-Code Agents"
+date: 2026-04-25
+paper_date: 2025-09-27
+excerpt: "针对长周期LCNC智能体，提出混合记忆系统，通过智能衰减机制和用户可视化界面解决记忆膨胀与上下文退化问题"
+excerpt_en: "This paper proposes a hybrid memory system for long-running LCNC agents, addressing memory inflation and contextual degradation with intelligent decay and a user-centric visualization interface."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Episodic
+  - Procedural
+paper_id: memory-management-and-contextual-consistency-for-long-running-low-code-agents
+paper_link: "https://arxiv.org/abs/2509.25250"
+auto_generated: true
+notes_hash: f7f1fe8e1a8173d0
+---
+
+## Motivation
+
+AI原生低代码/无代码 (LCNC) 平台正推动自主智能体执行复杂的长周期业务流程。
+
+然而，这些智能体面临一个根本性挑战：记忆管理。随着运行时间延长，它们会出现“记忆膨胀”和“上下文退化”。
+
+这会导致行为不一致、错误累积以及计算成本增加，限制了LCNC智能体的可靠性和效率。
+
+## Contribution
+
+*   **混合记忆系统**: 结合了情景记忆（episodic memory）和语义记忆（semantic memory）组件，专门为LCNC智能体设计。
+*   **智能衰减机制 (Intelligent Decay)**: 基于新近度、相关性和用户指定效用等综合评分，智能地修剪或整合记忆。
+*   **用户中心可视化界面**: 允许非技术用户直接管理智能体的记忆，例如通过视觉标记来保留或遗忘特定事实，增强透明度和可控性。
+*   **性能提升**: 在模拟长周期任务实验中，显著优于传统方法（如滑动窗口和基础 RAG），提高了任务完成率、上下文一致性和长期 token 成本效率。
+
+## Method
+
+### 混合记忆架构
+
+1.  **情景记忆 (Episodic Memory)**: 存储智能体在特定时间和上下文中的具体交互和经验，类似于人类的个人经历。
+2.  **语义记忆 (Semantic Memory)**: 存储智能体的通用知识、概念和事实，独立于特定事件，类似于人类的常识和知识库。
+
+### 智能衰减机制
+
+1.  **记忆评分**: 为每个记忆项计算一个综合分数，该分数结合了：
+    *   **新近度 (Recency)**: 记忆项的近期活跃程度。
+    *   **相关性 (Relevance)**: 记忆项与当前任务或目标的相关性。
+    *   **用户效用 (User-specified Utility)**: 用户通过可视化界面手动标记的记忆重要性。
+2.  **修剪与整合**: 根据综合评分，系统主动决定是修剪（删除不重要的记忆）还是整合（合并相似或冗余的记忆），以防止记忆膨胀。
+
+### 用户中心可视化界面
+
+1.  **记忆可视化**: 以直观的方式展示智能体的记忆内容和结构。
+2.  **直接管理**: 允许非技术用户通过拖放、标记等方式直接干预记忆管理，例如指定哪些信息应被保留或遗忘，实现记忆的透明化和可控性。
+
+## Comparison with Previous Work
+
+*   **vs. 滑动窗口 (Sliding Windows)**:
+    *   滑动窗口方法仅保留最新信息，导致长期上下文丢失和记忆碎片化。
+    *   我们的系统通过混合记忆和智能衰减，能够维持长期上下文，并更有效地管理记忆。
+*   **vs. 基础 RAG (Basic RAG)**:
+    *   基础 RAG 依赖于简单的检索机制，可能无法有效处理长周期任务中的记忆膨胀和上下文一致性问题。
+    *   我们的系统通过认知启发式记忆架构和主动衰减机制，提供了更精细、更高效的记忆管理。
+*   **vs. 传统记忆管理**:
+    *   传统方法通常缺乏对记忆内容进行智能评估和主动修剪的能力。
+    *   我们的“智能衰减”机制和用户可控性，使其在处理长周期智能体记忆方面更具适应性和效率。
+
+## Experiments
+
+**Table.** 我们的混合系统与基线策略的关键性能指标对比。
+
+| Metric | Sliding Window | Basic RAG | Our Hybrid System |
+| --- | --- | --- | --- |
+| Task Completion Rate (%) | 65.2 | 81.4 | 92.5 |
+| Average Token Cost (per turn) | 580 | 1150 | 890 |
+| Latency (ms) | 120 | 250 | 200 |
+| Consistency Score (Semantic) | 0.78 | 0.89 | 0.94 |
+| Contradiction Rate (%) | 18.1 | 5.5 | 1.2 |
+
+*   **任务完成率显著提升**: 我们的混合系统在任务完成率上达到了 92.5%，显著优于滑动窗口 (65.2%) 和基础 RAG (81.4%)。
+*   **上下文一致性更强**: 语义一致性得分最高 (0.94)，矛盾率最低 (1.2%)，表明智能体行为更加稳定和可靠。
+*   **Token 成本效率更高**: 尽管比滑动窗口略高，但相比基础 RAG，我们的系统显著降低了平均 token 成本，实现了长期运行的经济性。
+*   **整体性能优越**: 结果表明，我们提出的混合记忆系统在解决长周期 LCNC 智能体的记忆管理挑战方面，提供了更可靠、更高效的解决方案。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+The advent of AI-native Low-Code/No-Code (LCNC) platforms empowers autonomous agents to execute complex, long-duration business processes.
+
+However, a fundamental challenge persists for these agents: effective memory management. As they operate over extended periods, they inevitably encounter "memory inflation" and "contextual degradation."
+
+These issues lead to inconsistent behavior, error accumulation, and increased computational costs, thereby limiting the reliability and efficiency of LCNC agents.
+
+## Contribution
+
+*   **Novel Hybrid Memory System**: Combines episodic and semantic memory components, specifically designed for the unique demands of LCNC agents.
+*   **Proactive "Intelligent Decay" Mechanism**: Intelligently prunes or consolidates memories based on a composite score factoring in recency, relevance, and user-specified utility.
+*   **User-Centric Visualization Interface**: Aligned with the LCNC paradigm, it enables non-technical users to directly manage the agent's memory, for instance, by visually tagging facts to be retained or forgotten.
+*   **Superior Performance**: Demonstrated significant outperformance over traditional approaches like sliding windows and basic RAG in simulated long-running task experiments, yielding improved task completion rates, contextual consistency, and long-term token cost efficiency.
+
+## Method
+
+### Hybrid Memory Architecture
+
+1.  **Episodic Memory**: Stores specific interactions and experiences of the agent within a particular time and context, akin to human personal recollections.
+2.  **Semantic Memory**: Stores the agent's general knowledge, concepts, and facts, independent of specific events, similar to human common sense and knowledge base.
+
+### Intelligent Decay Mechanism
+
+1.  **Memory Scoring**: Each memory item is assigned a composite score, which integrates:
+    *   **Recency**: How recently the memory item was accessed or relevant.
+    *   **Relevance**: The memory item's pertinence to the current task or goal.
+    *   **User-specified Utility**: Importance manually assigned by the user via the visualization interface.
+2.  **Pruning and Consolidation**: Based on this composite score, the system proactively decides whether to prune (delete less important memories) or consolidate (merge similar or redundant memories) to prevent memory inflation.
+
+### User-Centric Visualization Interface
+
+1.  **Memory Visualization**: Presents the agent's memory content and structure in an intuitive and understandable manner.
+2.  **Direct Management**: Allows non-technical users to directly intervene in memory management through actions like dragging, tagging, or marking, thereby enhancing transparency and control over the agent's memory.
+
+## Comparison with Previous Work
+
+*   **vs. Sliding Windows**:
+    *   Sliding window approaches only retain the most recent information, leading to a loss of long-term context and fragmented memory.
+    *   Our system maintains long-term context and manages memory more effectively through its hybrid architecture and intelligent decay.
+*   **vs. Basic RAG**:
+    *   Basic RAG relies on simpler retrieval mechanisms, which may struggle with memory inflation and contextual consistency in long-running tasks.
+    *   Our system offers more nuanced and efficient memory management through its cognitively inspired architecture and proactive decay mechanism.
+*   **vs. Traditional Memory Management**:
+    *   Traditional methods often lack the capability for intelligent evaluation and proactive pruning of memory content.
+    *   Our "Intelligent Decay" mechanism and user controllability make it more adaptive and efficient for managing the memory of long-running agents.
+
+## Experiments
+
+**Table.** Comparison of Key Performance Indicators Across Strategies.
+
+| Metric | Sliding Window | Basic RAG | Our Hybrid System |
+| --- | --- | --- | --- |
+| Task Completion Rate (%) | 65.2 | 81.4 | 92.5 |
+| Average Token Cost (per turn) | 580 | 1150 | 890 |
+| Latency (ms) | 120 | 250 | 200 |
+| Consistency Score (Semantic) | 0.78 | 0.89 | 0.94 |
+| Contradiction Rate (%) | 18.1 | 5.5 | 1.2 |
+
+*   **Significantly Higher Task Completion Rate**: Our hybrid system achieved a 92.5% task completion rate, substantially outperforming Sliding Window (65.2%) and Basic RAG (81.4%).
+*   **Enhanced Contextual Consistency**: It demonstrated the highest semantic consistency score (0.94) and the lowest contradiction rate (1.2%), indicating more stable and reliable agent behavior.
+*   **Improved Token Cost Efficiency**: While slightly higher than Sliding Window, our system significantly reduced average token cost compared to Basic RAG, demonstrating long-term operational economy.
+*   **Overall Superior Performance**: The results confirm that our proposed hybrid memory system offers a more reliable and efficient solution for addressing the memory management challenges of long-running LCNC agents.

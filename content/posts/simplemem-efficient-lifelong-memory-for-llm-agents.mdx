@@ -1,0 +1,168 @@
+---
+title: "SimpleMem: Efficient Lifelong Memory for LLM Agents"
+date: 2026-04-25
+paper_date: 2026-01-05
+excerpt: "SimpleMem通过语义无损压缩，为LLM智能体提供高效的终身记忆管理，显著提升性能并降低成本"
+excerpt_en: "SimpleMem introduces an efficient lifelong memory framework for LLM agents using semantic lossless compression, significantly boosting performance and reducing inference costs."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Episodic
+  - Semantic
+paper_id: simplemem-efficient-lifelong-memory-for-llm-agents
+paper_link: "https://arxiv.org/abs/2601.02553"
+auto_generated: true
+notes_hash: b271cc6821ebd01e
+---
+
+## Motivation
+
+LLM智能体在复杂环境中进行长期交互时，需要有效的记忆系统来管理历史经验。
+
+现有方法要么保留完整的交互历史，导致大量冗余，要么依赖迭代推理来过滤噪声，产生高昂的token成本。
+
+为了解决这些挑战，我们提出了SimpleMem，一个基于语义无损压缩的高效记忆框架。
+
+## Contribution
+
+- **语义结构化压缩 (Semantic Structured Compression)**: 将非结构化交互提炼为紧凑、多视图索引的记忆单元，最大化信息密度。
+- **在线语义合成 (Online Semantic Synthesis)**: 在会话内部即时整合相关上下文，形成统一的抽象表示，消除冗余。
+- **意图感知检索规划 (Intent-Aware Retrieval Planning)**: 推断搜索意图，动态确定检索范围，高效构建精确上下文。
+
+## Method
+
+SimpleMem采用三阶段管道设计，旨在最大化信息密度和token利用率：
+
+1.  **语义结构化压缩 (Semantic Structured Compression)**:
+    *   将原始的、非结构化的交互历史（如对话、观察、行动）转化为结构化的、语义丰富的记忆单元。
+    *   这些记忆单元通过多视图索引（例如，语义层、词法层、符号层）进行组织，以便后续高效检索。
+
+2.  **在线语义合成 (Online Semantic Synthesis)**:
+    *   在当前会话进行时，实时识别并整合与新信息相关的旧记忆单元。
+    *   通过抽象和概括，将这些相关信息融合成更紧凑、无冗余的表示，减少记忆库的膨胀。
+
+3.  **意图感知检索规划 (Intent-Aware Retrieval Planning)**:
+    *   根据LLM智能体的当前任务或查询，推断其潜在的搜索意图。
+    *   基于推断出的意图，动态地规划检索策略，确定需要搜索的记忆视图和范围。
+    *   高效地从压缩和合成的记忆中提取最相关的上下文，供LLM智能体使用。
+
+## Comparison with Previous Work
+
+-   **vs. 传统上下文扩展 (Passive Context Extension)**: SimpleMem通过语义压缩和合成，避免了保留完整交互历史所带来的巨大冗余和高昂token成本。
+-   **vs. 迭代推理过滤 (Iterative Reasoning for Filtering)**: 传统方法依赖LLM进行多次推理来过滤噪声，SimpleMem则通过预先的语义处理和意图感知检索，显著降低了推理时的token消耗。
+-   **vs. 其他记忆框架 (e.g., MemGPT, A-Mem, LightMem)**: SimpleMem在保持高准确性的同时，实现了更优的检索效率和更低的推理成本，在性能和效率之间取得了更好的平衡。
+
+## Experiments
+
+**Table. LoCoMo基准测试中，SimpleMem在高性能模型（GPT-4.1系列和Qwen3-Plus）上的表现。SimpleMem实现了卓越的效率-性能平衡。**
+
+| Model | Method | MultiHop | Temporal | OpenDomain | SingleHop | Average | Token | | | | | | |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| F1 | BLEU | F1 | BLEU | F1 | BLEU | F1 | BLEU | F1 | BLEU | Cost | | |
+| GPT-4.1-mini | LoCoMo | 25.02 | 21.62 | 12.04 | 10.63 | 19.05 | 17.07 | 18.68 | 15.87 | 18.70 | 16.30 | 16,910 |
+| ReadAgent | 6.48 | 5.6 | 5.31 | 4.23 | 7.66 | 6.62 | 9.18 | 7.91 | 7.16 | 6.09 | 643 | |
+| MemoryBank | 5.00 | 4.68 | 5.94 | 4.78 | 5.16 | 4.52 | 5.72 | 4.86 | 5.46 | 4.71 | 432 | |
+| MemGPT | 17.72 | 16.02 | 19.44 | 16.54 | 11.29 | 10.18 | 25.59 | 24.25 | 18.51 | 16.75 | 16,977 | |
+| A-Mem | 25.06 | 17.32 | 51.01 | 44.75 | 13.22 | 14.75 | 41.02 | 36.99 | 32.58 | 28.45 | 2,520 | |
+| LightMem | 24.96 | 21.66 | 20.55 | 18.39 | 19.21 | 17.68 | 33.79 | 29.66 | 24.63 | 21.85 | 612 | |
+| Mem0 | 30.14 | 27.62 | 48.91 | 44.82 | 16.43 | 14.94 | 41.3 | 36.17 | 34.20 | 30.89 | 973 | |
+| SimpleMem | 43.46 | 38.82 | 58.62 | 50.10 | 19.76 | 18.04 | 51.12 | 43.53 | 43.24 | 37.62 | 531 | |
+| GPT-4o | LoCoMo | 28.00 | 18.47 | 9.09 | 5.78 | 16.47 | 14.80 | 61.56 | 54.19 | 28.78 | 23.31 | 16,910 |
+| ReadAgent | 14.61 | 9.95 | 4.16 | 3.19 | 8.84 | 8.37 | 12.46 | 10.29 | 10.02 | 7.95 | 805 | |
+| MemoryBank | 6.49 | 4.69 | 2.47 | 2.43 | 6.43 | 5.30 | 8.28 | 7.10 | 5.92 | 4.88 | 569 | |
+| MemGPT | 30.36 | 22.83 | 17.29 | 13.18 | 12.24 | 11.87 | 40.16 | 36.35 | 25.01 | 21.06 | 16,987 | |
+| A-Mem | 32.86 | 23.76 | 39.41 | 31.23 | 17.10 | 15.84 | 44.43 | 38.97 | 33.45 | 27.45 | 1,216 | |
+| LightMem | 28.15 | 21.83 | 36.53 | 29.12 | 13.38 | 11.54 | 33.76 | 28.02 | 27.96 | 22.63 | 645 | |
+| Mem0 | 35.13 | 27.56 | 52.38 | 44.15 | 17.73 | 15.92 | 39.12 | 35.43 | 36.09 | 30.77 | 985 | |
+| SimpleMem | 35.89 | 32.83 | 56.71 | 20.57 | 18.23 | 16.34 | 45.41 | 39.25 | 39.06 | 27.25 | 550 | |
+| Qwen3-Plus | LoCoMo | 24.15 | 18.94 | 16.57 | 13.28 | 11.81 | 10.58 | 38.58 | 28.16 | 22.78 | 17.74 | 16,910 |
+| ReadAgent | 9.52 | 6.83 | 11.22 | 8.15 | 5.41 | 5.23 | 9.85 | 7.96 | 9.00 | 7.04 | 742 | |
+| MemoryBank | 5.25 | 4.94 | 1.77 | 6.26 | 5.88 | 6.00 | 6.90 | 5.57 | 4.95 | 5.69 | 302 | |
+| MemGPT | 25.80 | 17.50 | 24.10 | 18.50 | 9.50 | 7.80 | 40.20 | 42.10 | 24.90 | 21.48 | 16,958 | |
+| A-Mem | 26.50 | 19.80 | 46.10 | 35.10 | 11.90 | 11.50 | 43.80 | 36.50 | 32.08 | 25.73 | 1,427 | |
+| LightMem | 28.95 | 24.13 | 42.58 | 38.52 | 16.54 | 13.23 | 40.78 | 36.52 | 32.21 | 28.10 | 606 | |
+| Mem0 | 32.42 | 21.24 | 47.53 | 39.82 | 17.18 | 14.53 | 46.25 | 37.52 | 35.85 | 28.28 | 1,020 | |
+| SimpleMem | 33.74 | 29.04 | 50.87 | 43.31 | 18.41 | 16.24 | 46.94 | 38.16 | 37.49 | 31.69 | 583 | |
+
+*   我们的方法在LoCoMo基准测试中，平均F1分数提升了26.4%，显著优于所有基线方法。
+*   SimpleMem将推理时的token消耗降低了高达30倍，展示了卓越的效率。
+*   在LongMemEval基准测试中，SimpleMem在多个子任务上均表现出最佳的综合性能，同时保持了任务间的平衡能力。
+*   这些结果证明了SimpleMem在性能和效率之间实现了优越的平衡，使其成为LLM智能体长期交互的理想记忆解决方案。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+To support long-term interaction in complex environments, LLM agents require robust memory systems that effectively manage historical experiences.
+
+Existing approaches often fall into two categories: retaining full interaction histories via passive context extension, which leads to substantial redundancy, or relying on iterative reasoning to filter noise, incurring high token costs.
+
+To address these critical challenges, we introduce SimpleMem, an efficient memory framework built upon semantic lossless compression.
+
+## Contribution
+
+-   **Semantic Structured Compression**: Distills unstructured interactions into compact, multi-view indexed memory units, maximizing information density.
+-   **Online Semantic Synthesis**: An intra-session process that instantly integrates related context into unified abstract representations to eliminate redundancy.
+-   **Intent-Aware Retrieval Planning**: Infers search intent to dynamically determine retrieval scope and construct precise context efficiently.
+
+## Method
+
+SimpleMem employs a three-stage pipeline designed to maximize information density and token utilization:
+
+1.  **Semantic Structured Compression**:
+    *   Transforms raw, unstructured interaction histories (e.g., dialogues, observations, actions) into structured, semantically rich memory units.
+    *   These memory units are organized with multi-view indexing (e.g., semantic, lexical, symbolic layers) for efficient subsequent retrieval.
+
+2.  **Online Semantic Synthesis**:
+    *   During an ongoing session, this stage identifies and integrates related older memory units with new information in real-time.
+    *   It synthesizes these related pieces into more compact, non-redundant abstract representations through summarization and generalization, preventing memory bloat.
+
+3.  **Intent-Aware Retrieval Planning**:
+    *   Based on the LLM agent's current task or query, it infers the underlying search intent.
+    *   This inferred intent dynamically guides the retrieval strategy, determining which memory views and scopes are most relevant for the current context.
+    *   It efficiently extracts the most precise and relevant context from the compressed and synthesized memory for the LLM agent to utilize.
+
+## Comparison with Previous Work
+
+-   **vs. Passive Context Extension**: SimpleMem avoids the significant redundancy and high token costs associated with retaining full interaction histories by employing semantic compression and synthesis.
+-   **vs. Iterative Reasoning for Filtering**: While prior methods rely on multiple LLM reasoning steps to filter noise, SimpleMem significantly reduces inference-time token consumption through its pre-processing semantic structuring and intent-aware retrieval.
+-   **vs. Other Memory Frameworks (e.g., MemGPT, A-Mem, LightMem)**: SimpleMem achieves a superior balance between performance and efficiency, delivering higher accuracy while maintaining better retrieval efficiency and lower inference costs.
+
+## Experiments
+
+**Table. Table 1: Performance on the LoCoMo benchmark with High-Capability Models (GPT-4.1 series and Qwen3-Plus). SimpleMem achieves superior efficiency-performance balance.**
+
+| Model | Method | MultiHop | Temporal | OpenDomain | SingleHop | Average | Token | | | | | | |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| F1 | BLEU | F1 | BLEU | F1 | BLEU | F1 | BLEU | F1 | BLEU | Cost | | |
+| GPT-4.1-mini | LoCoMo | 25.02 | 21.62 | 12.04 | 10.63 | 19.05 | 17.07 | 18.68 | 15.87 | 18.70 | 16.30 | 16,910 |
+| ReadAgent | 6.48 | 5.6 | 5.31 | 4.23 | 7.66 | 6.62 | 9.18 | 7.91 | 7.16 | 6.09 | 643 | |
+| MemoryBank | 5.00 | 4.68 | 5.94 | 4.78 | 5.16 | 4.52 | 5.72 | 4.86 | 5.46 | 4.71 | 432 | |
+| MemGPT | 17.72 | 16.02 | 19.44 | 16.54 | 11.29 | 10.18 | 25.59 | 24.25 | 18.51 | 16.75 | 16,977 | |
+| A-Mem | 25.06 | 17.32 | 51.01 | 44.75 | 13.22 | 14.75 | 41.02 | 36.99 | 32.58 | 28.45 | 2,520 | |
+| LightMem | 24.96 | 21.66 | 20.55 | 18.39 | 19.21 | 17.68 | 33.79 | 29.66 | 24.63 | 21.85 | 612 | |
+| Mem0 | 30.14 | 27.62 | 48.91 | 44.82 | 16.43 | 14.94 | 41.3 | 36.17 | 34.20 | 30.89 | 973 | |
+| SimpleMem | 43.46 | 38.82 | 58.62 | 50.10 | 19.76 | 18.04 | 51.12 | 43.53 | 43.24 | 37.62 | 531 | |
+| GPT-4o | LoCoMo | 28.00 | 18.47 | 9.09 | 5.78 | 16.47 | 14.80 | 61.56 | 54.19 | 28.78 | 23.31 | 16,910 |
+| ReadAgent | 14.61 | 9.95 | 4.16 | 3.19 | 8.84 | 8.37 | 12.46 | 10.29 | 10.02 | 7.95 | 805 | |
+| MemoryBank | 6.49 | 4.69 | 2.47 | 2.43 | 6.43 | 5.30 | 8.28 | 7.10 | 5.92 | 4.88 | 569 | |
+| MemGPT | 30.36 | 22.83 | 17.29 | 13.18 | 12.24 | 11.87 | 40.16 | 36.35 | 25.01 | 21.06 | 16,987 | |
+| A-Mem | 32.86 | 23.76 | 39.41 | 31.23 | 17.10 | 15.84 | 44.43 | 38.97 | 33.45 | 27.45 | 1,216 | |
+| LightMem | 28.15 | 21.83 | 36.53 | 29.12 | 13.38 | 11.54 | 33.76 | 28.02 | 27.96 | 22.63 | 645 | |
+| Mem0 | 35.13 | 27.56 | 52.38 | 44.15 | 17.73 | 15.92 | 39.12 | 35.43 | 36.09 | 30.77 | 985 | |
+| SimpleMem | 35.89 | 32.83 | 56.71 | 20.57 | 18.23 | 16.34 | 45.41 | 39.25 | 39.06 | 27.25 | 550 | |
+| Qwen3-Plus | LoCoMo | 24.15 | 18.94 | 16.57 | 13.28 | 11.81 | 10.58 | 38.58 | 28.16 | 22.78 | 17.74 | 16,910 |
+| ReadAgent | 9.52 | 6.83 | 11.22 | 8.15 | 5.41 | 5.23 | 9.85 | 7.96 | 9.00 | 7.04 | 742 | |
+| MemoryBank | 5.25 | 4.94 | 1.77 | 6.26 | 5.88 | 6.00 | 6.90 | 5.57 | 4.95 | 5.69 | 302 | |
+| MemGPT | 25.80 | 17.50 | 24.10 | 18.50 | 9.50 | 7.80 | 40.20 | 42.10 | 24.90 | 21.48 | 16,958 | |
+| A-Mem | 26.50 | 19.80 | 46.10 | 35.10 | 11.90 | 11.50 | 43.80 | 36.50 | 32.08 | 25.73 | 1,427 | |
+| LightMem | 28.95 | 24.13 | 42.58 | 38.52 | 16.54 | 13.23 | 40.78 | 36.52 | 32.21 | 28.10 | 606 | |
+| Mem0 | 32.42 | 21.24 | 47.53 | 39.82 | 17.18 | 14.53 | 46.25 | 37.52 | 35.85 | 28.28 | 1,020 | |
+| SimpleMem | 33.74 | 29.04 | 50.87 | 43.31 | 18.41 | 16.24 | 46.94 | 38.16 | 37.49 | 31.69 | 583 | |
+
+*   Our method consistently outperforms baseline approaches on benchmark datasets, achieving an average F1 improvement of 26.4% in LoCoMo.
+*   SimpleMem significantly reduces inference-time token consumption by up to 30-fold compared to baselines.
+*   On the LongMemEval benchmark, SimpleMem demonstrates the best overall performance while maintaining balanced capabilities across various sub-tasks.
+*   These results highlight SimpleMem's superior balance between performance and efficiency, making it an ideal memory solution for long-term LLM agent interactions.

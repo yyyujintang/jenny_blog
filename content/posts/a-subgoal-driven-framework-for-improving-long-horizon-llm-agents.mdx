@@ -1,0 +1,117 @@
+---
+title: "A Subgoal-driven Framework for Improving Long-Horizon LLM Agents"
+date: 2026-04-25
+paper_date: 2026-03-20
+excerpt: "提出子目标驱动框架和MiRA强化学习训练框架，显著提升LLM agent在长序列任务中的成功率"
+excerpt_en: "Introduces a subgoal-driven framework and the MiRA RL training framework to significantly improve LLM agents' success rates in long-horizon tasks."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Training-free
+  - Episodic
+  - Procedural
+paper_id: a-subgoal-driven-framework-for-improving-long-horizon-llm-agents
+paper_link: "https://arxiv.org/abs/2603.19685"
+auto_generated: true
+notes_hash: d51f550602553fab
+---
+
+## Motivation
+
+LLM-based agents在数字环境中作为自主控制器展现出强大潜力，但处理长序列动作和动态内容时面临挑战，例如web导航。
+
+现有LLM agents在长序列规划方面存在两大问题：
+* 在线执行时，它们常因新信息而偏离目标，缺乏清晰自适应的路径。
+* 在RL fine-tuning中，稀疏延迟的奖励信号使得agent难以识别成功动作，难以在长时间任务中保持连贯推理。
+
+## Contribution
+
+*   **子目标分解的在线规划框架**: 引入一个利用专有模型进行在线规划的agent框架，通过将复杂任务分解为可管理的子目标来解决长序列规划问题。
+*   **MiRA (Milestoning your Reinforcement Learning Enhanced Agent) RL训练框架**: 提出一个使用密集、基于里程碑的奖励信号的RL训练框架，以解决RL fine-tuning中奖励稀疏和延迟的问题。
+
+## Method
+
+### 1. 在线规划机制
+*   **子目标分解**: 将最终目标分解为一系列更小的、可管理的子目标。
+*   **实时路径调整**: 当新信息出现时，agent能够动态调整其规划路径，确保始终朝着当前子目标前进。
+
+### 2. MiRA RL训练框架
+*   **里程碑奖励**: 为agent在任务执行过程中达到特定里程碑提供密集的、即时的奖励信号，而非仅仅在最终成功时才给予奖励。
+*   **强化学习增强**: 利用这些密集的奖励信号来更有效地fine-tune LLM agent，使其能更好地理解哪些动作导致成功。
+
+## Comparison with Previous Work
+
+*   **vs. 现有LLM agents**: 我们的方法通过明确的推理时规划和里程碑奖励，解决了现有LLM agents在长序列任务中“迷失方向”和奖励稀疏的问题。
+*   **vs. GPT-4-Turbo (17.6%) 和 GPT-4o (13.9%)**: MiRA框架应用于Gemma3-12B模型后，其性能（43.0%）显著超越了这些专有系统。
+*   **vs. WebRL (38.4%)**: MiRA框架也超越了之前开源模型的SOTA，表明在长序列任务中具有更强的泛化能力和鲁棒性。
+
+## Experiments
+
+**Table.** WebArena-Lite基准测试上的成功率比较。
+
+| Model | Success Rate (%) |
+|---|---|
+| Gemini (baseline) | ~50% |
+| Gemini + Our Framework | ~60% |
+| Gemma3-12B (baseline) | 6.4 |
+| Gemma3-12B + MiRA | 43.0 |
+| GPT-4-Turbo | 17.6 |
+| GPT-4o | 13.9 |
+| WebRL | 38.4 |
+
+*   **专有模型性能提升**: 我们的实时规划机制使Gemini等专有模型在WebArena-Lite基准测试上的成功率绝对值提高了约10%。
+*   **开源模型显著突破**: 将MiRA应用于开源的Gemma3-12B模型，成功率从6.4%大幅提升至43.0%。
+*   **超越SOTA**: MiRA增强的Gemma3-12B模型性能超越了GPT-4-Turbo (17.6%)、GPT-4o (13.9%)等专有系统，以及之前的开源模型SOTA WebRL (38.4%)。
+*   **长序列能力验证**: 实验结果表明，结合显式推理时规划和基于里程碑的奖励显著提升了agent的长序列能力。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+LLM-based agents have emerged as powerful autonomous controllers for digital environments, but they face challenges when handling long sequences of actions and dynamic content, such as web navigation.
+
+Existing LLM-based agents struggle with long-horizon planning in two main ways:
+*   During online execution, they often lose track as new information arrives, lacking a clear and adaptive path toward the final goal.
+*   During reinforcement learning (RL) fine-tuning, sparse and delayed rewards make it difficult for agents to identify which actions lead to success, preventing them from maintaining coherent reasoning over extended tasks.
+
+## Contribution
+
+*   **Subgoal Decomposition for Online Planning**: We introduce an agent framework that leverages proprietary models for online planning through subgoal decomposition, addressing long-horizon planning challenges by breaking down complex tasks.
+*   **MiRA (Milestoning your Reinforcement Learning Enhanced Agent) RL Training Framework**: We present an RL training framework that uses dense, milestone-based reward signals to overcome the issues of sparse and delayed rewards in RL fine-tuning.
+
+## Method
+
+### 1. Online Planning Mechanism
+*   **Subgoal Decomposition**: The final goal is broken down into a series of smaller, more manageable subgoals.
+*   **Real-time Path Adjustment**: The agent can dynamically adjust its planned path as new information emerges, ensuring it continuously progresses towards the current subgoal.
+
+### 2. MiRA RL Training Framework
+*   **Milestone-based Rewards**: Dense, immediate reward signals are provided to the agent upon reaching specific milestones during task execution, rather than only at final success.
+*   **Reinforcement Learning Enhancement**: These dense reward signals are used to more effectively fine-tune the LLM agent, helping it better understand which actions lead to success.
+
+## Comparison with Previous Work
+
+*   **vs. Existing LLM Agents**: Our method addresses the "losing track" and sparse reward problems in long-horizon tasks for existing LLM agents through explicit inference-time planning and milestone-based rewards.
+*   **vs. GPT-4-Turbo (17.6%) and GPT-4o (13.9%)**: The MiRA framework, when applied to the Gemma3-12B model, significantly outperforms these proprietary systems with a success rate of 43.0%.
+*   **vs. WebRL (38.4%)**: The MiRA framework also surpasses the previous open-model state-of-the-art, demonstrating stronger generalization and robustness in long-horizon tasks.
+
+## Experiments
+
+**Table.** Comparison of success rates on the WebArena-Lite benchmark.
+
+| Model | Success Rate (%) |
+|---|---|
+| Gemini (baseline) | ~50% |
+| Gemini + Our Framework | ~60% |
+| Gemma3-12B (baseline) | 6.4 |
+| Gemma3-12B + MiRA | 43.0 |
+| GPT-4-Turbo | 17.6 |
+| GPT-4o | 13.9 |
+| WebRL | 38.4 |
+
+*   **Proprietary Model Performance Boost**: Our real-time planning mechanism improves proprietary models like Gemini by approximately a 10% absolute increase in success rate (SR) on the WebArena-Lite benchmark.
+*   **Significant Open-Model Breakthrough**: Applying MiRA to the open Gemma3-12B model increases its success rate from 6.4% to 43.0%.
+*   **Outperforming SOTA**: The MiRA-enhanced Gemma3-12B model surpasses proprietary systems such as GPT-4-Turbo (17.6%) and GPT-4o (13.9%), as well as the previous open-model state of the art, WebRL (38.4%).
+*   **Validation of Long-Horizon Capabilities**: Our findings demonstrate that combining explicit inference-time planning with milestone-based rewards significantly improves an agent's long-horizon capabilities.

@@ -1,0 +1,137 @@
+---
+title: "TheAgentCompany: Benchmarking LLM Agents on Consequential Real World Tasks"
+date: 2026-04-24
+paper_date: 2024-12-18
+excerpt: "引入TheAgentCompany基准，评估AI代理在模拟公司环境中执行真实世界专业任务的能力"
+excerpt_en: "Introducing TheAgentCompany, a benchmark to evaluate AI agents' performance on real-world professional tasks within a simulated company environment"
+tags:
+  - paper-notes
+  - Benchmark
+  - Long-Horizon
+paper_id: theagentcompany-benchmarking-llm-agents-on-consequential-real-world-tasks
+paper_link: "https://arxiv.org/abs/2412.14161"
+auto_generated: true
+notes_hash: d73c262bc7573df5
+---
+
+## Motivation
+
+随着LLM的进步，AI代理在与环境交互并产生影响方面发展迅速。
+工业界和经济政策制定者都迫切需要了解AI代理在加速或自主执行工作相关任务方面的表现。
+目前缺乏一个能够全面评估AI代理在复杂、真实世界工作场景中表现的标准化基准。
+
+## Contribution
+
+- **TheAgentCompany基准**: 一个可扩展的基准，用于评估AI代理在模拟软件公司环境中执行数字工作者任务的能力。
+- **真实世界任务模拟**: 任务涵盖浏览网页、编写代码、运行程序和与同事沟通等，高度模拟真实职场情境。
+- **自包含环境**: 构建了一个包含内部网站和数据的自包含环境，模拟了小型软件公司的工作流程。
+- **基线模型评估**: 对基于API和开源LLM的基线代理进行了测试，揭示了当前AI代理在任务自动化方面的能力边界。
+
+## Method
+
+1.  **环境构建**:
+    *   创建一个模拟小型软件公司的自包含数字环境。
+    *   环境包含内部Web站点（如GitLab、Plane、RocketChat、ownCloud）和相关数据，以模拟日常工作工具和信息流。
+2.  **任务设计**:
+    *   设计一系列模仿真实公司员工可能执行的任务，例如软件开发、项目管理、数据科学、行政、人力资源和财务等。
+    *   任务要求代理通过浏览网页、编写代码、运行程序和与模拟同事沟通来完成。
+3.  **代理评估**:
+    *   使用Success (任务成功率) 和Score (任务完成度得分) 作为主要评估指标。
+    *   记录代理完成任务所需的Steps (步骤数) 和Costs (成本)。
+4.  **基线测试**:
+    *   使用OpenHands框架，测试多种基于API的LLM（如Gemini-2.5-Pro, Claude-3.7-Sonnet, GPT-4o）和开源LLM（如Llama-3.1-405b, Qwen-2.5-72b）作为代理的驱动模型。
+
+## Comparison with Previous Work
+
+- **vs. 现有LLM基准**: 许多现有基准侧重于LLM的语言理解、生成或推理能力，而TheAgentCompany更侧重于LLM代理在复杂、多步骤、与环境交互的真实世界任务中的表现。
+- **vs. 其他代理基准**: 现有的一些代理基准可能专注于特定领域（如游戏、机器人），或环境复杂度较低。TheAgentCompany通过模拟完整的公司环境和多样化的专业任务，提供了更贴近数字工作场景的评估。
+- **vs. 纯代码执行基准**: 传统的代码执行基准通常只评估代码生成和执行的准确性，而TheAgentCompany的任务则要求代理在代码执行之外，还能进行信息检索、沟通协作等多种操作。
+
+## Experiments
+
+**Table. 各种基础模型在TheAgentCompany上的性能比较。**
+
+| Agent | Model | Success | Score | Steps | Costs |
+| --- | --- | --- | --- | --- | --- |
+| API-based Models |  |  |  |  |  |
+| OpenHands 0.28.1 | Gemini-2.5-Pro | 30.3% | 39.3% | 27.2 | $4.2 |
+| OpenHands 0.28.1 | Claude-3.7-Sonnet | 26.3% | 36.4% | 27.8 | $4.1 |
+| OpenHands 0.14.2 | Claude-3.5-Sonnet | 24.0% | 34.4% | 29.2 | $6.3 |
+| OpenHands 0.14.2 | Gemini-2.0-Flash | 11.4% | 19.0% | 39.9 | $0.6 |
+| OpenHands 0.14.2 | GPT-4o | 8.6% | 16.7% | 14.6 | $1.3 |
+| OWL RolePlay | GPT-4o, o3-mini | 4.0% | 11.3% | N/A | N/A |
+| OpenHands 0.14.2 | Gemini-1.5-Pro | 3.4% | 8.0% | 22.1 | $6.8 |
+| OpenHands 0.14.2 | Amazon-Nova-Pro-v1 | 1.7% | 5.7% | 19.6 | $1.6 |
+| Open-weights Models |  |  |  |  |  |
+| OpenHands 0.14.2 | Llama-3.1-405b | 7.4% | 14.1% | 23.0 | $3.2 |
+| OpenHands 0.14.2 | Llama-3.3-70b | 6.9% | 12.8% | 20.9 | $0.9 |
+| OpenHands 0.14.2 | Qwen-2.5-72b | 5.7% | 11.8% | 24.0 | $1.5 |
+| OpenHands 0.14.2 | Llama-3.1-70b | 1.7% | 6.5% | 19.2 | $0.8 |
+| OpenHands 0.14.2 | Qwen-2-72b | 1.1% | 4.2% | 23.7 | $0.3 |
+
+- **当前代理能力上限**: 最具竞争力的代理（Gemini-2.5-Pro）能够自主完成30%的任务，表明简单任务自动化已部分可行，但复杂长周期任务仍是挑战。
+- **闭源模型表现优异**: 基于API的闭源LLM（如Gemini-2.5-Pro, Claude-3.7-Sonnet）在Success和Score上显著优于开源模型。
+- **任务复杂度影响**: 代理在不同平台和不同性质的任务上表现差异显著，例如在GitLab和Plane上的成功率较高，而在ownCloud等平台以及数据科学、财务等任务上成功率较低，这表明任务的复杂性和所需工具的熟练度对代理性能有很大影响。
+- **成本与性能权衡**: 某些模型（如Gemini-1.5-Pro）虽然成本较高，但性能并不突出，而另一些模型（如Gemini-2.0-Flash）在较低成本下也能达到一定性能，提示了未来在实际应用中需要进行成本效益分析。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+With advancements in LLMs, AI agents have rapidly developed in their ability to interact with and affect change in their environments.
+Both industry and economic policymakers urgently need to understand how performant AI agents are at accelerating or autonomously performing work-related tasks.
+Currently, there is a lack of a standardized benchmark that can comprehensively evaluate AI agents' performance in complex, real-world work scenarios.
+
+## Contribution
+
+- **TheAgentCompany Benchmark**: An extensible benchmark for evaluating AI agents' ability to perform digital worker tasks in a simulated software company environment.
+- **Real-World Task Simulation**: Tasks cover web browsing, code writing, program execution, and communication with coworkers, highly simulating real workplace situations.
+- **Self-Contained Environment**: A self-contained environment with internal websites and data is built to mimic the workflow of a small software company.
+- **Baseline Model Evaluation**: Baseline agents powered by both API-based and open-weights LLMs were tested, revealing the current limits of AI agents' capabilities in task automation.
+
+## Method
+
+1.  **Environment Construction**:
+    *   Create a self-contained digital environment simulating a small software company.
+    *   The environment includes internal websites (e.g., GitLab, Plane, RocketChat, ownCloud) and relevant data to mimic daily work tools and information flow.
+2.  **Task Design**:
+    *   Design a variety of tasks that mimic those a real company employee might perform, such as software development, project management, data science, administration, HR, and finance.
+    *   Tasks require agents to complete them by browsing the web, writing code, running programs, and communicating with simulated coworkers.
+3.  **Agent Evaluation**:
+    *   Use Success (task completion rate) and Score (task completion score) as primary evaluation metrics.
+    *   Record the Steps (number of steps) and Costs (cost) required for agents to complete tasks.
+4.  **Baseline Testing**:
+    *   Using the OpenHands framework, test various API-based LLMs (e.g., Gemini-2.5-Pro, Claude-3.7-Sonnet, GPT-4o) and open-source LLMs (e.g., Llama-3.1-405b, Qwen-2.5-72b) as the driving models for the agents.
+
+## Comparison with Previous Work
+
+- **vs. Existing LLM Benchmarks**: Many existing benchmarks focus on LLM's language understanding, generation, or reasoning abilities, while TheAgentCompany focuses more on LLM agents' performance in complex, multi-step, environment-interacting real-world tasks.
+- **vs. Other Agent Benchmarks**: Some existing agent benchmarks may focus on specific domains (e.g., games, robotics) or have lower environmental complexity. TheAgentCompany provides a more realistic evaluation of digital work scenarios by simulating a complete company environment and diverse professional tasks.
+- **vs. Pure Code Execution Benchmarks**: Traditional code execution benchmarks typically only evaluate the accuracy of code generation and execution. TheAgentCompany's tasks require agents to perform various operations beyond code execution, such as information retrieval, communication, and collaboration.
+
+## Experiments
+
+**Table. Performance comparison of various foundation models on TheAgentCompany.**
+
+| Agent | Model | Success | Score | Steps | Costs |
+| --- | --- | --- | --- | --- | --- |
+| API-based Models |  |  |  |  |  |
+| OpenHands 0.28.1 | Gemini-2.5-Pro | 30.3% | 39.3% | 27.2 | $4.2 |
+| OpenHands 0.28.1 | Claude-3.7-Sonnet | 26.3% | 36.4% | 27.8 | $4.1 |
+| OpenHands 0.14.2 | Claude-3.5-Sonnet | 24.0% | 34.4% | 29.2 | $6.3 |
+| OpenHands 0.14.2 | Gemini-2.0-Flash | 11.4% | 19.0% | 39.9 | $0.6 |
+| OpenHands 0.14.2 | GPT-4o | 8.6% | 16.7% | 14.6 | $1.3 |
+| OWL RolePlay | GPT-4o, o3-mini | 4.0% | 11.3% | N/A | N/A |
+| OpenHands 0.14.2 | Gemini-1.5-Pro | 3.4% | 8.0% | 22.1 | $6.8 |
+| OpenHands 0.14.2 | Amazon-Nova-Pro-v1 | 1.7% | 5.7% | 19.6 | $1.6 |
+| Open-weights Models |  |  |  |  |  |
+| OpenHands 0.14.2 | Llama-3.1-405b | 7.4% | 14.1% | 23.0 | $3.2 |
+| OpenHands 0.14.2 | Llama-3.3-70b | 6.9% | 12.8% | 20.9 | $0.9 |
+| OpenHands 0.14.2 | Qwen-2.5-72b | 5.7% | 11.8% | 24.0 | $1.5 |
+| OpenHands 0.14.2 | Llama-3.1-70b | 1.7% | 6.5% | 19.2 | $0.8 |
+| OpenHands 0.14.2 | Qwen-2-72b | 1.1% | 4.2% | 23.7 | $0.3 |
+
+- **Current Agent Capabilities**: The most competitive agent (Gemini-2.5-Pro) autonomously completes 30% of tasks, indicating that automation of simpler tasks is partially feasible, but complex, long-horizon tasks remain challenging.
+- **Superior Performance of Closed-Source Models**: API-based closed-source LLMs (e.g., Gemini-2.5-Pro, Claude-3.7-Sonnet) significantly outperform open-source models in both Success and Score.
+- **Impact of Task Complexity**: Agent performance varies significantly across different platforms and task types. For instance, success rates are higher on GitLab and Plane, but lower on platforms like ownCloud and for tasks such as data science and finance. This suggests that task complexity and the required proficiency with tools greatly influence agent performance.
+- **Cost-Performance Trade-off**: Some models (e.g., Gemini-1.5-Pro) have high costs but do not show outstanding performance, while others (e.g., Gemini-2.0-Flash) achieve reasonable performance at lower costs, highlighting the need for cost-benefit analysis in future practical applications.

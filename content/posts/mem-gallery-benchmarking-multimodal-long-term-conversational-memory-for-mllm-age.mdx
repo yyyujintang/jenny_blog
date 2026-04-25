@@ -1,0 +1,139 @@
+---
+title: "Mem-Gallery: Benchmarking Multimodal Long-Term Conversational Memory for MLLM Agents"
+date: 2026-04-25
+paper_date: 2026-01-07
+excerpt: "Mem-Gallery基准评估MLLM代理在多模态、长期对话中的记忆能力，涵盖记忆提取、推理和知识管理。"
+excerpt_en: "Mem-Gallery benchmarks MLLM agent memory in multimodal, long-term conversations, evaluating extraction, reasoning, and knowledge management."
+tags:
+  - paper-notes
+  - Benchmark
+  - QA
+paper_id: mem-gallery-benchmarking-multimodal-long-term-conversational-memory-for-mllm-age
+paper_link: "https://arxiv.org/abs/2601.03515"
+auto_generated: true
+notes_hash: 09dc4a7b1104c87e
+---
+
+## Motivation
+
+多模态大语言模型（MLLM）代理的长期记忆能力至关重要，尤其是在信息不断积累和演进的对话场景中。
+
+现有基准要么仅评估文本对话中的多会话记忆，要么只在局部上下文中评估多模态理解。它们未能有效评估多模态记忆如何在长期对话轨迹中被保存、组织和演进。
+
+因此，迫切需要一个能够全面评估MLLM代理多模态长期对话记忆的新基准。
+
+## Contribution
+
+- **Mem-Gallery基准**: 提出了Mem-Gallery，一个用于评估MLLM代理多模态长期对话记忆的新基准。
+- **高质量数据集**: Mem-Gallery包含高质量的多会话对话，这些对话以视觉和文本信息为基础，具有长交互周期和丰富的多模态依赖性。
+- **系统评估框架**: 提出了一个系统性评估框架，从三个功能维度评估关键记忆能力：记忆提取和测试时适应、记忆推理以及记忆知识管理。
+- **广泛基准测试**: 对十三种记忆系统进行了广泛的基准测试，揭示了当前模型在显式多模态信息保留、记忆组织、记忆推理和知识管理方面的局限性及效率瓶颈。
+
+## Method
+
+Mem-Gallery基准旨在评估MLLM代理在多模态长期对话中的记忆能力。
+
+### 数据集构建
+1.  **多会话对话**: 构建了基于视觉和文本信息的高质量多会话对话，这些对话具有长交互周期和丰富的多模态依赖。
+2.  **记忆依赖**: 数据集设计确保了对话中信息的积累和演进，需要代理在不同会话间保留和利用记忆。
+
+### 评估框架
+1.  **记忆提取和测试时适应 (Memory Extraction and Test-Time Adaptation)**: 评估代理从长期记忆中检索相关信息并适应当前任务的能力。
+2.  **记忆推理 (Memory Reasoning)**: 评估代理根据存储的记忆进行复杂推理，回答需要跨会话或跨模态信息整合的问题。
+3.  **记忆知识管理 (Memory Knowledge Management)**: 评估代理组织、更新和管理其记忆库的能力，例如识别和处理冗余信息，或根据新信息更新旧知识。
+
+### 评估指标
+使用F1、BLEU-1、EM和LLM-Judge等指标来量化代理在上述三个维度上的表现。
+
+## Comparison with Previous Work
+
+- **vs. 现有文本多会话记忆基准**: 现有基准如DuLeMon、DialogBench和MemoryBank主要关注文本模态，未能评估多模态信息在长期对话中的记忆。Mem-Gallery通过整合视觉和文本信息，填补了这一空白。
+- **vs. 现有局部多模态理解基准**: 现有基准如MMDU和LoCoMo虽然涉及多模态，但通常在局部上下文或单轮对话中评估理解能力，缺乏对跨会话、长期记忆演进的评估。Mem-Gallery则专注于长期对话轨迹中的多模态记忆。
+- **vs. LongMemEval和MemoryAgentBench**: 这些基准虽然也关注长期记忆，但Mem-Gallery在多模态依赖的丰富性、交互周期的长度以及记忆能力评估的系统性方面提供了更全面的视角。
+- **vs. MMRC**: MMRC涉及多模态和对话，但Mem-Gallery更侧重于记忆的“演进”和“管理”维度，并提供了更细致的评估框架。
+
+## Experiments
+
+**Table.** Mem-Gallery与代表性对话基准的比较。
+
+| Benchmark | Conversational Characteristics | Extract.&Adapt. | Reasoning | Management |  |  |  |  |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| A. Round | A. Img. | Multi-Sess. | MM Info. | FR | VS | TTL | TR | VR | MR | KR | CD | AR |  |
+| DuLeMon Xu et al. (2022) | 8.16 | — | ✓ | ✗ | ✓ ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| DialogBench Ou et al. (2024) | 7.48 | — | ✓ | ✗ | ✓ ✗ | ✗ | ✗ | ✗ | ✗ | ✓ ✗ | ✓ ✗ | ✗ | ✗ |
+| MemoryBank Zhong et al. (2024) | 3.77 | — | ✓ | ✗ | ✓ ✗ | ✗ | ✗ | ✓ ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| MMDU Liu et al. (2024) | 14.95 | 3.83 | ✗ | ✓ | ✓ | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ | ✗ | ✗ |
+| LoCoMo Maharana et al. (2024) | 10.81 | 3.35 | ✓ | ✓ | ✓ | ✗ | ✗ | ✓ ✗ | ✗ | ✓ | ✗ | ✗ | ✓ ✗ |
+| LOCCO Jia et al. (2025) | 4.77 | — | ✓ | ✗ | ✓ ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| LongMemEval Wu et al. (2025) | 5.19 | — | ✓ | ✗ | ✓ ✗ | ✗ | ✗ | ✓ ✗ | ✗ | ✓ ✗ | ✓ ✗ | ✗ | ✓ ✗ |
+| MemoryAgentBench Hu et al. (2025a) | 9.55 | — | ✓ | ✗ | ✓ ✗ | ✗ | ✓ ✗ | ✓ ✗ | ✗ | ✓ ✗ | ✓ ✗ | ✗ | ✗ |
+| MMRC Xue et al. (2025) | 12.90 | 2.90 | ✗ | ✓ | ✓ | ✗ | ✗ | ✓ | ✓ | ✓ | ✓ ✗ | ✗ | ✓ |
+| \rowcolorTopThree Mem-Gallery (Ours) | 16.51 | 4.18 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+
+- **全面覆盖**: Mem-Gallery在多会话、多模态信息、记忆提取与适应、推理和知识管理的所有子维度上均实现了“✓”，表明其评估范围的全面性远超现有基准。
+- **更长的对话和图像**: Mem-Gallery拥有最高的平均对话轮次（A. Round 16.51）和平均图像数量（A. Img. 4.18），这反映了其在长期多模态交互方面的深度。
+- **现有模型表现不佳**: 对十三种记忆系统的广泛基准测试显示，即使是SOTA模型，在Mem-Gallery上仍面临显著挑战，尤其是在多模态记忆推理和知识管理方面。
+- **效率瓶颈**: 实验结果还揭示了当前模型在处理复杂多模态长期记忆时的效率问题，需要进一步研究以优化性能。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Long-term memory is a critical capability for multimodal large language model (MLLM) agents, especially in conversational settings where information accumulates and evolves over time.
+
+Existing benchmarks either evaluate multi-session memory in text-only conversations or assess multimodal understanding within localized contexts. They fail to evaluate how multimodal memory is preserved, organized, and evolved across long-term conversational trajectories.
+
+Therefore, there is an urgent need for a new benchmark that can comprehensively evaluate the multimodal long-term conversational memory of MLLM agents.
+
+## Contribution
+
+- **Mem-Gallery Benchmark**: Introduction of Mem-Gallery, a novel benchmark for evaluating multimodal long-term conversational memory in MLLM agents.
+- **High-Quality Dataset**: Mem-Gallery features high-quality multi-session conversations grounded in both visual and textual information, characterized by long interaction horizons and rich multimodal dependencies.
+- **Systematic Evaluation Framework**: Proposal of a systematic evaluation framework that assesses key memory capabilities along three functional dimensions: memory extraction and test-time adaptation, memory reasoning, and memory knowledge management.
+- **Extensive Benchmarking**: Extensive benchmarking across thirteen memory systems, revealing key findings such as the necessity of explicit multimodal information retention and memory organization, persistent limitations in memory reasoning and knowledge management, and efficiency bottlenecks of current models.
+
+## Method
+
+The Mem-Gallery benchmark is designed to evaluate the memory capabilities of MLLM agents in multimodal long-term conversations.
+
+### Dataset Construction
+1.  **Multi-session Conversations**: High-quality multi-session conversations are constructed, grounded in both visual and textual information, featuring long interaction horizons and rich multimodal dependencies.
+2.  **Memory Dependencies**: The dataset is designed to ensure information accumulates and evolves throughout conversations, requiring agents to retain and utilize memory across sessions.
+
+### Evaluation Framework
+1.  **Memory Extraction and Test-Time Adaptation**: This dimension assesses the agent's ability to retrieve relevant information from long-term memory and adapt it to the current task.
+2.  **Memory Reasoning**: This dimension evaluates the agent's capacity to perform complex reasoning based on stored memories, answering questions that require integrating information across sessions or modalities.
+3.  **Memory Knowledge Management**: This dimension assesses the agent's ability to organize, update, and manage its memory store, such as identifying and handling redundant information or updating old knowledge with new information.
+
+### Evaluation Metrics
+Metrics such as F1, BLEU-1, EM, and LLM-Judge are used to quantify agent performance across the three aforementioned dimensions.
+
+## Comparison with Previous Work
+
+- **vs. Existing Text-Only Multi-session Memory Benchmarks**: Prior benchmarks like DuLeMon, DialogBench, and MemoryBank primarily focus on text modality, failing to evaluate multimodal information in long-term conversations. Mem-Gallery addresses this gap by integrating both visual and textual information.
+- **vs. Existing Local Multimodal Understanding Benchmarks**: Benchmarks such as MMDU and LoCoMo, while multimodal, typically assess understanding within localized contexts or single-turn interactions, lacking evaluation of cross-session, long-term memory evolution. Mem-Gallery specifically targets multimodal memory across extended conversational trajectories.
+- **vs. LongMemEval and MemoryAgentBench**: While these benchmarks also address long-term memory, Mem-Gallery offers a more comprehensive perspective in terms of the richness of multimodal dependencies, the length of interaction horizons, and the systematicity of memory capability evaluation.
+- **vs. MMRC**: MMRC involves multimodal and conversational aspects, but Mem-Gallery places a stronger emphasis on the "evolution" and "management" dimensions of memory, providing a more detailed evaluation framework.
+
+## Experiments
+
+**Table.** Comparison between Mem-Gallery with representative conversational benchmarks.
+
+| Benchmark | Conversational Characteristics | Extract.&Adapt. | Reasoning | Management |  |  |  |  |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| A. Round | A. Img. | Multi-Sess. | MM Info. | FR | VS | TTL | TR | VR | MR | KR | CD | AR |  |
+| DuLeMon Xu et al. (2022) | 8.16 | — | ✓ | ✗ | ✓ ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| DialogBench Ou et al. (2024) | 7.48 | — | ✓ | ✗ | ✓ ✗ | ✗ | ✗ | ✗ | ✗ | ✓ ✗ | ✓ ✗ | ✗ | ✗ |
+| MemoryBank Zhong et al. (2024) | 3.77 | — | ✓ | ✗ | ✓ ✗ | ✗ | ✗ | ✓ ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| MMDU Liu et al. (2024) | 14.95 | 3.83 | ✗ | ✓ | ✓ | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ | ✗ | ✗ |
+| LoCoMo Maharana et al. (2024) | 10.81 | 3.35 | ✓ | ✓ | ✓ | ✗ | ✗ | ✓ ✗ | ✗ | ✓ | ✗ | ✗ | ✓ ✗ |
+| LOCCO Jia et al. (2025) | 4.77 | — | ✓ | ✗ | ✓ ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| LongMemEval Wu et al. (2025) | 5.19 | — | ✓ | ✗ | ✓ ✗ | ✗ | ✗ | ✓ ✗ | ✗ | ✓ ✗ | ✓ ✗ | ✗ | ✓ ✗ |
+| MemoryAgentBench Hu et al. (2025a) | 9.55 | — | ✓ | ✗ | ✓ ✗ | ✗ | ✓ ✗ | ✓ ✗ | ✗ | ✓ ✗ | ✓ ✗ | ✗ | ✗ |
+| MMRC Xue et al. (2025) | 12.90 | 2.90 | ✗ | ✓ | ✓ | ✗ | ✗ | ✓ | ✓ | ✓ | ✓ ✗ | ✗ | ✓ |
+| \rowcolorTopThree Mem-Gallery (Ours) | 16.51 | 4.18 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+
+- **Comprehensive Coverage**: Mem-Gallery achieves "✓" across all sub-dimensions of multi-session, multimodal information, memory extraction & adaptation, reasoning, and knowledge management, indicating its far more comprehensive evaluation scope compared to existing benchmarks.
+- **Longer Dialogues and More Images**: Mem-Gallery boasts the highest average dialogue rounds (A. Round 16.51) and average number of images (A. Img. 4.18), reflecting its depth in long-term multimodal interactions.
+- **Underperformance of Existing Models**: Extensive benchmarking across thirteen memory systems reveals that even SOTA models face significant challenges on Mem-Gallery, particularly in multimodal memory reasoning and knowledge management.
+- **Efficiency Bottlenecks**: The experimental results also highlight efficiency issues in current models when handling complex multimodal long-term memory, necessitating further research for performance optimization.

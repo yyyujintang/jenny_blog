@@ -1,0 +1,153 @@
+---
+title: "LongMemEval: Benchmarking Chat Assistants on Long-Term Interactive Memory"
+date: 2026-04-24
+paper_date: 2024-10-14
+excerpt: "引入LongMemEval基准测试，评估聊天助手在持续交互中的长期记忆能力，并提出优化记忆设计的统一框架"
+excerpt_en: "Introducing LongMemEval, a benchmark to evaluate long-term memory in chat assistants, and proposing a unified framework for memory design optimization"
+tags:
+  - paper-notes
+  - Benchmark
+  - QA
+paper_id: longmemeval-benchmarking-chat-assistants-on-long-term-interactive-memory
+paper_link: "https://arxiv.org/abs/2410.10813"
+auto_generated: true
+notes_hash: a6dfe7e524ee5a39
+---
+
+## Motivation
+
+当前LLM驱动的聊天助手已集成记忆组件来跟踪聊天历史，以提供更准确、个性化的响应。
+
+然而，这些系统在持续交互中的长期记忆能力仍未得到充分探索。现有基准测试往往无法全面覆盖长期记忆的各项核心能力。
+
+本研究旨在解决这一空白，通过引入一个全面的基准测试来深入评估聊天助手的长期记忆表现。
+
+## Contribution
+
+- **LongMemEval基准测试**: 引入一个全面的基准测试，用于评估聊天助手在长期交互中的五项核心记忆能力：信息提取、多会话推理、时间推理、知识更新和弃权。
+- **大规模数据集**: 包含500个精心策划的问题，嵌入在可自由扩展的用户-助手聊天历史中，对现有长期记忆系统构成重大挑战。
+- **统一记忆框架**: 提出了一个将长期记忆设计分解为索引、检索和读取三个阶段的统一框架。
+- **记忆设计优化**: 基于实验洞察，提出多项记忆设计优化，包括用于价值粒度的会话分解、用于索引的事实增强键扩展，以及用于细化搜索范围的时间感知查询扩展。
+- **性能提升**: 实验证明，这些优化显著提高了LongMemEval上的记忆召回率和下游问答性能。
+- **资源公开**: 基准测试和代码已公开，为推进LLM聊天助手的长期记忆能力提供宝贵资源和指导。
+
+## Method
+
+### 1. LongMemEval基准测试设计
+
+1.  **核心记忆能力**: 评估五项关键能力：信息提取 (IE)、多会话推理 (MR)、时间推理 (TR)、知识更新 (KU) 和弃权 (ABS)。
+2.  **数据生成**:
+    *   **用户背景**: 基于人类构建的用户属性本体（如人口统计、生活方式、生活事件等）生成多样化的用户背景。
+    *   **会话历史**: 模拟用户与助手的多轮、多会话交互，其中包含需要长期记忆才能回答的问题。
+    *   **问题策划**: 500个问题精心设计，旨在测试上述五项核心记忆能力，并嵌入在可扩展的聊天历史中。
+3.  **评估指标**: 采用准确率来衡量模型回答问题的正确性。
+
+### 2. 统一记忆框架
+
+1.  **索引 (Indexing)**: 如何将对话历史分解并存储为可检索的记忆单元（value）。
+    *   **会话分解 (Session Decomposition)**: 将对话历史分解为更细粒度的会话或轮次，以提高价值粒度。
+    *   **事实增强键扩展 (Fact-Augmented Key Expansion)**: 在索引阶段，通过提取用户事实来扩展键 (key)，增强检索的准确性。
+2.  **检索 (Retrieval)**: 如何根据当前查询从记忆库中找到相关的记忆单元。
+    *   **时间感知查询扩展 (Time-Aware Query Expansion)**: 在查询中融入时间信息，以缩小搜索范围，提高时间推理问题的检索效率。
+3.  **读取 (Reading)**: 如何将检索到的记忆单元与当前上下文结合，生成最终响应。
+    *   本研究主要关注索引和检索阶段的优化。
+
+## Comparison with Previous Work
+
+- **vs. 现有长期记忆基准**:
+    *   LongMemEval在覆盖的记忆能力（IE, MR, KU, TR, ABS）方面比现有基准（如MSC, DuLeMon, MemoryBank, PerLTQA, LoCoMo, DialSim）更全面。
+    *   LongMemEval在会话数量、问题数量和上下文深度方面也具有竞争力，尤其是在上下文深度上提供了115k至1.5M的范围，对模型提出了更高的挑战。
+    *   现有基准通常侧重于部分记忆能力，而LongMemEval旨在提供一个更综合的评估。
+- **vs. 传统RAG系统**:
+    *   本研究提出的统一框架和优化（如会话分解、事实增强键扩展、时间感知查询扩展）超越了传统RAG简单地将整个对话作为value或key的方法，提供了更精细的记忆管理策略。
+- **vs. 其他记忆增强框架**:
+    *   与In-context RAG、MemoryBank、LD-Agent、CoN、RAPTOR、MemWalker、HippoRAG等框架相比，我们的设计在Value、Key、Query、Retrieval、Time-aware和Reading等维度上进行了特定的优化组合，尤其强调了时间感知和事实增强。
+
+## Experiments
+
+**Table.** LongMemEval与现有长期记忆基准的比较。
+
+| Benchmark | Domain | #Sess | #Q | Context Depth | IE | MR | KU | TR | ABS |
+|---|---|---|---|---|---|---|---|---|---|
+| MSC (Xu et al., 2022a) | Open-Domain | 5k | - | 1k | ✗ | ✗ | ✗ | ✗ | ✗ |
+| DuLeMon (Xu et al., 2022b) | Open-Domain | 30k | - | 1k | ✗ | ✗ | ✗ | ✗ | ✗ |
+| MemoryBank (Zhong et al., 2024) | Personal | 300 | 194 | 5k | ✓ | ✗ | ✗ | ✓ | ✗ |
+| PerLTQA (Du et al., 2024) | Personal | 4k | 8593 | 1M∗ | ✓ | ✗ | ✗ | ✗ | ✓ |
+| LoCoMo (Maharana et al., 2024) | Personal | 1k | 7512 | 10k | ✓ | ✓ | ✗ | ✓ | ✓ |
+| DialSim (Kim et al., 2024) | TV Shows | 1k–2k | 1M | 350k | ✓ | ✓∗∗ | ✗ | ✓ | ✓ |
+| LongMemEval (this work) | Personal | 50k | 500 | 115k, 1.5M | ✓ | ✓ | ✓ | ✓ | ✓ |
+
+*   **现有模型表现不佳**: 商业聊天助手和长上下文LLM在LongMemEval上显示出约30%的准确率下降，表明现有系统在持续交互中的长期记忆能力存在显著挑战。
+*   **优化效果显著**: 提出的记忆设计优化，特别是事实增强键扩展和时间感知查询扩展，显著提高了记忆召回率和下游问答性能。例如，K = V + fact的键设计在检索和端到端QA方面均优于其他设计。
+*   **时间感知的重要性**: 时间感知查询扩展在处理时间推理问题时，通过缩小检索范围，显著提升了检索性能。
+*   **基准全面性**: LongMemEval在所有五项核心记忆能力上都提供了覆盖，使其成为评估长期记忆能力的更全面工具。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Current LLM-driven chat assistant systems have integrated memory components to track user-assistant chat histories, enabling more accurate and personalized responses.
+
+However, their long-term memory capabilities in sustained interactions remain underexplored. Existing benchmarks often fail to comprehensively cover all core long-term memory abilities.
+
+This research aims to address this gap by introducing a comprehensive benchmark to deeply evaluate the long-term memory performance of chat assistants.
+
+## Contribution
+
+- **LongMemEval Benchmark**: Introduced a comprehensive benchmark to evaluate five core long-term memory abilities of chat assistants in sustained interactions: information extraction, multi-session reasoning, temporal reasoning, knowledge updates, and abstention.
+- **Large-scale Dataset**: Features 500 meticulously curated questions embedded within freely scalable user-assistant chat histories, posing a significant challenge to existing long-term memory systems.
+- **Unified Memory Framework**: Presented a unified framework that breaks down long-term memory design into three stages: indexing, retrieval, and reading.
+- **Memory Design Optimizations**: Proposed several memory design optimizations based on key experimental insights, including session decomposition for value granularity, fact-augmented key expansion for indexing, and time-aware query expansion for refining the search scope.
+- **Performance Improvement**: Extensive experiments show that these optimizations greatly improve both memory recall and downstream question answering on LongMemEval.
+- **Public Resources**: The benchmark and code are publicly available, providing valuable resources and guidance for advancing the long-term memory capabilities of LLM-based chat assistants.
+
+## Method
+
+### 1. LongMemEval Benchmark Design
+
+1.  **Core Memory Abilities**: Evaluates five key abilities: information extraction (IE), multi-session reasoning (MR), temporal reasoning (TR), knowledge updates (KU), and abstention (ABS).
+2.  **Data Generation**:
+    *   **User Backgrounds**: Diverse user backgrounds are generated based on a human-constructed user attribute ontology (e.g., demographic, lifestyle, life events).
+    *   **Conversation Histories**: Simulates multi-turn, multi-session interactions between users and assistants, containing questions that require long-term memory to answer.
+    *   **Question Curation**: 500 questions are meticulously designed to test the five core memory abilities and are embedded within scalable chat histories.
+3.  **Evaluation Metric**: Accuracy is used to measure the correctness of model responses.
+
+### 2. Unified Memory Framework
+
+1.  **Indexing**: How conversation history is decomposed and stored as retrievable memory units (value).
+    *   **Session Decomposition**: Decomposes conversation history into finer-grained sessions or turns to improve value granularity.
+    *   **Fact-Augmented Key Expansion**: Enhances retrieval accuracy by expanding the key with extracted user facts during the indexing stage.
+2.  **Retrieval**: How relevant memory units are found from the memory store based on the current query.
+    *   **Time-Aware Query Expansion**: Incorporates temporal information into the query to narrow down the search scope and improve retrieval efficiency for temporal reasoning questions.
+3.  **Reading**: How retrieved memory units are combined with the current context to generate the final response.
+    *   This study primarily focuses on optimizations in the indexing and retrieval stages.
+
+## Comparison with Previous Work
+
+- **vs. Existing Long-Term Memory Benchmarks**:
+    *   LongMemEval offers more comprehensive coverage of memory abilities (IE, MR, KU, TR, ABS) compared to existing benchmarks (e.g., MSC, DuLeMon, MemoryBank, PerLTQA, LoCoMo, DialSim).
+    *   LongMemEval is also competitive in terms of the number of sessions, questions, and context depth, particularly offering a context depth range of 115k to 1.5M, posing a greater challenge to models.
+    *   Existing benchmarks often focus on a subset of memory abilities, whereas LongMemEval aims to provide a more holistic evaluation.
+- **vs. Traditional RAG Systems**:
+    *   The unified framework and optimizations (e.g., session decomposition, fact-augmented key expansion, time-aware query expansion) proposed in this study go beyond traditional RAG's simple approach of treating the entire conversation as value or key, offering more refined memory management strategies.
+- **vs. Other Memory-Augmented Frameworks**:
+    *   Compared to frameworks like In-context RAG, MemoryBank, LD-Agent, CoN, RAPTOR, MemWalker, and HippoRAG, our design incorporates specific combinations of optimizations across Value, Key, Query, Retrieval, Time-aware, and Reading dimensions, with a particular emphasis on time-awareness and fact augmentation.
+
+## Experiments
+
+**Table.** A comparison between LongMemEval and existing long-term memory benchmarks.
+
+| Benchmark | Domain | #Sess | #Q | Context Depth | IE | MR | KU | TR | ABS |
+|---|---|---|---|---|---|---|---|---|---|
+| MSC (Xu et al., 2022a) | Open-Domain | 5k | - | 1k | ✗ | ✗ | ✗ | ✗ | ✗ |
+| DuLeMon (Xu et al., 2022b) | Open-Domain | 30k | - | 1k | ✗ | ✗ | ✗ | ✗ | ✗ |
+| MemoryBank (Zhong et al., 2024) | Personal | 300 | 194 | 5k | ✓ | ✗ | ✗ | ✓ | ✗ |
+| PerLTQA (Du et al., 2024) | Personal | 4k | 8593 | 1M∗ | ✓ | ✗ | ✗ | ✗ | ✓ |
+| LoCoMo (Maharana et al., 2024) | Personal | 1k | 7512 | 10k | ✓ | ✓ | ✗ | ✓ | ✓ |
+| DialSim (Kim et al., 2024) | TV Shows | 1k–2k | 1M | 350k | ✓ | ✓∗∗ | ✗ | ✓ | ✓ |
+| LongMemEval (this work) | Personal | 50k | 500 | 115k, 1.5M | ✓ | ✓ | ✓ | ✓ | ✓ |
+
+*   **Poor Performance of Existing Models**: Commercial chat assistants and long-context LLMs show a 30% accuracy drop on LongMemEval, indicating significant challenges in their long-term memory capabilities during sustained interactions.
+*   **Significant Optimization Impact**: The proposed memory design optimizations, especially fact-augmented key expansion and time-aware query expansion, significantly improve both memory recall and downstream question answering performance. For instance, the K = V + fact key design outperforms other designs in both retrieval and end-to-end QA.
+*   **Importance of Time-Awareness**: Time-aware query expansion significantly boosts retrieval performance for temporal reasoning questions by narrowing down the retrieval scope.
+*   **Benchmark Comprehensiveness**: LongMemEval provides coverage across all five core memory abilities, making it a more comprehensive tool for evaluating long-term memory.

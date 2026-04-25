@@ -1,0 +1,150 @@
+---
+title: "PlugMem: A Task-Agnostic Plugin Memory Module for LLM Agents"
+date: 2026-04-25
+paper_date: 2026-02-23
+excerpt: "PlugMem提出一种任务无关的插件式记忆模块，通过知识图谱有效管理LLM智能体的长期记忆"
+excerpt_en: "PlugMem proposes a task-agnostic plugin memory module for LLM agents, effectively managing long-term memory through a knowledge graph."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Training-free
+  - Episodic
+  - Semantic
+paper_id: plugmem-a-task-agnostic-plugin-memory-module-for-llm-agents
+paper_link: "https://arxiv.org/abs/2603.03296"
+paper_code: "https://github.com/TIMAN-group/PlugMem"
+auto_generated: true
+notes_hash: af5984781db82956
+---
+
+## Motivation
+
+大型语言模型（LLM）智能体在复杂环境中运行时，长期记忆至关重要。然而，现有记忆设计要么是针对特定任务的，缺乏通用性。
+
+另一些任务无关的记忆设计，则因为检索到的信息相关性低或上下文爆炸（context explosion）而效率不高。这主要是因为它们倾向于检索原始记忆轨迹，而非抽象知识。
+
+## Contribution
+
+*   **任务无关的插件式记忆模块 (Task-Agnostic Plugin Memory Module)**: PlugMem可以附加到任意LLM智能体，无需针对特定任务进行重新设计，大大提高了通用性和可复用性。
+*   **知识中心化的记忆图谱 (Knowledge-Centric Memory Graph)**: 受认知科学启发，将情景记忆（episodic memories）结构化为紧凑、可扩展的知识图谱，明确表示命题知识（propositional knowledge）和规范知识（prescriptive knowledge）。
+*   **高效的知识检索与推理 (Efficient Knowledge Retrieval and Reasoning)**: 通过在任务相关知识上进行检索和推理，而非冗长的原始轨迹，显著提升了记忆系统的效率和效果。
+*   **信息密度优化 (Optimized Information Density)**: 在统一的信息论分析下，PlugMem实现了最高的信息密度，意味着其记忆表示更紧凑且富有信息量。
+
+## Method
+
+PlugMem的核心在于其知识中心化的记忆图谱设计，它将原始经验转化为抽象知识，并进行高效组织和检索。
+
+### 记忆结构化
+
+1.  **情景记忆（Episodic Memory）**: 原始的、线性的交互记录和观察，作为记忆图谱的基础层，用于验证抽象知识。
+2.  **命题知识（Propositional Knowledge）**: 上下文无关的概念、事实和世界知识，以“事实块”（Fact Block）的形式存储，是可验证的完整陈述。
+3.  **规范知识（Prescriptive Knowledge）**: 解决问题的动态“如何做”知识，以“工作流块”（Workflow Block）的形式存储，是执行复杂任务的完整动作序列。
+
+### 记忆图谱构建
+
+1.  **概念中心语义记忆结构 (Concept-Centric Semantic Memory Structuring)**: 概念作为轻量级索引指向命题（Proposition）负载，形成“概念提及命题”的结构。
+2.  **意图中心程序记忆结构 (Intent-Centric Procedural Memory Structuring)**: 用户目标（Intent）作为键来查找整体解决方案（Prescription），形成“意图解决规范”的结构。
+3.  **情景记忆作为锚点 (Episodic Memory as the Anchor)**: 情景记忆作为“事实真相”层，验证抽象知识图谱，形成“知识证明来源”的结构。
+
+### 记忆检索与推理
+
+*   PlugMem通过在结构化的知识图谱上进行检索和推理，能够高效地找到与当前任务最相关的抽象知识，避免了检索大量冗余的原始记忆。
+
+## Comparison with Previous Work
+
+*   **vs. Vanilla Retrieval / RAG**: 这些方法通常直接检索原始记忆或文本块，缺乏将原始经验转化为可重用抽象知识的能力，导致检索效率低且上下文爆炸。PlugMem通过构建知识图谱，将知识作为记忆单元，显著提升了效率和相关性。
+*   **vs. GraphRAG**: GraphRAG虽然也使用图谱，但其将实体或文本块作为记忆单元。PlugMem则将更抽象的知识（命题和规范）作为记忆单元，实现了更高的信息密度和更有效的推理。
+*   **vs. A-Mem / ReasoningBank**: 这些方法虽然也关注知识抽象，但PlugMem的记忆图谱设计更强调知识的结构化和跨任务通用性，并且在统一的信息论分析下实现了更高的信息密度。
+*   **vs. Zep / MemoryOS**: 这些系统通常支持情景记忆，但在将工作记忆转化为可重用、抽象知识方面能力有限。PlugMem通过其M2K（Memory-to-Knowledge）机制，有效地将情景记忆转化为可泛化的抽象知识。
+
+## Experiments
+
+**Table.** LLM智能体记忆系统对比。
+
+| Meth. | M2K | KaU | Mech. | Mem. | Agn. |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Str. | Ret. | Rea. | E | S | P |  |  |  |  |
+| Vanilla Retrieval | ✗ | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ | ✗ | ✓ |
+| Vanilla RAG | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✓ |
+| GraphRAG | ✓ | ✗ | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | ✓ ✗ |
+| A-Mem | ✓ | ✓ | ✓ | ✗ | ✗ | ✓ | ✓ | ✗ | ✓ |
+| Zep | ✗ | ✗ | ✓ | ✓ | ✗ | ✓ | ✓ | ✗ | ✗ |
+| MemoryOS | ✗ | ✗ | ✗ | ✓ | ✗ | ✓ | ✓ | ✗ | ✗ |
+| HippoRAG2 | ✓ | ✗ | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ |
+| AWM | ✓ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ |
+| ReasoningBank | ✓ | ✓ | ✗ | ✗ | ✗ | ✓ | ✗ | ✓ | ✗ |
+| PlugMem | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+
+*   PlugMem在三个异构基准测试（长周期对话问答、多跳知识检索和Web智能体任务）中未经修改地进行了评估。
+*   结果表明，PlugMem始终优于任务无关的基线模型，并超越了任务特定的记忆设计。
+*   在统一的信息论分析下，PlugMem实现了最高的信息密度，证明了其记忆表示的紧凑性和高效性。
+*   PlugMem在M2K（将工作记忆转化为可重用抽象知识）和KaU（采用知识作为记忆单元）方面表现出色，并全面支持结构化记忆表示（Str.）、精炼的检索策略（Ret.）和检索后推理（Rea.）。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Long-term memory is crucial for large language model (LLM) agents operating in complex environments. However, existing memory designs often suffer from two main issues.
+
+Firstly, many designs are task-specific, limiting their transferability and requiring significant redesign for new applications.
+
+Secondly, task-agnostic approaches tend to be less effective due to low task-relevance of retrieved information or context explosion from retrieving verbose raw memory trajectories instead of abstract knowledge.
+
+## Contribution
+
+*   **Task-Agnostic Plugin Memory Module**: PlugMem can be attached to any LLM agent without task-specific redesign, significantly enhancing its versatility and reusability across diverse applications.
+*   **Knowledge-Centric Memory Graph**: Inspired by cognitive science, PlugMem structures episodic memories into a compact, extensible knowledge graph that explicitly represents both propositional and prescriptive knowledge.
+*   **Efficient Knowledge Retrieval and Reasoning**: By enabling retrieval and reasoning over task-relevant abstract knowledge rather than lengthy raw trajectories, PlugMem significantly improves the efficiency and effectiveness of the memory system.
+*   **Optimized Information Density**: Under a unified information-theoretic analysis, PlugMem achieves the highest information density, indicating a more compact and informative memory representation.
+
+## Method
+
+PlugMem's core methodology revolves around its knowledge-centric memory graph design, which transforms raw experiences into abstract knowledge for efficient organization and retrieval.
+
+### Memory Structuring
+
+1.  **Episodic Memory**: This layer consists of raw, linear records of past interactions and observations, serving as the foundational "ground truth" for the memory graph.
+2.  **Propositional Knowledge**: Context-independent concepts, facts, and world knowledge are stored as "Fact Blocks," which are complete, verifiable statements.
+3.  **Prescriptive Knowledge**: Dynamic "how-to" knowledge for problem-solving is represented as "Workflow Blocks," comprising full action sequences for executing complex tasks.
+
+### Memory Graph Construction
+
+1.  **Concept-Centric Semantic Memory Structuring**: Concepts act as lightweight indices pointing to heavier Proposition payloads, forming a "Concept mentions Proposition" structure.
+2.  **Intent-Centric Procedural Memory Structuring**: User goals (Intents) serve as keys to find holistic Solution blocks (Prescriptions), forming an "Intent solves Prescription" structure.
+3.  **Episodic Memory as the Anchor**: Episodic memory functions as the "ground truth" layer, validating the abstract knowledge graphs and forming a "Knowledge proves Source" structure.
+
+### Memory Retrieval and Reasoning
+
+*   PlugMem leverages its structured knowledge graph for retrieval and reasoning, efficiently identifying the most task-relevant abstract knowledge and avoiding the need to process large volumes of redundant raw memories.
+
+## Comparison with Previous Work
+
+*   **vs. Vanilla Retrieval / RAG**: These methods typically retrieve raw memories or text chunks directly, lacking the ability to transform raw experience into reusable abstract knowledge. This often leads to inefficient retrieval and context explosion. PlugMem, by contrast, structures knowledge as the unit of memory, significantly improving efficiency and relevance.
+*   **vs. GraphRAG**: While GraphRAG also utilizes graphs, it treats entities or text chunks as memory units. PlugMem operates at a higher level of abstraction, using propositional and prescriptive knowledge as memory units, which results in higher information density and more effective reasoning.
+*   **vs. A-Mem / ReasoningBank**: While these methods also focus on knowledge abstraction, PlugMem's memory graph design emphasizes structured, cross-task generalizable knowledge, achieving superior information density under a unified information-theoretic analysis.
+*   **vs. Zep / MemoryOS**: These systems often support episodic memory but have limited capabilities in transforming working memories into reusable, abstract knowledge. PlugMem's M2K (Memory-to-Knowledge) mechanism effectively converts episodic memories into generalizable abstract knowledge.
+
+## Experiments
+
+**Table.** Comparison of representative agentic memory systems.
+
+| Meth. | M2K | KaU | Mech. | Mem. | Agn. |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Str. | Ret. | Rea. | E | S | P |  |  |  |  |
+| Vanilla Retrieval | ✗ | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ | ✗ | ✓ |
+| Vanilla RAG | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✓ |
+| GraphRAG | ✓ | ✗ | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | ✓ ✗ |
+| A-Mem | ✓ | ✓ | ✓ | ✗ | ✗ | ✓ | ✓ | ✗ | ✓ |
+| Zep | ✗ | ✗ | ✓ | ✓ | ✗ | ✓ | ✓ | ✗ | ✗ |
+| MemoryOS | ✗ | ✗ | ✗ | ✓ | ✗ | ✓ | ✓ | ✗ | ✗ |
+| HippoRAG2 | ✓ | ✗ | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ |
+| AWM | ✓ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ |
+| ReasoningBank | ✓ | ✓ | ✗ | ✗ | ✗ | ✓ | ✗ | ✓ | ✗ |
+| PlugMem | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+
+*   PlugMem was evaluated unchanged across three heterogeneous benchmarks: long-horizon conversational question answering, multi-hop knowledge retrieval, and web agent tasks.
+*   The results consistently show that PlugMem outperforms task-agnostic baselines and even exceeds task-specific memory designs.
+*   Under a unified information-theoretic analysis, PlugMem achieved the highest information density, demonstrating the compactness and efficiency of its memory representation.
+*   PlugMem excels in M2K (Memory-to-Knowledge transformation) and KaU (Knowledge as Unit), fully supporting structured memory representations (Str.), refined retrieval strategies (Ret.), and post-retrieval reasoning (Rea.).

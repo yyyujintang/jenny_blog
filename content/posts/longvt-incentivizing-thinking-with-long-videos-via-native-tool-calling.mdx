@@ -1,0 +1,139 @@
+---
+title: "LongVT: Incentivizing \"Thinking with Long Videos\" via Native Tool Calling"
+date: 2026-04-25
+paper_date: 2025-11-25
+excerpt: "针对长视频推理中大型多模态模型幻觉问题，LongVT引入工具调用实现全局到局部的多模态思维链。"
+excerpt_en: "LongVT addresses hallucinations in long-form video reasoning for LMMs by introducing an agentic framework with native tool calling for global-to-local multimodal Chain-of-Tool-Thought."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Multimodal
+  - Procedural
+paper_id: longvt-incentivizing-thinking-with-long-videos-via-native-tool-calling
+paper_venue: "CVPR26"
+paper_link: "https://arxiv.org/abs/2511.20785"
+auto_generated: true
+notes_hash: 7251d34cb3b1ec6d
+---
+
+## Motivation
+
+大型多模态模型（LMMs）在视频推理方面展现出巨大潜力，但处理长视频时，由于证据稀疏且时间分散，容易产生幻觉。
+
+人类理解长视频的方式通常是先全局浏览，然后针对细节检查相关片段。我们希望AI模型也能模仿这种“思考方式”。
+
+## Contribution
+
+- **代理框架 (Agentic Framework)**: 引入LongVT，一个端到端的代理框架，通过交错的多模态工具思维链（Multimodal Chain-of-Tool-Thought）实现“用长视频思考”。
+- **原生工具调用 (Native Tool Calling)**: 利用LMMs固有的时间定位能力作为原生视频裁剪工具，实现对特定视频片段的放大和更细粒度帧的重采样。
+- **全局到局部推理循环 (Global-to-Local Reasoning Loop)**: 构建一个持续的推理循环，直到答案在检索到的视觉证据中得到充分验证。
+- **VideoSIAH 数据集 (VideoSIAH Dataset)**: 针对长视频推理任务中细粒度问答数据稀缺的问题，我们策划并发布了VideoSIAH数据套件，用于训练和评估。
+- **三阶段训练策略 (Three-stage Training Strategy)**: 设计了一个精心规划的三阶段训练策略，包括工具集成冷启动监督微调、代理强化学习和代理强化微调。
+
+## Method
+
+### LongVT 代理框架
+
+1.  **全局概览 (Global Skimming)**: LMMs首先对整个长视频进行初步分析，识别潜在的相关时间段。
+2.  **工具调用 (Tool Calling)**: 利用LMMs自身的时间定位能力作为“视频裁剪工具”，根据全局分析结果选择并裁剪出更具体的视频片段。
+3.  **局部细化 (Local Refinement)**: 对裁剪出的片段进行更细粒度的帧重采样和分析，以获取详细信息。
+4.  **迭代推理 (Iterative Reasoning)**: 这个全局到局部的推理循环会持续进行，直到模型能够将答案充分地基于检索到的视觉证据。
+
+### VideoSIAH 数据集
+
+1.  **训练数据集 (Training Dataset)**: 包含247.9K样本用于工具集成冷启动监督微调，1.6K样本用于代理强化学习，以及15.4K样本用于代理强化微调。
+2.  **评估基准 (Evaluation Benchmark)**: 包含1,280个问答对，通过半自动化数据管道和人工验证精心策划。
+
+### 训练策略
+
+1.  **工具集成冷启动监督微调 (Tool-integrated Cold-start Supervised Fine-tuning)**: 利用大规模数据对模型进行初步训练，使其理解并使用工具。
+2.  **代理强化学习 (Agentic Reinforcement Learning)**: 通过强化学习进一步优化模型的代理行为和决策能力。
+3.  **代理强化微调 (Agentic Reinforcement Fine-tuning)**: 针对特定代理任务进行精细化微调，提升其在长视频推理中的表现。
+
+## Comparison with Previous Work
+
+- **vs. 传统LMMs (Traditional LMMs)**: 现有LMMs在处理长视频时容易产生幻觉，因为它们难以有效处理稀疏且时间分散的证据。LongVT通过引入工具调用和迭代的全局到局部推理，显著缓解了这一问题。
+- **vs. 文本Chain-of-Thought (Textual Chain-of-Thought)**: 传统的文本思维链在视频推理中虽然有效，但缺乏直接与视频内容交互的能力。LongVT引入了多模态工具思维链，允许模型直接“操作”视频，进行更深层次的视觉证据检索。
+- **vs. 缺乏细粒度QA数据的方法 (Methods lacking fine-grained QA data)**: 许多现有方法受限于长视频细粒度QA数据的稀缺性。LongVT通过策划和发布VideoSIAH数据集，为训练和评估提供了宝贵的资源。
+
+## Experiments
+
+**Table.** VideoSIAH数据集的训练和评估数据组成。
+
+| Split | Source | Purpose | Samples | Total |
+| --- | --- | --- | --- | --- |
+| SFT (w/o tool) | LongVideo-Reason CoT [4] | Reasoning-augmented Open-ended QA | 5,238 | 228,835 |
+|  | Video-R1 CoT [8] | Reasoning-augmented Video QA | 165,575 |  |
+|  | Image-based CoT | Reasoning-augmented Image QA | 58,022 |  |
+| SFT (w/ tool) | Gemini-distilled iMCoTT | Tool-augmented Open-ended QA | 12,766 | 19,161 |
+|  | Qwen-distilled iMCoTT | Tool-augmented Temporal Grounding | 6,395 |  |
+| RL | Gemini-distilled QAs | Open-ended QA over Long Videos | 1,667 | 17,020 |
+| RFT | Self-distilled iMCoTT | Agentic Behaviors | 15,353 |  |
+
+- LongVT在四个具有挑战性的长视频理解和推理基准上始终优于现有强大的基线模型。
+- 精心设计的三阶段训练策略对于LongVT的卓越性能至关重要。
+- VideoSIAH数据集的引入有效解决了长视频细粒度问答数据稀缺的问题，促进了模型的训练和评估。
+- LongVT通过其代理框架和原生工具调用，显著提升了LMMs在长视频推理中的证据接地能力，减少了幻觉。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Large multimodal models (LMMs) show great promise for video reasoning with textual Chain-of-Thought, but they are prone to hallucinations, especially when processing long-form videos where evidence is sparse and temporally dispersed.
+
+Inspired by how humans comprehend long videos—by first skimming globally and then examining relevant clips for details—we aim to enable AI models to emulate this "thinking" process.
+
+## Contribution
+
+- **Agentic Framework**: We introduce LongVT, an end-to-end agentic framework that enables "Thinking with Long Videos" via interleaved Multimodal Chain-of-Tool-Thought.
+- **Native Tool Calling**: We exploit LMMs' inherent temporal grounding ability as a native video cropping tool to zoom in on specific video clips and resample finer-grained video frames.
+- **Global-to-Local Reasoning Loop**: This reasoning loop continues until answers are fully grounded in retrieved visual evidence.
+- **VideoSIAH Data Suite**: To address the scarcity of fine-grained question-answering (QA) data for long video reasoning, we curate and release VideoSIAH to facilitate both training and evaluation.
+- **Three-stage Training Strategy**: A meticulously designed three-stage training strategy is employed, including tool-integrated cold-start supervised fine-tuning, agentic reinforcement learning, and agentic reinforcement fine-tuning.
+
+## Method
+
+### LongVT Agentic Framework
+
+1.  **Global Skimming**: The LMM initially analyzes the entire long video to identify potentially relevant temporal segments.
+2.  **Tool Calling**: Leveraging the LMM's intrinsic temporal grounding capability, it acts as a "video cropping tool" to select and crop more specific video clips based on the global analysis.
+3.  **Local Refinement**: Finer-grained video frames are resampled and analyzed from the cropped segments to extract detailed information.
+4.  **Iterative Reasoning**: This global-to-local reasoning loop continues iteratively until the model's answers are robustly grounded in the retrieved visual evidence.
+
+### VideoSIAH Data Suite
+
+1.  **Training Dataset**: Comprises 247.9K samples for tool-integrated cold-start supervised fine-tuning, 1.6K samples for agentic reinforcement learning, and 15.4K samples for agentic reinforcement fine-tuning.
+2.  **Evaluation Benchmark**: Consists of 1,280 QA pairs meticulously curated through a semi-automatic data pipeline with human-in-the-loop validation.
+
+### Training Strategy
+
+1.  **Tool-integrated Cold-start Supervised Fine-tuning**: Initial training on a large dataset to enable the model to understand and utilize tools.
+2.  **Agentic Reinforcement Learning**: Further optimization of the model's agentic behaviors and decision-making capabilities through reinforcement learning.
+3.  **Agentic Reinforcement Fine-tuning**: Fine-tuning for specific agentic tasks to enhance performance in long video reasoning.
+
+## Comparison with Previous Work
+
+- **vs. Traditional LMMs**: Existing LMMs struggle with hallucinations in long videos due to difficulties in processing sparse and temporally dispersed evidence. LongVT mitigates this through tool calling and iterative global-to-local reasoning.
+- **vs. Textual Chain-of-Thought**: While effective, traditional textual Chain-of-Thought lacks direct interaction with video content. LongVT's Multimodal Chain-of-Tool-Thought allows the model to "operate" on videos for deeper visual evidence retrieval.
+- **vs. Methods lacking fine-grained QA data**: Many prior approaches are limited by the scarcity of fine-grained QA data for long videos. LongVT addresses this by curating and releasing the VideoSIAH dataset, providing a valuable resource for training and evaluation.
+
+## Experiments
+
+**Table.** Composition of the VideoSIAH dataset for training and evaluation.
+
+| Split | Source | Purpose | Samples | Total |
+| --- | --- | --- | --- | --- |
+| SFT (w/o tool) | LongVideo-Reason CoT [4] | Reasoning-augmented Open-ended QA | 5,238 | 228,835 |
+|  | Video-R1 CoT [8] | Reasoning-augmented Video QA | 165,575 |  |
+|  | Image-based CoT | Reasoning-augmented Image QA | 58,022 |  |
+| SFT (w/ tool) | Gemini-distilled iMCoTT | Tool-augmented Open-ended QA | 12,766 | 19,161 |
+|  | Qwen-distilled iMCoTT | Tool-augmented Temporal Grounding | 6,395 |  |
+| RL | Gemini-distilled QAs | Open-ended QA over Long Videos | 1,667 | 17,020 |
+| RFT | Self-distilled iMCoTT | Agentic Behaviors | 15,353 |  |
+
+- LongVT consistently outperforms existing strong baselines across four challenging long-video understanding and reasoning benchmarks.
+- The meticulously designed three-stage training strategy is crucial for LongVT's superior performance.
+- The introduction of the VideoSIAH dataset effectively addresses the scarcity of fine-grained QA data for long videos, facilitating model training and evaluation.
+- LongVT significantly enhances LMMs' ability to ground answers in visual evidence and reduce hallucinations in long video reasoning through its agentic framework and native tool calling.

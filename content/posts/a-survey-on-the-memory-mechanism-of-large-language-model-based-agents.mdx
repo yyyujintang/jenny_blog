@@ -1,0 +1,172 @@
+---
+title: "A Survey on the Memory Mechanism of Large Language Model based Agents"
+date: 2026-04-24
+paper_date: 2024-04-21
+excerpt: "综述LLM Agent的记忆机制，系统梳理设计、评估方法及应用，并指出未来研究方向"
+excerpt_en: "A comprehensive survey on memory mechanisms for LLM-based agents, systematically reviewing design, evaluation, applications, and future directions."
+tags:
+  - paper-notes
+  - Survey
+paper_id: a-survey-on-the-memory-mechanism-of-large-language-model-based-agents
+paper_link: "https://arxiv.org/abs/2404.13501"
+auto_generated: true
+notes_hash: b132f6c0e4e89d0a
+---
+
+## Motivation
+
+LLM-based agents因其自我演化能力，在解决需要长期复杂交互的现实世界问题中备受关注。
+支持agent与环境交互的关键组件是其记忆机制。
+尽管现有研究提出了许多有前景的记忆机制，但它们分散在不同论文中，缺乏系统性综述来总结和比较这些工作。
+
+这种分散性阻碍了对通用有效设计模式的抽象，从而未能有效启发未来的研究。
+因此，需要一个全面的综述来填补这一空白，系统地梳理LLM-based agents的记忆机制。
+
+## Contribution
+
+*   **系统性综述**: 首次全面综述LLM-based agents的记忆机制，涵盖“是什么”和“为什么需要”记忆。
+*   **设计与评估框架**: 系统回顾如何设计和评估记忆模块，抽象出通用设计模式。
+*   **应用场景分析**: 呈现记忆模块在多种agent应用中的重要作用。
+*   **局限性与未来方向**: 分析现有工作的局限性，并提出重要的未来研究方向。
+*   **资源库**: 创建并维护一个GitHub仓库 (https://github.com/nuster1128/LLM_Agent_Memory_Survey)，以跟进该领域的最新进展。
+
+## Method
+
+本综述采用以下结构和方法来系统地分析LLM-based agents的记忆机制：
+
+1.  **定义与必要性**: 首先探讨LLM-based agents中记忆的定义及其重要性。
+2.  **记忆模块设计**:
+    *   **记忆来源 (Memory Sources)**: 讨论agent可以利用的记忆信息来源，包括内部、跨试验和外部知识。
+    *   **记忆形式 (Memory Forms)**: 分析记忆的表示形式，如文本形式（完整、近期、检索、外部）和参数形式（微调、编辑）。
+    *   **记忆操作 (Memory Operations)**: 审视记忆的写入、管理（合并、反思、遗忘）和读取机制。
+3.  **记忆模块评估**: 探讨评估记忆模块有效性的方法和指标。
+4.  **应用场景**: 展示记忆模块在各种LLM-based agent应用中的具体实例和关键作用。
+5.  **挑战与未来方向**: 总结现有工作的局限性，并展望未来的研究机遇和方向。
+
+## Comparison with Previous Work
+
+*   **vs. 现有零散研究**: 现有工作大多专注于提出单一或特定类型的记忆机制，缺乏对整个领域的系统性梳理。本综述通过整合这些分散的研究，提供了一个统一的视角。
+*   **vs. 缺乏设计模式抽象**: 之前的研究未能从宏观层面抽象出通用且有效的记忆设计模式。本综述旨在填补这一空白，为未来的设计提供指导。
+*   **vs. 缺乏评估方法总结**: 现有文献中对记忆模块的评估方法没有进行系统性总结。本综述将评估方法纳入框架，帮助研究者更好地衡量记忆机制的效果。
+*   **vs. 缺乏未来方向指引**: 之前的研究通常只关注自身方法的改进，而本综述通过分析现有局限性，明确指出了该领域重要的未来研究方向。
+
+## Experiments
+
+**Table.** 记忆来源总结。✓表示模型采用了相应来源，×表示未采用。
+
+| Models | Inside-trial Information | Cross-trial Information | External Knowledge \bigstrut |
+| :--- | :--- | :--- | :--- |
+| MemoryBank [6] | ✓ | × | ×\bigstrut[t] |
+| RET-LLM [7] | ✓ | × | ✓ |
+| ChatDB [96] | ✓ | × | ✓ |
+| TiM [97] | ✓ | × | × |
+| SCM [98] | ✓ | × | × |
+| Voyager [99] | ✓ | × | × |
+| MemGPT [100] | ✓ | × | × |
+| MemoChat [94] | ✓ | × | × |
+| MPC [101] | ✓ | × | × |
+| Generative Agents [83] | ✓ | × | × |
+| RecMind [102] | ✓ | × | ✓ |
+| Retroformer [103] | ✓ | ✓ | ✓ |
+| ExpeL [82] | ✓ | ✓ | ✓ |
+| Synapse [91] | ✓ | ✓ | × |
+| GITM [93] | ✓ | ✓ | ✓ |
+| ReAct [104] | ✓ | × | ✓ |
+| Reflexion [5] | ✓ | ✓ | ✓ |
+| RecAgent [95] | ✓ | × | × |
+| Character-LLM [105] | ✓ | × | ✓ |
+| MAC [106] | ✓ | × | × |
+| Huatuo [107] | ✓ | × | ✓ |
+| ChatDev [1] | ✓ | × | × |
+| InteRecAgent [108] | ✓ | × | ✓ |
+| MetaAgents [109] | ✓ | × | × |
+| TPTU [110, 111] | ✓ | × | ✓ |
+| MetaGPT [112] | ✓ | ✓ | × |
+| S3 [2] | ✓ | × | × |
+| InvestLM [113] | ✓ | × | ✓\bigstrut[b] |
+
+*   本综述并未进行新的实验，而是对现有文献中的记忆机制进行了分类和总结。
+*   上表展示了不同LLM-based agent模型在记忆来源上的采用情况。
+*   绝大多数模型都利用了“Inside-trial Information”（试验内信息），这表明短期或当前上下文记忆是基础。
+*   “Cross-trial Information”（跨试验信息）和“External Knowledge”（外部知识）的采用率相对较低，但一些先进模型如Retroformer、ExpeL和GITM则同时利用了这三种记忆来源，暗示了更复杂的记忆管理可能带来更好的性能。
+*   *(基于标题与领域常识推断,未读全文)*
+
+<!-- LANG:EN -->
+
+## Motivation
+
+LLM-based agents have garnered significant attention due to their self-evolving capabilities, which are crucial for solving real-world problems requiring long-term and complex agent-environment interactions.
+The memory mechanism is a key component enabling these agent-environment interactions.
+While many promising memory mechanisms have been proposed, they are scattered across various papers, lacking a systematic review to summarize and compare them holistically.
+
+This fragmentation hinders the abstraction of common and effective design patterns, thus failing to inspire future research effectively.
+Therefore, a comprehensive survey is needed to bridge this gap by systematically organizing the memory mechanisms of LLM-based agents.
+
+## Contribution
+
+*   **Systematic Survey**: The first comprehensive survey on memory mechanisms for LLM-based agents, covering "what is" and "why do we need" memory.
+*   **Design and Evaluation Framework**: A systematic review of how to design and evaluate memory modules, abstracting common design patterns.
+*   **Application Scenario Analysis**: Presents the significant role of memory modules in various agent applications.
+*   **Limitations and Future Directions**: Analyzes the limitations of existing work and outlines important future research directions.
+*   **Repository**: Creation and maintenance of a GitHub repository (https://github.com/nuster1128/LLM_Agent_Memory_Survey) to keep up with the latest advancements in the field.
+
+## Method
+
+This survey adopts the following structure and methodology to systematically analyze the memory mechanisms of LLM-based agents:
+
+1.  **Definition and Necessity**: Initially discusses the definition of memory in LLM-based agents and its importance.
+2.  **Memory Module Design**:
+    *   **Memory Sources**: Explores the sources of memory information an agent can leverage, including inside-trial, cross-trial, and external knowledge.
+    *   **Memory Forms**: Analyzes the representation forms of memory, such as textual forms (complete, recent, retrieved, external) and parametric forms (fine-tuning, editing).
+    *   **Memory Operations**: Examines mechanisms for memory writing, management (merging, reflection, forgetting), and reading.
+3.  **Memory Module Evaluation**: Discusses methods and metrics for evaluating the effectiveness of memory modules.
+4.  **Application Scenarios**: Showcases specific examples and the critical role of memory modules in various LLM-based agent applications.
+5.  **Challenges and Future Directions**: Summarizes the limitations of existing work and provides insights into future research opportunities and directions.
+
+## Comparison with Previous Work
+
+*   **vs. Existing Dispersed Studies**: Most existing works focus on proposing single or specific types of memory mechanisms, lacking a systematic overview of the entire field. This survey integrates these dispersed studies to provide a unified perspective.
+*   **vs. Lack of Design Pattern Abstraction**: Previous research has failed to abstract general and effective memory design patterns at a macroscopic level. This survey aims to fill this gap, guiding future designs.
+*   **vs. Lack of Evaluation Method Summarization**: There has been no systematic summary of evaluation methods for memory modules in prior literature. This survey incorporates evaluation methods into its framework, helping researchers better measure the effectiveness of memory mechanisms.
+*   **vs. Lack of Future Direction Guidance**: Previous studies typically focus only on improving their own methods. In contrast, this survey identifies important future research directions in the field by analyzing existing limitations.
+
+## Experiments
+
+**Table.** Summarization of the memory sources. ✓ indicates the corresponding source is adopted, × indicates it is not.
+
+| Models | Inside-trial Information | Cross-trial Information | External Knowledge \bigstrut |
+| :--- | :--- | :--- | :--- |
+| MemoryBank [6] | ✓ | × | ×\bigstrut[t] |
+| RET-LLM [7] | ✓ | × | ✓ |
+| ChatDB [96] | ✓ | × | ✓ |
+| TiM [97] | ✓ | × | × |
+| SCM [98] | ✓ | × | × |
+| Voyager [99] | ✓ | × | × |
+| MemGPT [100] | ✓ | × | × |
+| MemoChat [94] | ✓ | × | × |
+| MPC [101] | ✓ | × | × |
+| Generative Agents [83] | ✓ | × | × |
+| RecMind [102] | ✓ | × | ✓ |
+| Retroformer [103] | ✓ | ✓ | ✓ |
+| ExpeL [82] | ✓ | ✓ | ✓ |
+| Synapse [91] | ✓ | ✓ | × |
+| GITM [93] | ✓ | ✓ | ✓ |
+| ReAct [104] | ✓ | × | ✓ |
+| Reflexion [5] | ✓ | ✓ | ✓ |
+| RecAgent [95] | ✓ | × | × |
+| Character-LLM [105] | ✓ | × | ✓ |
+| MAC [106] | ✓ | × | × |
+| Huatuo [107] | ✓ | × | ✓ |
+| ChatDev [1] | ✓ | × | × |
+| InteRecAgent [108] | ✓ | × | ✓ |
+| MetaAgents [109] | ✓ | × | × |
+| TPTU [110, 111] | ✓ | × | ✓ |
+| MetaGPT [112] | ✓ | ✓ | × |
+| S3 [2] | ✓ | × | × |
+| InvestLM [113] | ✓ | × | ✓\bigstrut[b] |
+
+*   This survey does not present new experiments but rather categorizes and summarizes memory mechanisms from existing literature.
+*   The table above illustrates the adoption of different memory sources across various LLM-based agent models.
+*   The vast majority of models utilize "Inside-trial Information," indicating that short-term or current context memory is fundamental.
+*   The adoption rates for "Cross-trial Information" and "External Knowledge" are relatively lower, but advanced models like Retroformer, ExpeL, and GITM leverage all three memory sources, suggesting that more complex memory management may lead to superior performance.
+*   *(Inferred from title/venue; full paper not read.)*

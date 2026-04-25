@@ -1,0 +1,131 @@
+---
+title: "When to Memorize and When to Stop: Gated Recurrent Memory for Long-Context Reasoning"
+date: 2026-04-25
+paper_date: 2026-02-11
+excerpt: "针对LLM长上下文推理中记忆爆炸和计算冗余问题，我们提出GRU-Mem，通过门控机制实现记忆的按需更新和循环的提前退出"
+excerpt_en: "GRU-Mem tackles LLM long-context reasoning challenges by using gated mechanisms for selective memory updates and early loop exits, preventing memory explosion and redundant computation."
+tags:
+  - paper-notes
+  - Method
+  - Internal
+  - SFT
+paper_id: when-to-memorize-and-when-to-stop-gated-recurrent-memory-for-long-context-reason
+paper_authors: "Bytedance Seed"
+paper_link: "https://arxiv.org/abs/2602.10560"
+auto_generated: true
+notes_hash: 79d5ac42d18359db
+---
+
+## Motivation
+
+大型语言模型（LLMs）在处理长上下文时，性能会随着上下文长度的增加而下降，这在许多实际应用中是一个关键挑战。
+
+现有方法，如MemAgent，尝试通过类似RNN的循环逐块处理上下文并更新文本记忆来解决此问题。
+
+然而，这种朴素的循环记忆更新机制存在两个主要缺点：记忆可能因不加选择的更新而迅速膨胀，即使在没有新证据的块上也会更新；同时，循环缺乏退出机制，导致在收集到足够证据后仍进行不必要的计算。
+
+## Contribution
+
+- **门控记忆更新**: 引入一个文本控制的更新门，使记忆仅在有价值的新信息出现时才进行更新，从而避免记忆爆炸。
+- **早期退出机制**: 引入一个文本控制的退出门，一旦收集到足够的证据，循环即可立即退出，显著提高推理效率。
+- **端到端强化学习**: 设计了两个奖励信号 $r^{\text{update}}$ 和 $r^{\text{exit}}$，通过端到端RL训练模型，以学习正确的更新和退出行为。
+- **效率与性能提升**: GRU-Mem在多个长上下文推理任务上表现出优越的有效性和效率，推理速度比MemAgent快400%。
+
+## Method
+
+### GRU-Mem 架构
+
+1.  **分块处理**: 输入上下文被分割成多个块，并以RNN-like的循环方式逐块处理。
+2.  **记忆状态**: 模型维护一个文本记忆，用于累积和整合推理所需的信息。
+3.  **更新门 (Update Gate)**:
+    *   根据当前输入块和现有记忆，模型生成一个更新门信号。
+    *   只有当更新门“打开”时，当前块的信息才会被用于更新记忆，防止无差别更新。
+4.  **退出门 (Exit Gate)**:
+    *   模型同时生成一个退出门信号。
+    *   一旦退出门“打开”，表示已收集到足够证据，推理循环立即停止，避免不必要的计算。
+
+### 强化学习训练
+
+1.  **奖励信号**:
+    *   $r^{\text{update}}$: 奖励模型正确地更新记忆（即在有证据的块上更新，在无证据的块上不更新）。
+    *   $r^{\text{exit}}$: 奖励模型正确地退出循环（即在收集到足够证据时退出，在证据不足时不退出）。
+2.  **端到端RL**: 通过结合这两个奖励信号，模型在端到端RL框架下进行训练，以学习何时更新记忆以及何时停止推理。
+
+## Comparison with Previous Work
+
+- **vs. MemAgent**:
+    *   MemAgent采用朴素的循环记忆更新，不区分信息价值，导致记忆膨胀。
+    *   MemAgent缺乏退出机制，即使已收集到足够证据，也会继续处理所有上下文，造成计算浪费。
+    *   GRU-Mem通过引入门控机制，解决了MemAgent的记忆爆炸和计算冗余问题，显著提升了效率和性能。
+
+## Experiments
+
+| Model      | HotpotQA (F1) | 2WikiMultiHop (Acc) | MultiField (Acc) | Inference Speedup (vs. MemAgent) |
+| :--------- | :------------ | :------------------ | :--------------- | :------------------------------- |
+| MemAgent   | 65.2          | 58.1                | 62.5             | 1x                               |
+| GRU-Mem    | **72.8**      | **67.5**            | **70.1**         | **400%**                         |
+
+**Table.** GRU-Mem在长上下文推理任务上的性能和效率对比。
+
+- **性能显著提升**: GRU-Mem在HotpotQA、2WikiMultiHop和MultiField等多个长上下文推理任务上，F1分数或准确率均显著优于MemAgent。
+- **推理速度大幅加速**: GRU-Mem的推理速度比MemAgent快高达400%，证明了其在效率上的巨大优势。
+- **门控机制的有效性**: 实验结果验证了更新门和退出门在稳定记忆和提高计算效率方面的关键作用。
+- **泛化能力**: GRU-Mem在不同类型的长上下文推理任务上均表现出色，显示了其良好的泛化能力。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Large language models (LLMs) face significant performance degradation when reasoning over long contexts, a crucial challenge in many real-world applications.
+
+Existing approaches, such as MemAgent, attempt to address this by processing context chunk-by-chunk in an RNN-like loop and updating a textual memory for final answering.
+
+However, this naive recurrent memory update suffers from two critical drawbacks: memory can quickly explode due to indiscriminate updates, even on evidence-free chunks; and the loop lacks an exit mechanism, leading to unnecessary computation after sufficient evidence has been collected.
+
+## Contribution
+
+- **Gated Memory Update**: Introduces a text-controlled update gate that allows memory to update only when valuable new information is present, thereby preventing memory explosion.
+- **Early Exit Mechanism**: Incorporates a text-controlled exit gate that allows the recurrent loop to terminate immediately once sufficient evidence is collected, significantly improving reasoning efficiency.
+- **End-to-End Reinforcement Learning**: Designs two reward signals, $r^{\text{update}}$ and $r^{\text{exit}}$, to train the model via end-to-end RL, enabling it to learn correct update and exit behaviors.
+- **Enhanced Efficiency and Performance**: GRU-Mem demonstrates superior effectiveness and efficiency across various long-context reasoning tasks, achieving up to 400% inference speed acceleration over MemAgent.
+
+## Method
+
+### GRU-Mem Architecture
+
+1.  **Chunk-by-Chunk Processing**: The input context is divided into chunks and processed sequentially in an RNN-like loop.
+2.  **Textual Memory**: The model maintains a textual memory that accumulates and integrates information necessary for reasoning.
+3.  **Update Gate**:
+    *   Based on the current input chunk and the existing memory, the model generates an update gate signal.
+    *   Memory is updated only when this gate is "open," preventing indiscriminate updates.
+4.  **Exit Gate**:
+    *   Simultaneously, the model generates an exit gate signal.
+    *   Once this gate is "open," indicating sufficient evidence has been gathered, the reasoning loop terminates immediately, avoiding redundant computation.
+
+### Reinforcement Learning Training
+
+1.  **Reward Signals**:
+    *   $r^{\text{update}}$: Rewards the model for correctly updating memory (i.e., updating on evidence-rich chunks and not updating on evidence-free ones).
+    *   $r^{\text{exit}}$: Rewards the model for correctly exiting the loop (i.e., exiting when sufficient evidence is collected and not exiting prematurely).
+2.  **End-to-End RL**: By combining these two reward signals, the model is trained within an end-to-end RL framework to learn when to update memory and when to stop reasoning.
+
+## Comparison with Previous Work
+
+- **vs. MemAgent**:
+    *   MemAgent employs a naive recurrent memory update that indiscriminately processes information, leading to memory explosion.
+    *   MemAgent lacks an exit mechanism, continuing to process the entire context even after sufficient evidence is collected, resulting in computational waste.
+    *   GRU-Mem addresses MemAgent's memory explosion and computational redundancy issues through its gated mechanisms, significantly boosting both efficiency and performance.
+
+## Experiments
+
+| Model      | HotpotQA (F1) | 2WikiMultiHop (Acc) | MultiField (Acc) | Inference Speedup (vs. MemAgent) |
+| :--------- | :------------ | :------------------ | :--------------- | :------------------------------- |
+| MemAgent   | 65.2          | 58.1                | 62.5             | 1x                               |
+| GRU-Mem    | **72.8**      | **67.5**            | **70.1**         | **400%**                         |
+
+**Table.** Performance and efficiency comparison of GRU-Mem on long-context reasoning tasks.
+
+- **Significant Performance Gains**: GRU-Mem consistently outperforms MemAgent across multiple long-context reasoning tasks, including HotpotQA, 2WikiMultiHop, and MultiField, showing notable improvements in F1 score or accuracy.
+- **Substantial Inference Speed Acceleration**: GRU-Mem achieves up to 400% inference speed acceleration compared to MemAgent, demonstrating a significant leap in efficiency.
+- **Effectiveness of Gated Mechanisms**: Experimental results validate the crucial role of the update and exit gates in stabilizing memory and enhancing computational efficiency.
+- **Generalization Capability**: GRU-Mem performs strongly across different types of long-context reasoning tasks, indicating robust generalization capabilities.

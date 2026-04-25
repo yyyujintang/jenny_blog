@@ -1,0 +1,173 @@
+---
+title: "Optimus-1: Hybrid Multimodal Memory Empowered Agents Excel in Long-Horizon Tasks"
+date: 2026-04-24
+paper_date: 2024-08-07
+excerpt: "Optimus-1通过混合多模态记忆模块，使AI智能体在开放世界长周期任务中表现卓越"
+excerpt_en: "Optimus-1 leverages a Hybrid Multimodal Memory module to enable AI agents to excel in long-horizon tasks within open-world environments."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Multimodal
+paper_id: optimus-1-hybrid-multimodal-memory-empowered-agents-excel-in-long-horizon-tasks
+paper_venue: "NeurIPS24"
+paper_link: "https://arxiv.org/abs/2408.03615"
+paper_code: "https://github.com/JiuTian-VL/Optimus-1"
+auto_generated: true
+notes_hash: 6b559d19e1b8711c
+---
+
+## Motivation
+
+构建一个通用型智能体是人工智能领域长期以来的愿景。现有智能体在许多领域取得了显著进展，但在开放世界中完成长周期任务时仍面临挑战。
+
+我们认为这主要是因为智能体缺乏必要的“世界知识”和“多模态经验”，这些是指导智能体完成各种长周期任务的关键。
+
+## Contribution
+
+- **分层有向知识图谱 (Hierarchical Directed Knowledge Graph)**：将世界知识转化为结构化的知识图谱，使智能体能够显式地表示和学习世界知识。
+- **抽象多模态经验池 (Abstracted Multimodal Experience Pool)**：总结历史信息，为智能体的in-context learning提供丰富的参考。
+- **知识引导规划器 (Knowledge-guided Planner)**：结合上述混合多模态记忆模块，增强智能体在面对长周期任务时的规划能力。
+- **经验驱动反思器 (Experience-Driven Reflector)**：结合上述混合多模态记忆模块，提升智能体在面对长周期任务时的反思能力。
+- **Optimus-1智能体**: 基于混合多模态记忆模块构建的多模态智能体，在Minecraft等复杂环境中表现出色。
+
+## Method
+
+Optimus-1的核心在于其**混合多模态记忆模块 (Hybrid Multimodal Memory module)**，该模块包含两个主要组件：
+
+### 1. 知识表示与学习
+
+1.  **世界知识转化**: 将原始世界知识转化为**分层有向知识图谱 (Hierarchical Directed Knowledge Graph)**。
+2.  **显式表示**: 知识图谱允许智能体以结构化的方式显式地表示和存储世界知识。
+3.  **知识学习**: 智能体可以从这个图谱中学习和推理，以指导其行为。
+
+### 2. 经验总结与参考
+
+1.  **历史信息总结**: 将智能体的历史交互信息和经验总结为**抽象多模态经验池 (Abstracted Multimodal Experience Pool)**。
+2.  **丰富参考**: 经验池为智能体提供丰富的多模态参考，用于in-context learning。
+3.  **指导决策**: 智能体可以检索并利用这些经验来指导其在长周期任务中的规划和行动。
+
+### 3. 智能体架构
+
+1.  **Optimus-1**: 在混合多模态记忆模块之上，构建了一个完整的Optimus-1多模态智能体。
+2.  **知识引导规划器 (Knowledge-guided Planner)**: 利用知识图谱进行更有效的任务规划。
+3.  **经验驱动反思器 (Experience-Driven Reflector)**: 利用经验池进行任务反思和学习，以改进未来的行为。
+
+## Comparison with Previous Work
+
+- **vs. 现有智能体**: 现有智能体在开放世界长周期任务中表现不佳，主要原因在于缺乏必要的“世界知识”和“多模态经验”。Optimus-1通过引入混合多模态记忆模块，显式地解决了这些问题。
+- **vs. GPT-4V基线**: Optimus-1在多模态大语言模型（MLLMs）作为骨干网络时，通过其记忆模块展现出强大的泛化能力，在许多任务上超越了GPT-4V基线。
+- **vs. 其他基线 (如DEPS, Jarvis-1)**: Optimus-1在Minecraft等长周期任务基准测试中显著优于所有现有智能体，并在许多任务上展现出接近人类水平的表现。
+
+## Experiments
+
+**Table. Optimus-1在长周期任务基准测试上的主要结果。我们报告了每个任务组的平均成功率（SR）、平均步数（AS）和平均时间（AT）。**
+
+| Group | Metric | GPT-3.5 | GPT-4V | DEPS | Jarvis-1 | Optimus-1 | Human-level |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Wood | SR | 40.16 | 41.42 | 77.01 | 93.76 | 98.60 | 100.00 |
+| AT | 56.39 | 55.15 | 85.53 | 67.76 | 47.09 | 31.08 |
+| AS | 1127.78 | 1103.04 | 1710.61 | 1355.25 | 841.94 | 621.59 |
+| Stone | SR | 20.40 | 20.89 | 48.52 | 89.20 | 92.35 | 100.00 |
+| AT | 135.71 | 132.77 | 138.71 | 141.50 | 129.94 | 80.85 |
+| AS | 2714.21 | 2655.47 | 2574.30 | 2830.05 | 2518.88 | 1617.00 |
+| Iron | SR | 0.00 | 0.00 | 16.37 | 36.15 | 46.69 | 86.00 |
+| AT | + | + | 944.61 | 722.78 | 651.33 | 434.38 |
+| AS | + | + | 8892.24 | 8455.51 | 6017.85 | 5687.60 |
+| Gold | SR | 0.00 | 0.00 | 0.00 | 7.20 | 8.51 | 17.31 |
+| AT | + | + | + | 787.37 | 726.35 | 557.08 |
+| AS | + | + | + | 15747.13 | 15527.07 | 13141.60 |
+| Diamond | SR | 0.00 | 0.00 | 0.60 | 8.98 | 11.61 | 16.98 |
+| AT | + | + | 1296.96 | 1255.06 | 1150.98 | 744.82 |
+| AS | + | + | 23939.30 | 25101.25 | 23019.64 | 16237.54 |
+| Redstone | SR | 0.00 | 0.00 | 0.00 | 16.31 | 25.02 | 33.27 |
+| AT | + | + | + | 1070.42 | 932.50 | 617.89 |
+| AS | + | + | + | 17408.40 | 12709.99 | 12357.00 |
+| Armor | SR | 0.00 | 0.00 | 9.98 | 15.82 | 19.47 | 28.48 |
+| AT | + | + | 997.59 | 924.60 | 824.53 | 551.30 |
+| AS | + | + | 17951.95 | 16492.96 | 16350.56 | 11026.00 |
+| Overall | SR | 0.00 | 0.00 | 5.39 | 16.89 | 22.26 | 36.41 |
+
+- **显著超越SOTA**: Optimus-1在所有长周期任务基准测试中显著优于所有现有智能体，尤其是在Wood和Stone等任务组中，成功率接近人类水平。
+- **接近人类水平表现**: 在许多任务上，Optimus-1展现出接近人类水平的性能，尤其是在成功率（SR）指标上。
+- **高效完成任务**: Optimus-1在平均步数（AS）和平均时间（AT）上通常更低，表明其能更高效地完成任务。
+- **强大的泛化能力**: 即使以不同的MLLMs作为骨干，Optimus-1通过其混合多模态记忆模块，仍能展现出强大的泛化能力，超越了GPT-4V基线。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Building a general-purpose agent is a long-standing vision in artificial intelligence. While existing agents have made remarkable progress in many domains, they still struggle to complete long-horizon tasks in open-world environments.
+
+We attribute this limitation to the lack of necessary world knowledge and multimodal experience, which are crucial for guiding agents through a variety of complex, long-horizon tasks.
+
+## Contribution
+
+- **Hierarchical Directed Knowledge Graph**: Transforms world knowledge into a structured graph, allowing agents to explicitly represent and learn world knowledge.
+- **Abstracted Multimodal Experience Pool**: Summarizes historical information to provide agents with rich references for in-context learning.
+- **Knowledge-guided Planner**: Integrates with the Hybrid Multimodal Memory module to enhance the agent's planning capabilities for long-horizon tasks.
+- **Experience-Driven Reflector**: Integrates with the Hybrid Multimodal Memory module to improve the agent's reflection and learning in the face of long-horizon tasks.
+- **Optimus-1 Agent**: A multimodal agent constructed upon the Hybrid Multimodal Memory module, demonstrating superior performance in complex environments like Minecraft.
+
+## Method
+
+The core of Optimus-1 lies in its **Hybrid Multimodal Memory module**, which comprises two main components:
+
+### 1. Knowledge Representation and Learning
+
+1.  **World Knowledge Transformation**: Converts raw world knowledge into a **Hierarchical Directed Knowledge Graph**.
+2.  **Explicit Representation**: The knowledge graph allows the agent to explicitly represent and store world knowledge in a structured manner.
+3.  **Knowledge Learning**: The agent can learn and reason from this graph to guide its behavior.
+
+### 2. Experience Summarization and Reference
+
+1.  **Historical Information Summarization**: Summarizes the agent's historical interactions and experiences into an **Abstracted Multimodal Experience Pool**.
+2.  **Rich References**: The experience pool provides the agent with rich multimodal references for in-context learning.
+3.  **Decision Guidance**: The agent can retrieve and utilize these experiences to guide its planning and actions in long-horizon tasks.
+
+### 3. Agent Architecture
+
+1.  **Optimus-1**: A complete Optimus-1 multimodal agent is constructed on top of the Hybrid Multimodal Memory module.
+2.  **Knowledge-guided Planner**: Utilizes the knowledge graph for more effective task planning.
+3.  **Experience-Driven Reflector**: Leverages the experience pool for task reflection and learning to improve future behavior.
+
+## Comparison with Previous Work
+
+- **vs. Existing Agents**: Current agents perform poorly on open-world long-horizon tasks due to a lack of essential "world knowledge" and "multimodal experience." Optimus-1 explicitly addresses these issues by introducing its Hybrid Multimodal Memory module.
+- **vs. GPT-4V Baseline**: Optimus-1 demonstrates strong generalization capabilities with its memory module, even when using various MLLMs as backbones, outperforming the GPT-4V baseline on many tasks.
+- **vs. Other Baselines (e.g., DEPS, Jarvis-1)**: Optimus-1 significantly outperforms all existing agents on challenging long-horizon task benchmarks like Minecraft, exhibiting near human-level performance on many tasks.
+
+## Experiments
+
+**Table. Main results of Optimus-1 on long-horizon tasks benchmark. We report the average success rate (SR), average number of steps (AS), and average time (AT) on each task group.**
+
+| Group | Metric | GPT-3.5 | GPT-4V | DEPS | Jarvis-1 | Optimus-1 | Human-level |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Wood | SR | 40.16 | 41.42 | 77.01 | 93.76 | 98.60 | 100.00 |
+| AT | 56.39 | 55.15 | 85.53 | 67.76 | 47.09 | 31.08 |
+| AS | 1127.78 | 1103.04 | 1710.61 | 1355.25 | 841.94 | 621.59 |
+| Stone | SR | 20.40 | 20.89 | 48.52 | 89.20 | 92.35 | 100.00 |
+| AT | 135.71 | 132.77 | 138.71 | 141.50 | 129.94 | 80.85 |
+| AS | 2714.21 | 2655.47 | 2574.30 | 2830.05 | 2518.88 | 1617.00 |
+| Iron | SR | 0.00 | 0.00 | 16.37 | 36.15 | 46.69 | 86.00 |
+| AT | + | + | 944.61 | 722.78 | 651.33 | 434.38 |
+| AS | + | + | 8892.24 | 8455.51 | 6017.85 | 5687.60 |
+| Gold | SR | 0.00 | 0.00 | 0.00 | 7.20 | 8.51 | 17.31 |
+| AT | + | + | + | 787.37 | 726.35 | 557.08 |
+| AS | + | + | + | 15747.13 | 15527.07 | 13141.60 |
+| Diamond | SR | 0.00 | 0.00 | 0.60 | 8.98 | 11.61 | 16.98 |
+| AT | + | + | 1296.96 | 1255.06 | 1150.98 | 744.82 |
+| AS | + | + | 23939.30 | 25101.25 | 23019.64 | 16237.54 |
+| Redstone | SR | 0.00 | 0.00 | 0.00 | 16.31 | 25.02 | 33.27 |
+| AT | + | + | + | 1070.42 | 932.50 | 617.89 |
+| AS | + | + | + | 17408.40 | 12709.99 | 12357.00 |
+| Armor | SR | 0.00 | 0.00 | 9.98 | 15.82 | 19.47 | 28.48 |
+| AT | + | + | 997.59 | 924.60 | 824.53 | 551.30 |
+| AS | + | + | 17951.95 | 16492.96 | 16350.56 | 11026.00 |
+| Overall | SR | 0.00 | 0.00 | 5.39 | 16.89 | 22.26 | 36.41 |
+
+- **Significant SOTA Improvement**: Optimus-1 significantly outperforms all existing agents across challenging long-horizon task benchmarks, especially achieving near human-level success rates in tasks like Wood and Stone.
+- **Near Human-Level Performance**: The agent demonstrates performance approaching human levels on many tasks, particularly in terms of Success Rate (SR).
+- **Efficient Task Completion**: Optimus-1 generally achieves lower Average Steps (AS) and Average Time (AT), indicating more efficient task completion.
+- **Strong Generalization**: Optimus-1 exhibits strong generalization capabilities with its Hybrid Multimodal Memory module, even when integrating various Multimodal Large Language Models (MLLMs) as backbones, outperforming the GPT-4V baseline.

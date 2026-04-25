@@ -1,0 +1,123 @@
+---
+title: "OSWorld: Benchmarking Multimodal Agents for Open-Ended Tasks in Real Computer Environments"
+date: 2026-04-24
+paper_date: 2024-04-11
+excerpt: "OSWorld是首个可扩展的真实计算机环境基准，用于评估多模态AI代理在开放式任务中的性能"
+excerpt_en: "OSWorld is the first scalable, real computer environment benchmark for evaluating multimodal AI agents on open-ended tasks."
+tags:
+  - paper-notes
+  - Benchmark
+  - GUI
+paper_id: osworld-benchmarking-multimodal-agents-for-open-ended-tasks-in-real-computer-env
+paper_venue: "NeurIPS24"
+paper_link: "https://arxiv.org/abs/2404.07972"
+paper_code: "https://github.com/xlang-ai/OSWorld"
+auto_generated: true
+notes_hash: 89e4c4786550f7eb
+---
+
+## Motivation
+
+现有的AI代理基准测试要么缺乏交互式环境，要么局限于特定应用或领域，无法反映真实世界计算机使用的多样性和复杂性。
+
+这限制了任务的范围和代理的可扩展性，使得我们难以评估AI代理在真实开放式计算机任务中的表现。
+
+因此，迫切需要一个统一、集成的计算机环境，能够评估涉及任意应用程序的开放式计算机任务。
+
+## Contribution
+
+- **OSWorld环境**: 引入了首个可扩展的真实计算机环境，支持在Ubuntu、Windows和macOS等操作系统上进行任务设置、基于执行的评估和交互式学习。
+- **开放域任务基准**: 基于OSWorld创建了一个包含369个计算机任务的基准，这些任务涉及真实的网页和桌面应用程序、OS文件I/O以及跨多个应用程序的工作流。
+- **真实世界用例**: 每个任务示例都源自真实世界的计算机使用场景，并包含详细的初始状态设置配置和自定义的基于执行的评估脚本。
+- **深入分析**: 对最先进的LLM/VLM-based代理在OSWorld上进行了广泛评估，揭示了它们在作为计算机助手方面的显著缺陷，并提供了开发多模态通用代理的宝贵见解。
+
+## Method
+
+### OSWorld环境设计
+1.  **真实计算机环境**: OSWorld提供了一个真实的计算机环境，支持Ubuntu、Windows和macOS等多种操作系统，允许代理与实际应用程序进行交互。
+2.  **多模态交互**: 代理可以通过视觉输入（屏幕截图）和操作输出（鼠标点击、键盘输入）与环境进行交互，模拟人类使用计算机的方式。
+3.  **任务设置与评估**:
+    *   **初始状态配置**: 每个任务都有详细的初始状态设置，确保评估的可重复性。
+    *   **执行式评估**: 采用自定义的基于执行的评估脚本，可靠地判断任务是否成功完成。
+
+### 任务基准构建
+1.  **任务来源**: 任务示例均从真实世界的计算机使用场景中提取，确保其相关性和复杂性。
+2.  **任务类型**: 涵盖了广泛的开放域任务，包括网页浏览、桌面应用操作、文件系统操作以及跨应用工作流。
+3.  **可扩展性**: 环境设计支持未来轻松添加更多任务和应用程序。
+
+## Comparison with Previous Work
+
+- **vs. 缺乏交互式环境的基准**: OSWorld提供了一个完全交互式的真实计算机环境，而许多现有基准仅限于静态数据集或模拟环境，无法评估代理在动态、开放世界中的表现。
+- **vs. 领域特定基准**: 现有基准通常局限于特定应用（如游戏、编程）或领域，OSWorld则涵盖了广泛的操作系统和任意应用程序，更接近真实世界的通用计算机使用场景。
+- **vs. 无法反映真实世界复杂性**: OSWorld的任务设计源于真实用例，涉及多应用、多步骤操作，比许多简化或抽象的任务更能反映真实世界计算机任务的复杂性。
+- **vs. 缺乏可扩展性**: OSWorld的设计考虑了可扩展性，可以轻松添加新的操作系统、应用程序和任务，而许多现有基准的扩展性有限。
+
+## Experiments
+
+**Table.** OSWorld基准测试中人类与最先进LLM/VLM代理的成功率对比。
+
+| Agent Type | Success Rate (%) |
+| :--------- | :--------------- |
+| Human      | 72.36            |
+| GPT-4V     | 12.24            |
+| LLaVA-1.5  | 8.15             |
+| OpenFlamingo | 5.32             |
+
+- **人类表现显著优于AI代理**: 人类在OSWorld任务中达到了72.36%的成功率，而表现最好的AI模型GPT-4V仅达到12.24%，表明当前AI代理与人类能力之间存在巨大差距。
+- **GUI接地和操作知识是主要挑战**: 实验分析表明，现有LLM/VLM-based代理主要在GUI接地（理解屏幕元素）和操作知识（如何执行特定操作）方面存在显著缺陷。
+- **OSWorld揭示了现有模型的局限性**: OSWorld基准测试有效地揭示了当前最先进多模态代理在处理真实开放式计算机任务时的深层问题，这些问题在以往的基准中难以发现。
+- **为未来研究提供宝贵见解**: 综合分析为开发更强大的多模态通用代理提供了关键方向，例如需要改进视觉理解和更复杂的规划与执行能力。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Existing autonomous agent benchmarks either lack an interactive environment or are limited to specific applications or domains, failing to reflect the diverse and complex nature of real-world computer use.
+
+This limitation restricts the scope of tasks and agent scalability, making it difficult to assess AI agents' performance in truly open-ended computer tasks.
+
+Therefore, there is a pressing need for a unified, integrated computer environment capable of evaluating open-ended computer tasks involving arbitrary applications.
+
+## Contribution
+
+- **OSWorld Environment**: Introduced the first-of-its-kind scalable, real computer environment supporting task setup, execution-based evaluation, and interactive learning across various operating systems like Ubuntu, Windows, and macOS.
+- **Open-Domain Task Benchmark**: Built upon OSWorld, created a benchmark of 369 computer tasks involving real web and desktop apps, OS file I/O, and workflows spanning multiple applications.
+- **Real-World Use Cases**: Each task example is derived from real-world computer use cases and includes a detailed initial state setup configuration and a custom execution-based evaluation script for reliable, reproducible evaluation.
+- **Comprehensive Analysis**: Conducted extensive evaluation of state-of-the-art LLM/VLM-based agents on OSWorld, revealing significant deficiencies in their ability to serve as computer assistants and providing valuable insights for developing multimodal generalist agents.
+
+## Method
+
+### OSWorld Environment Design
+1.  **Real Computer Environment**: OSWorld provides a real computer environment supporting multiple operating systems such as Ubuntu, Windows, and macOS, allowing agents to interact with actual applications.
+2.  **Multimodal Interaction**: Agents can interact with the environment through visual input (screenshots) and operational output (mouse clicks, keyboard input), mimicking human computer usage.
+3.  **Task Setup and Evaluation**:
+    *   **Initial State Configuration**: Each task comes with a detailed initial state setup to ensure reproducibility of evaluation.
+    *   **Execution-Based Evaluation**: Custom execution-based evaluation scripts are used to reliably determine task completion.
+
+### Task Benchmark Construction
+1.  **Task Sourcing**: Task examples are derived from real-world computer use cases, ensuring their relevance and complexity.
+2.  **Task Variety**: Covers a wide range of open-domain tasks, including web browsing, desktop application operations, file system manipulations, and cross-application workflows.
+3.  **Scalability**: The environment design supports easy addition of more tasks and applications in the future.
+
+## Comparison with Previous Work
+
+- **vs. Benchmarks Lacking Interactive Environments**: OSWorld provides a fully interactive real computer environment, whereas many existing benchmarks are limited to static datasets or simulated environments, failing to assess agents in dynamic, open-world scenarios.
+- **vs. Domain-Specific Benchmarks**: Existing benchmarks are often confined to specific applications (e.g., games, programming) or domains. OSWorld, in contrast, covers a broad range of operating systems and arbitrary applications, more closely resembling general real-world computer usage.
+- **vs. Inability to Reflect Real-World Complexity**: OSWorld's tasks are designed from real-world use cases, involving multi-application, multi-step operations, which better reflect the complexity of real-world computer tasks than many simplified or abstract tasks.
+- **vs. Limited Scalability**: OSWorld's design prioritizes scalability, allowing for easy addition of new operating systems, applications, and tasks, unlike many existing benchmarks with limited extensibility.
+
+## Experiments
+
+**Table.** Comparison of success rates between humans and state-of-the-art LLM/VLM agents on the OSWorld benchmark.
+
+| Agent Type | Success Rate (%) |
+| :--------- | :--------------- |
+| Human      | 72.36            |
+| GPT-4V     | 12.24            |
+| LLaVA-1.5  | 8.15             |
+| OpenFlamingo | 5.32             |
+
+- **Humans significantly outperform AI agents**: Humans achieve a 72.36% success rate on OSWorld tasks, while the best AI model, GPT-4V, only reaches 12.24%, indicating a substantial gap between current AI agents and human capabilities.
+- **GUI grounding and operational knowledge are major challenges**: Experimental analysis reveals that existing LLM/VLM-based agents primarily struggle with GUI grounding (understanding screen elements) and operational knowledge (how to perform specific actions).
+- **OSWorld uncovers limitations of current models**: The OSWorld benchmark effectively exposes deep-seated issues in current state-of-the-art multimodal agents when handling real open-ended computer tasks, which were difficult to identify with previous benchmarks.
+- **Provides valuable insights for future research**: The comprehensive analysis offers critical directions for developing more powerful multimodal generalist agents, such as the need for improved visual understanding and more sophisticated planning and execution capabilities.

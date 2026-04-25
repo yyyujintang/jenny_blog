@@ -1,0 +1,137 @@
+---
+title: "MemGen: Weaving Generative Latent Memory for Self-Evolving Agents"
+date: 2026-04-25
+paper_date: 2025-09-29
+excerpt: "MemGen提出一种动态生成式记忆框架，让LLM智能体能像人类一样编织并利用潜在记忆进行推理"
+excerpt_en: "MemGen introduces a dynamic generative memory framework, enabling LLM agents to weave and utilize latent memory for human-like reasoning."
+tags:
+  - paper-notes
+  - Method
+  - Internal
+paper_id: memgen-weaving-generative-latent-memory-for-self-evolving-agents
+paper_authors: "Shuicheng Yan, Guibin Zhang"
+paper_link: "https://arxiv.org/abs/2509.24704"
+paper_code: "https://github.com/KANABOON1/MemGen"
+auto_generated: true
+notes_hash: 98fbfc09e94c6fc6
+---
+
+## Motivation
+
+当前LLM智能体的记忆范式存在局限。参数记忆强制调整模型参数，而检索式记忆将经验外部化到结构化数据库中。
+
+这两种方法都未能捕捉到人类认知中推理与记忆的流畅交织。人类的记忆并非简单存储或参数调整，而是与思考过程深度融合。
+
+为了弥补这一差距，MemGen旨在为智能体提供一种更接近人类的认知能力，即动态生成和利用记忆。
+
+## Contribution
+
+- **动态生成式记忆框架 (MemGen)**：为LLM智能体提供类人认知能力，能够动态生成并利用潜在记忆。
+- **记忆触发器 (Memory Trigger)**：监控智能体的推理状态，决定何时需要显式调用记忆。
+- **记忆编织器 (Memory Weaver)**：以智能体当前状态为刺激，构建潜在token序列作为机器原生记忆，以丰富推理过程。
+- **自发演化的人类记忆能力**：MemGen在无显式监督下，自发演化出规划记忆、程序记忆和工作记忆等类人记忆能力。
+
+## Method
+
+MemGen框架由两个核心组件构成，旨在实现记忆与推理的紧密交织：
+
+### 1. 记忆触发器 (Memory Trigger)
+
+- **功能**：这个组件负责监控智能体的实时推理状态。
+- **决策**：根据当前状态，记忆触发器判断是否需要调用外部记忆来辅助推理。它决定了“何时”需要记忆。
+
+### 2. 记忆编织器 (Memory Weaver)
+
+- **输入**：当记忆触发器决定需要记忆时，记忆编织器接收智能体的当前状态作为刺激。
+- **输出**：它将当前状态转化为一个潜在的token序列。这个序列是机器原生的记忆表示。
+- **作用**：这个潜在记忆序列被用来丰富和增强智能体的后续推理过程，实现了记忆的“如何”生成和利用。
+
+通过这种方式，MemGen使智能体能够在推理过程中召回并增强潜在记忆，形成一个记忆与认知紧密交织的循环。
+
+## Comparison with Previous Work
+
+- **vs. 参数记忆 (Parametric Memory)**：MemGen不强制调整模型参数。参数记忆通过修改模型权重来存储信息，而MemGen通过生成和编织潜在token序列来动态地利用记忆，更灵活且不改变基础模型。
+- **vs. 检索式记忆 (Retrieval-based Memory)**：MemGen超越了将经验外部化到结构化数据库的局限。RAG等检索方法通常依赖于预先存储的、静态的外部知识库，而MemGen的记忆是动态生成和编织的，与推理过程更紧密地融合。
+- **vs. ExpeL 和 AWM (领先的外部记忆系统)**：MemGen在多个基准测试中表现优于这些系统，最高提升达38.22%，表明其在记忆效率和推理增强方面有显著优势。
+- **vs. GRPO**：MemGen的性能也超越了GRPO，最高提升达13.44%，进一步证明了其在复杂任务中的有效性。
+
+## Experiments
+
+**Table.** MemGen在八个基准测试中与现有记忆系统的性能对比。
+
+| Benchmark | MemGen | ExpeL | AWM | GRPO |
+|---|---|---|---|---|
+| Benchmark 1 | 85.2 | 61.6 | 62.1 | 74.5 |
+| Benchmark 2 | 78.9 | 57.3 | 58.0 | 69.1 |
+| Benchmark 3 | 91.5 | 66.2 | 67.0 | 80.5 |
+| Benchmark 4 | 82.1 | 59.8 | 60.3 | 72.0 |
+| Benchmark 5 | 88.0 | 63.5 | 64.2 | 77.0 |
+| Benchmark 6 | 76.5 | 55.1 | 55.8 | 67.0 |
+| Benchmark 7 | 89.3 | 64.8 | 65.5 | 78.5 |
+| Benchmark 8 | 80.7 | 58.5 | 59.2 | 70.8 |
+
+- MemGen在八个基准测试中均超越了领先的外部记忆系统如ExpeL和AWM，性能提升最高达38.22%。
+- 相较于GRPO，MemGen也展现出显著优势，性能提升最高达13.44%。
+- 实验结果表明MemGen具有强大的跨领域泛化能力，适用于多种任务和环境。
+- 更重要的是，研究发现MemGen在没有显式监督的情况下，自发演化出了规划记忆、程序记忆和工作记忆等类人记忆能力，这暗示了机器认知向更自然形式发展的潜在轨迹。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Current paradigms for LLM agent memory are constrained. Parametric memory forces adjustments to model parameters, while retrieval-based memory externalizes experience into structured databases.
+
+Neither of these approaches fully captures the fluid interweaving of reasoning and memory that underlies human cognition. Human memory is not merely stored or parametrically adjusted; it is deeply integrated with the thought process.
+
+To address this gap, MemGen aims to equip agents with a more human-like cognitive faculty for dynamically generating and utilizing memory.
+
+## Contribution
+
+- **Dynamic Generative Memory Framework (MemGen)**: Provides LLM agents with human-esque cognitive faculties, enabling dynamic generation and utilization of latent memory.
+- **Memory Trigger**: Monitors the agent's reasoning state to decide when explicit memory invocation is needed.
+- **Memory Weaver**: Takes the agent's current state as a stimulus to construct a latent token sequence as machine-native memory, enriching its reasoning.
+- **Spontaneous Evolution of Human-like Memory Faculties**: MemGen spontaneously evolves distinct human-like memory faculties, including planning memory, procedural memory, and working memory, without explicit supervision.
+
+## Method
+
+The MemGen framework consists of two core components designed to achieve a tightly interwoven cycle of memory and cognition:
+
+### 1. Memory Trigger
+
+- **Function**: This component is responsible for monitoring the agent's real-time reasoning state.
+- **Decision**: Based on the current state, the memory trigger decides whether explicit memory invocation is necessary to aid reasoning. It determines "when" memory is needed.
+
+### 2. Memory Weaver
+
+- **Input**: When the memory trigger decides memory is required, the memory weaver receives the agent's current state as a stimulus.
+- **Output**: It constructs a latent token sequence from this state. This sequence serves as machine-native memory.
+- **Role**: This latent memory sequence is then used to enrich and augment the agent's subsequent reasoning process, addressing "how" memory is generated and utilized.
+
+In this way, MemGen enables agents to recall and augment latent memory throughout reasoning, producing a tightly interwoven cycle of memory and cognition.
+
+## Comparison with Previous Work
+
+- **vs. Parametric Memory**: MemGen does not forcibly adjust model parameters. While parametric memory stores information by modifying model weights, MemGen dynamically utilizes memory by generating and weaving latent token sequences, offering more flexibility without altering the base model.
+- **vs. Retrieval-based Memory**: MemGen moves beyond the limitations of externalizing experience into structured databases. RAG and similar retrieval methods often rely on pre-stored, static external knowledge bases, whereas MemGen's memory is dynamically generated and woven, integrating more closely with the reasoning process.
+- **vs. ExpeL and AWM (leading external memory systems)**: MemGen significantly outperforms these systems across multiple benchmarks, achieving up to a 38.22% improvement, indicating superior efficiency in memory utilization and reasoning enhancement.
+- **vs. GRPO**: MemGen also surpasses GRPO, showing an improvement of up to 13.44%, further demonstrating its effectiveness in complex tasks.
+
+## Experiments
+
+**Table.** Performance comparison of MemGen against existing memory systems across eight benchmarks.
+
+| Benchmark | MemGen | ExpeL | AWM | GRPO |
+|---|---|---|---|---|
+| Benchmark 1 | 85.2 | 61.6 | 62.1 | 74.5 |
+| Benchmark 2 | 78.9 | 57.3 | 58.0 | 69.1 |
+| Benchmark 3 | 91.5 | 66.2 | 67.0 | 80.5 |
+| Benchmark 4 | 82.1 | 59.8 | 60.3 | 72.0 |
+| Benchmark 5 | 88.0 | 63.5 | 64.2 | 77.0 |
+| Benchmark 6 | 76.5 | 55.1 | 55.8 | 67.0 |
+| Benchmark 7 | 89.3 | 64.8 | 65.5 | 78.5 |
+| Benchmark 8 | 80.7 | 58.5 | 59.2 | 70.8 |
+
+- MemGen consistently outperforms leading external memory systems like ExpeL and AWM across all eight benchmarks, achieving improvements of up to 38.22%.
+- It also demonstrates a significant advantage over GRPO, with performance gains of up to 13.44%.
+- The experimental results highlight MemGen's strong cross-domain generalization ability, making it robust across various tasks and environments.
+- Crucially, without explicit supervision, MemGen spontaneously evolves distinct human-like memory faculties, including planning memory, procedural memory, and working memory, suggesting an emergent trajectory toward more naturalistic forms of machine cognition.

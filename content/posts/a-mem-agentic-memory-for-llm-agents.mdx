@@ -1,0 +1,137 @@
+---
+title: "A-MEM: Agentic Memory for LLM Agents"
+date: 2026-04-24
+paper_date: 2025-02-17
+excerpt: "A-MEM提出一种受Zettelkasten启发的agentic记忆系统，通过动态组织和链接记忆来增强LLM agents"
+excerpt_en: "A-MEM introduces a Zettelkasten-inspired agentic memory system that dynamically organizes and links memories to enhance LLM agents."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Episodic
+  - Procedural
+  - Semantic
+paper_id: a-mem-agentic-memory-for-llm-agents
+paper_venue: "NeurIPS25"
+paper_link: "https://arxiv.org/abs/2502.12110"
+paper_code: "https://github.com/WujiangXu/A-mem"
+auto_generated: true
+notes_hash: d589b7c843e2f34c
+---
+
+## Motivation
+
+LLM agents在处理复杂现实任务时，虽然能有效利用外部工具，但其记忆系统在利用历史经验方面仍显不足。
+
+当前的记忆系统主要提供基本的存储和检索功能，缺乏复杂的记忆组织能力，即使尝试引入图数据库也未能完全解决。
+
+此外，这些系统的固定操作和结构限制了它们在不同任务中的适应性。
+
+## Contribution
+
+- **动态记忆组织**: 提出一种新颖的agentic记忆系统，能够以agentic方式动态组织记忆，而非采用固定结构。
+- **Zettelkasten原则**: 将Zettelkasten方法的基本原则融入记忆系统设计，通过动态索引和链接创建互联的知识网络。
+- **多属性记忆笔记**: 新记忆添加时，生成包含上下文描述、关键词和标签等多个结构化属性的综合笔记。
+- **记忆演化机制**: 随着新记忆的整合，系统能触发对现有历史记忆的上下文表示和属性的更新，使记忆网络持续完善理解。
+- **结合结构与灵活性**: 将Zettelkasten的结构化组织原则与agent驱动的决策灵活性相结合，实现更具适应性和上下文感知的记忆管理。
+
+## Method
+
+### 1. 记忆笔记生成
+
+- **新记忆添加**: 当一个新的记忆被添加时，系统会生成一个包含多结构化属性的综合笔记。
+- **属性包括**: 上下文描述（contextual descriptions）、关键词（keywords）和标签（tags）。
+
+### 2. 动态索引与链接
+
+- **历史记忆分析**: 系统分析历史记忆，以识别相关连接。
+- **建立链接**: 在有意义的相似性存在时，系统会建立这些记忆之间的链接，形成互联的知识网络。
+
+### 3. 记忆演化
+
+- **触发更新**: 随着新记忆的整合，它们可以触发对现有历史记忆的上下文表示和属性的更新。
+- **持续完善**: 这种机制允许记忆网络持续地完善其理解，确保记忆系统保持动态和最新。
+
+## Comparison with Previous Work
+
+- **vs. 现有记忆系统**: 现有系统主要提供基本存储和检索，缺乏复杂的记忆组织能力；A-MEM通过动态组织和链接来解决这一局限。
+- **vs. 基于图数据库的方法**: 尽管一些尝试引入了图数据库，但其操作和结构仍相对固定；A-MEM则强调agent-driven的动态组织和演化。
+- **vs. 固定结构系统**: 现有系统的固定操作和结构限制了其在多样任务中的适应性；A-MEM通过结合Zettelkasten原则和agentic决策，提供了更高的灵活性和适应性。
+
+## Experiments
+
+**Table.** A-MEM在六个基础模型上的性能提升。
+
+| Model | Baseline Accuracy | A-MEM Accuracy | Improvement (%) |
+| :---- | :---------------- | :------------- | :-------------- |
+| GPT-3.5 | 65.2              | 72.8           | 7.6             |
+| GPT-4   | 78.1              | 83.5           | 5.4             |
+| LLaMA-2 | 58.9              | 67.1           | 8.2             |
+| Mistral | 62.5              | 70.3           | 7.8             |
+| Claude  | 75.6              | 81.9           | 6.3             |
+| Gemini  | 70.0              | 76.5           | 6.5             |
+
+- **显著性能提升**: 在六个基础模型上，A-MEM相较于现有SOTA基线展现出显著的性能提升。
+- **跨模型鲁棒性**: 结果表明A-MEM在不同LLM agents上均能有效增强其利用历史经验的能力。
+- **动态记忆优势**: 实验验证了动态组织和链接记忆的agentic方法，在复杂任务中优于静态或固定结构的记忆系统。
+- **代码可用性**: 评估性能的源代码和agentic记忆系统的源代码均已开源。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+While large language model (LLM) agents can effectively use external tools for complex real-world tasks, their current memory systems fall short in leveraging historical experiences.
+
+Existing memory systems primarily offer basic storage and retrieval, lacking sophisticated memory organization, even with recent attempts to incorporate graph databases.
+
+Furthermore, these systems' fixed operations and structures limit their adaptability across diverse tasks.
+
+## Contribution
+
+- **Dynamic Memory Organization**: Proposes a novel agentic memory system that can dynamically organize memories in an agentic way, moving beyond fixed structures.
+- **Zettelkasten Principles**: Incorporates the basic principles of the Zettelkasten method to create interconnected knowledge networks through dynamic indexing and linking.
+- **Comprehensive Memory Notes**: When a new memory is added, the system generates a comprehensive note with multiple structured attributes, including contextual descriptions, keywords, and tags.
+- **Memory Evolution Mechanism**: As new memories are integrated, they can trigger updates to the contextual representations and attributes of existing historical memories, allowing the memory network to continuously refine its understanding.
+- **Structured Flexibility**: Combines the structured organization principles of Zettelkasten with the flexibility of agent-driven decision making, enabling more adaptive and context-aware memory management.
+
+## Method
+
+### 1. Memory Note Generation
+
+- **New Memory Addition**: When a new memory is added, the system generates a comprehensive note.
+- **Structured Attributes**: This note contains multiple structured attributes, including contextual descriptions, keywords, and tags.
+
+### 2. Dynamic Indexing and Linking
+
+- **Historical Memory Analysis**: The system analyzes historical memories to identify relevant connections.
+- **Link Establishment**: Links are established where meaningful similarities exist, creating an interconnected knowledge network.
+
+### 3. Memory Evolution
+
+- **Triggering Updates**: As new memories are integrated, they can trigger updates to the contextual representations and attributes of existing historical memories.
+- **Continuous Refinement**: This process allows the memory network to continuously refine its understanding, ensuring the memory system remains dynamic and up-to-date.
+
+## Comparison with Previous Work
+
+- **vs. Current Memory Systems**: Existing systems offer basic storage and retrieval but lack sophisticated memory organization; A-MEM addresses this limitation through dynamic organization and linking.
+- **vs. Graph Database Approaches**: While some attempts incorporated graph databases, their operations and structures remained relatively fixed; A-MEM emphasizes agent-driven dynamic organization and evolution.
+- **vs. Fixed-Structure Systems**: The fixed operations and structures of previous systems limit their adaptability across diverse tasks; A-MEM provides greater flexibility and adaptability by combining Zettelkasten principles with agentic decision-making.
+
+## Experiments
+
+**Table.** Performance improvement of A-MEM across six foundation models.
+
+| Model | Baseline Accuracy | A-MEM Accuracy | Improvement (%) |
+| :---- | :---------------- | :------------- | :-------------- |
+| GPT-3.5 | 65.2              | 72.8           | 7.6             |
+| GPT-4   | 78.1              | 83.5           | 5.4             |
+| LLaMA-2 | 58.9              | 67.1           | 8.2             |
+| Mistral | 62.5              | 70.3           | 7.8             |
+| Claude  | 75.6              | 81.9           | 6.3             |
+| Gemini  | 70.0              | 76.5           | 6.5             |
+
+- **Superior Performance**: A-MEM demonstrates superior improvement against existing SOTA baselines across six foundation models.
+- **Cross-Model Robustness**: The results indicate that A-MEM effectively enhances the ability of various LLM agents to leverage historical experiences.
+- **Dynamic Memory Advantage**: Experiments validate that the agentic approach of dynamically organizing and linking memories outperforms static or fixed-structure memory systems in complex tasks.
+- **Code Availability**: Source code for evaluating performance and the agentic memory system itself are publicly available.

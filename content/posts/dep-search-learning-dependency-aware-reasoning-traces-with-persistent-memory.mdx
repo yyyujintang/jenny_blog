@@ -1,0 +1,123 @@
+---
+title: "Dep-Search: Learning Dependency-Aware Reasoning Traces with Persistent Memory"
+date: 2026-04-25
+paper_date: 2026-01-27
+excerpt: "Dep-Search通过结构化推理、检索和持久记忆，提升LLM处理复杂多跳推理任务的能力"
+excerpt_en: "Dep-Search enhances LLM's ability to tackle complex multi-hop reasoning tasks by integrating structured reasoning, retrieval, and persistent memory."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Episodic
+paper_id: dep-search-learning-dependency-aware-reasoning-traces-with-persistent-memory
+paper_link: "https://arxiv.org/abs/2601.18771"
+auto_generated: true
+notes_hash: 7ab5f7b583ff53e6
+---
+
+## Motivation
+
+LLM在复杂推理任务中表现出色，尤其是在结合搜索机制探索外部知识库时。
+然而，现有搜索框架过度依赖隐式自然语言推理来决定搜索策略和如何利用检索到的信息。
+这种依赖导致了管理子问题依赖、高效重用知识以及通过强化学习优化搜索策略的挑战。
+
+## Contribution
+
+- **依赖感知搜索框架 (Dep-Search)**: 整合了结构化推理、检索和持久记忆，超越了现有搜索框架。
+- **显式控制机制**: 使模型能够分解具有依赖关系的问题，按需检索信息，访问记忆中的知识，并将长推理上下文总结为可重用的记忆条目。
+- **GRPO**: 通过GRPO学习最优搜索策略，有效管理依赖关系并重用知识。
+- **广泛的实验验证**: 在七个多样化的问答数据集上显著提升了LLM处理复杂多跳推理任务的能力。
+
+## Method
+
+Dep-Search是一个依赖感知的搜索框架，通过以下核心组件实现：
+
+1.  **问题分解 (Question Decomposition)**:
+    *   模型首先将复杂问题分解为具有明确依赖关系的子问题。
+    *   这种显式分解有助于管理多跳推理中的信息流。
+
+2.  **按需检索 (On-Demand Retrieval)**:
+    *   当需要外部信息时，模型会触发检索机制，从知识库中获取相关文档。
+    *   这确保了检索是目标导向且高效的。
+
+3.  **持久记忆 (Persistent Memory)**:
+    *   引入一个持久记忆模块，用于存储和访问先前检索到的知识和推理结果。
+    *   模型可以从记忆中提取相关信息，避免重复检索和冗余计算。
+
+4.  **记忆总结 (Memory Summarization)**:
+    *   将冗长的推理上下文总结成简洁、可重用的记忆条目，存储在持久记忆中。
+    *   这有助于管理上下文长度，并促进知识的有效重用。
+
+5.  **GRPO 学习 (GRPO Learning)**:
+    *   利用广义策略优化 (GRPO) 算法来学习和优化搜索策略。
+    *   GRPO使模型能够根据依赖关系和记忆内容，动态地决定下一步的推理动作（分解、检索、访问记忆、总结）。
+
+## Comparison with Previous Work
+
+- **vs. 传统RAG框架**: 传统RAG主要侧重于单步检索和生成，而Dep-Search通过结构化推理、显式依赖管理和持久记忆，支持多步复杂推理。
+- **vs. 现有搜索框架**: 现有搜索框架通常依赖隐式自然语言推理来决定搜索策略，难以有效管理子问题依赖和知识重用。Dep-Search引入了显式控制机制和结构化记忆。
+- **vs. 缺乏记忆机制的模型**: 许多模型在多步推理中无法有效重用先前检索的信息，导致重复和效率低下。Dep-Search的持久记忆解决了这一问题。
+
+## Experiments
+
+*(基于标题与领域常识推断,未读全文)*
+
+- **性能显著提升**: Dep-Search在七个多样化的问答数据集上，显著提升了LLM处理复杂多跳推理任务的能力。
+- **超越强基线**: 实验结果表明，Dep-Search在不同模型规模下，均优于现有的强基线方法。
+- **有效性验证**: 证明了结构化推理、按需检索和持久记忆的集成，对于解决复杂推理任务的有效性。
+- **GRPO的优势**: 结果也突出了GRPO在学习最优搜索策略方面的优势。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Large Language Models (LLMs) have shown remarkable capabilities in complex reasoning, especially when augmented with search mechanisms for external knowledge.
+However, current search frameworks heavily rely on implicit natural language reasoning to determine search strategies and how to leverage retrieved information across steps.
+This reliance creates fundamental challenges in managing dependencies between sub-questions, efficiently reusing previously retrieved knowledge, and learning optimal search strategies through reinforcement learning.
+
+## Contribution
+
+- **Dependency-Aware Search Framework (Dep-Search)**: Integrates structured reasoning, retrieval, and persistent memory, advancing beyond existing search frameworks.
+- **Explicit Control Mechanisms**: Enable the model to decompose questions with dependency relationships, retrieve information when needed, access previously stored knowledge from memory, and summarize long reasoning contexts into reusable memory entries.
+- **GRPO Integration**: Utilizes GRPO for learning optimal search strategies, effectively managing dependencies and knowledge reuse.
+- **Extensive Experimental Validation**: Demonstrates significant enhancement in LLMs' ability to tackle complex multi-hop reasoning tasks across seven diverse question answering datasets.
+
+## Method
+
+Dep-Search is a dependency-aware search framework that achieves its capabilities through the following core components:
+
+1.  **Question Decomposition**:
+    *   The model first decomposes complex questions into sub-questions with explicit dependency relationships.
+    *   This structured decomposition aids in managing the flow of information in multi-hop reasoning.
+
+2.  **On-Demand Retrieval**:
+    *   When external information is required, the model triggers a retrieval mechanism to fetch relevant documents from a knowledge base.
+    *   This ensures that retrieval is targeted and efficient.
+
+3.  **Persistent Memory**:
+    *   A persistent memory module is introduced to store and access previously retrieved knowledge and reasoning outcomes.
+    *   The model can retrieve relevant information from memory, avoiding redundant searches and computations.
+
+4.  **Memory Summarization**:
+    *   Long reasoning contexts are summarized into concise, reusable memory entries, which are then stored in persistent memory.
+    *   This helps manage context length and facilitates effective knowledge reuse.
+
+5.  **GRPO Learning**:
+    *   The Generalized Policy Optimization (GRPO) algorithm is employed to learn and optimize the search strategies.
+    *   GRPO enables the model to dynamically decide the next reasoning action (decompose, retrieve, access memory, summarize) based on dependencies and memory content.
+
+## Comparison with Previous Work
+
+- **vs. Traditional RAG Frameworks**: Traditional RAG primarily focuses on single-step retrieval and generation. Dep-Search extends this with structured reasoning, explicit dependency management, and persistent memory for multi-step complex reasoning.
+- **vs. Existing Search Frameworks**: Current search frameworks often rely on implicit natural language reasoning for search strategy, struggling with effective sub-question dependency management and knowledge reuse. Dep-Search introduces explicit control mechanisms and structured memory.
+- **vs. Models Lacking Memory Mechanisms**: Many models fail to effectively reuse previously retrieved information in multi-step reasoning, leading to redundancy and inefficiency. Dep-Search's persistent memory addresses this limitation.
+
+## Experiments
+
+*(Inferred from title/venue; full paper not read.)*
+
+- **Significant Performance Gains**: Dep-Search substantially enhances LLMs' ability to tackle complex multi-hop reasoning tasks across seven diverse question answering datasets.
+- **Outperforms Strong Baselines**: Experiments show that Dep-Search achieves significant improvements over strong baselines across different model scales.
+- **Validation of Effectiveness**: The results demonstrate the effectiveness of integrating structured reasoning, on-demand retrieval, and persistent memory for complex reasoning tasks.
+- **Advantage of GRPO**: The findings also highlight the advantage of GRPO in learning optimal search strategies.

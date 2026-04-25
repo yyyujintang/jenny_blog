@@ -1,0 +1,170 @@
+---
+title: "MemoryArena: Benchmarking Agent Memory in Interdependent Multi-Session Agentic Tasks"
+date: 2026-04-25
+paper_date: 2026-02-12
+excerpt: "MemoryArena是一个统一的评估基准，用于在多会话、相互依赖的智能体任务中测试AI智能体的记忆能力"
+excerpt_en: "MemoryArena is a unified evaluation gym for benchmarking AI agent memory in interdependent, multi-session agentic tasks."
+tags:
+  - paper-notes
+  - Benchmark
+  - Long-Horizon
+paper_id: memoryarena-benchmarking-agent-memory-in-interdependent-multi-session-agentic-ta
+paper_authors: "Yu Wang, Yuanzhe Hu"
+paper_link: "https://arxiv.org/abs/2602.16313"
+auto_generated: true
+notes_hash: bf7f7005b167b826
+---
+
+## Motivation
+
+现有对带记忆智能体的评估通常将记忆和行动孤立地分开评估。一类基准通过测试对过去对话或文本的召回能力来评估记忆，但未能捕捉记忆如何指导未来的决策。
+
+另一类基准则侧重于在单会话任务中行动的智能体，这些任务不需要长期记忆。然而，在现实环境中，记忆和行动是紧密耦合的。
+
+智能体在与环境交互时获取记忆，随后依赖这些记忆来解决未来的任务。为了捕捉这种真实场景，我们引入了MemoryArena。
+
+## Contribution
+
+- **统一评估基准**: 引入MemoryArena，一个用于在多会话Memory-Agent-Environment循环中评估智能体记忆的统一平台。
+- **人机协作任务**: 包含由人类精心设计的智能体任务，这些任务具有明确的相互依赖子任务。
+- **记忆蒸馏与应用**: 智能体必须从早期的行动和反馈中学习，将经验提炼成记忆，并随后利用这些记忆指导后续行动以解决整体任务。
+- **多领域支持**: 支持在网页导航、偏好约束规划、渐进式信息搜索和顺序形式推理等多个领域进行评估。
+- **揭示评估差距**: 发现现有长上下文记忆基准（如LoCoMo）上表现近乎饱和的智能体，在我们的智能体设置中表现不佳，从而揭示了当前智能体记忆评估的不足。
+
+## Method
+
+### MemoryArena 任务设计
+1.  **多会话与相互依赖**: MemoryArena中的任务被设计为多会话且子任务之间相互依赖。这意味着智能体在早期会话中获得的记忆必须用于指导后续会话中的决策。
+2.  **记忆获取与利用**: 智能体通过与环境交互来获取经验和反馈，并将这些经验蒸馏成可用于未来任务的记忆。
+3.  **任务类型**:
+    *   **网页导航 (Web Navigation)**: 智能体需要在多个网页之间导航以完成复杂任务。
+    *   **偏好约束规划 (Preference-Constrained Planning)**: 智能体需要根据用户偏好进行规划和决策。
+    *   **渐进式信息搜索 (Progressive Information Search)**: 智能体需要逐步搜索和整合信息以解决问题。
+    *   **顺序形式推理 (Sequential Formal Reasoning)**: 智能体需要进行多步骤的逻辑推理来解决形式化问题。
+
+### 评估指标
+1.  **成功率 (Success Rate, SR)**: 衡量智能体成功完成任务的比例。
+2.  **部分成功率 (Partial Success Rate, PS)**: 衡量智能体在多步骤任务中完成部分子任务的比例。
+3.  **记忆利用效率**: 评估智能体如何有效地利用其记忆来改进决策和行动。
+*(基于标题与领域常识推断,未读全文)*
+
+## Comparison with Previous Work
+
+- **vs. LOCOMO (Maharana et al., 2024), LongMemEval (Wu et al., 2025), MemoryAgentBench (Hu et al., 2025a), MemoryBench (Ai et al., 2025)**: 这些基准主要评估记忆的召回能力，但未能捕捉记忆如何指导智能体在多会话任务中的未来决策和行动。它们通常不涉及智能体与环境的交互。
+- **vs. WebArena (Zhou et al., ), WebShop (Yao et al., 2022), VeriGUI (Liu et al., 2025)**: 这些基准侧重于智能体在单会话任务中的行动能力，但通常不需要长期记忆。它们缺乏多会话和子任务相互依赖的特性。
+- **vs. Evo-Memory (Wei et al., 2025b), AgencyBench (Li et al., 2026a)**: 这些工作可能在一定程度上结合了记忆和行动，但MemoryArena更强调任务的相互依赖性，即智能体必须从早期会话中学习并将其记忆用于指导后续会话的决策。MemoryArena提供了更明确的Memory-Agent-Environment循环。
+
+## Experiments
+
+**Table.** MemoryArena与其他现有基准的特性对比。
+
+| | Memory-Agent-Env. Loops | | | Task Settings | | | | |
+|---|---|---|---|---|---|---|---|---|
+| Memory | | | | | | | | |
+| Eval. | | | | | | | | |
+| Agentic | | | | | | | | |
+| Actions | | | | | | | | |
+| Env. | | | | | | | | |
+| Feedback | | | | | | | | |
+| Multi-Sess. | | | | | | | | |
+| Tasks | | | | | | | | |
+| Interdep. | | | | | | | | |
+| ST | | | | | | | | |
+| # T | | | | | | | | |
+| (# Q) | | | | | | | | |
+| # Interdep. | | | | | | | | |
+| ST | | | | | | | | |
+| LOCOMO (Maharana et al., 2024) | ✓ | ✗ | ✗ | ✓ | ✗ | 7512 | 1 | N/A1 |
+| LongMemEval (Wu et al., 2025) | ✓ | ✗ | ✗ | ✓ | ✗ | 500 | 1 | |
+| MemoryAgentBench (Hu et al., 2025a) | ✓ | ✗ | ✗ | ✓ | ✗ | 2k | 1 | |
+| MemoryBench (Ai et al., 2025) | ✓ | ✗ | ✗ | ✓ | ✗ | 778 | 1 | |
+| WebArena (Zhou et al., ) | ✗ | ✓ | ✓ | ✗ | ✗ | 812 | 1 | 13.3 |
+| WebShop(Yao et al., 2022) | ✗ | ✓ | ✓ | ✗ | ✗ | 200 | 1 | 7.3 |
+| VeriGUI (Liu et al., 2025) | ✗ | ✓ | ✓ | ✓ | ✗ | 130 | 4.5 | 214 |
+| Evo-Memory (Wei et al., 2025b) | ✓ | ✓ | ✓ | ✓ | ✗ | N/A2 | N/A2 | N/A2 |
+| AgencyBench (Li et al., 2026a) | ✗ | ✓ | ✓ | ✓ | ✓ | 138 | 4.31^3 | 90 |
+| MemoryArena | ✓ | ✓ | ✓ | ✓ | ✓ | 766 | 6.9 | 57 |
+
+- **现有基准的不足**: 实验结果表明，在现有长上下文记忆基准（如LoCoMo）上表现近乎饱和的智能体，在MemoryArena的智能体设置中表现不佳。
+- **揭示评估差距**: 这暴露了当前智能体记忆评估的一个显著差距，即现有方法未能充分捕捉记忆在指导多会话、相互依赖任务中的作用。
+- **MemoryArena的挑战性**: MemoryArena任务的相互依赖性和多会话特性对智能体的记忆和推理能力提出了更高的要求。
+- **未来研究方向**: 结果强调了开发更先进的记忆机制和智能体架构的必要性，以更好地处理现实世界中记忆与行动紧密耦合的复杂场景。
+*(基于标题与领域常识推断,未读全文)*
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Existing evaluations of agents with memory typically assess memorization and action in isolation. One class of benchmarks evaluates memorization by testing recall of past conversations or text but fails to capture how memory is used to guide future decisions.
+
+Another class focuses on agents acting in single-session tasks without the need for long-term memory. However, in realistic settings, memorization and action are tightly coupled.
+
+Agents acquire memory while interacting with the environment, and subsequently rely on that memory to solve future tasks. To capture this setting, we introduce MemoryArena.
+
+## Contribution
+
+- **Unified Evaluation Gym**: Introduction of MemoryArena, a unified platform for benchmarking agent memory in multi-session Memory-Agent-Environment loops.
+- **Human-Crafted Agentic Tasks**: Comprises human-crafted agentic tasks with explicitly interdependent subtasks.
+- **Memory Distillation and Utilization**: Agents must learn from earlier actions and feedback by distilling experiences into memory, and subsequently use that memory to guide later actions to solve the overall task.
+- **Multi-Domain Support**: Supports evaluation across web navigation, preference-constrained planning, progressive information search, and sequential formal reasoning.
+- **Exposure of Evaluation Gap**: Reveals that agents with near-saturated performance on existing long-context memory benchmarks like LoCoMo perform poorly in our agentic setting, exposing a gap in current evaluations for agents with memory.
+
+## Method
+
+### MemoryArena Task Design
+1.  **Multi-Session and Interdependent**: Tasks in MemoryArena are designed to be multi-session with interdependent subtasks. This means memory acquired in earlier sessions must guide decisions in subsequent sessions.
+2.  **Memory Acquisition and Utilization**: Agents acquire experiences and feedback through interaction with the environment, distilling these experiences into memory for future tasks.
+3.  **Task Types**:
+    *   **Web Navigation**: Agents need to navigate across multiple web pages to complete complex tasks.
+    *   **Preference-Constrained Planning**: Agents must plan and make decisions based on user preferences.
+    *   **Progressive Information Search**: Agents need to progressively search and integrate information to solve problems.
+    *   **Sequential Formal Reasoning**: Agents are required to perform multi-step logical reasoning to solve formal problems.
+
+### Evaluation Metrics
+1.  **Success Rate (SR)**: Measures the proportion of tasks successfully completed by the agent.
+2.  **Partial Success Rate (PS)**: Measures the proportion of subtasks completed by the agent in multi-step tasks.
+3.  **Memory Utilization Efficiency**: Assesses how effectively agents leverage their memory to improve decision-making and actions.
+*(Inferred from title/venue; full paper not read.)*
+
+## Comparison with Previous Work
+
+- **vs. LOCOMO (Maharana et al., 2024), LongMemEval (Wu et al., 2025), MemoryAgentBench (Hu et al., 2025a), MemoryBench (Ai et al., 2025)**: These benchmarks primarily evaluate memory recall but fail to capture how memory guides future decisions and actions in multi-session agentic tasks. They typically do not involve agent-environment interaction.
+- **vs. WebArena (Zhou et al., ), WebShop (Yao et al., 2022), VeriGUI (Liu et al., 2025)**: These benchmarks focus on agentic actions in single-session tasks but generally do not require long-term memory. They lack the multi-session and interdependent subtask characteristics.
+- **vs. Evo-Memory (Wei et al., 2025b), AgencyBench (Li et al., 2026a)**: While these works may incorporate memory and action to some extent, MemoryArena places a stronger emphasis on task interdependence, where agents must learn from earlier sessions and use their memory to guide subsequent decisions. MemoryArena provides a more explicit Memory-Agent-Environment loop.
+
+## Experiments
+
+**Table.** Comparison of MemoryArena features with existing benchmarks.
+
+| | Memory-Agent-Env. Loops | | | Task Settings | | | | |
+|---|---|---|---|---|---|---|---|---|
+| Memory | | | | | | | | |
+| Eval. | | | | | | | | |
+| Agentic | | | | | | | | |
+| Actions | | | | | | | | |
+| Env. | | | | | | | | |
+| Feedback | | | | | | | | |
+| Multi-Sess. | | | | | | | | |
+| Tasks | | | | | | | | |
+| Interdep. | | | | | | | | |
+| ST | | | | | | | | |
+| # T | | | | | | | | |
+| (# Q) | | | | | | | | |
+| # Interdep. | | | | | | | | |
+| ST | | | | | | | | |
+| LOCOMO (Maharana et al., 2024) | ✓ | ✗ | ✗ | ✓ | ✗ | 7512 | 1 | N/A1 |
+| LongMemEval (Wu et al., 2025) | ✓ | ✗ | ✗ | ✓ | ✗ | 500 | 1 | |
+| MemoryAgentBench (Hu et al., 2025a) | ✓ | ✗ | ✗ | ✓ | ✗ | 2k | 1 | |
+| MemoryBench (Ai et al., 2025) | ✓ | ✗ | ✗ | ✓ | ✗ | 778 | 1 | |
+| WebArena (Zhou et al., ) | ✗ | ✓ | ✓ | ✗ | ✗ | 812 | 1 | 13.3 |
+| WebShop(Yao et al., 2022) | ✗ | ✓ | ✓ | ✗ | ✗ | 200 | 1 | 7.3 |
+| VeriGUI (Liu et al., 2025) | ✗ | ✓ | ✓ | ✓ | ✗ | 130 | 4.5 | 214 |
+| Evo-Memory (Wei et al., 2025b) | ✓ | ✓ | ✓ | ✓ | ✗ | N/A2 | N/A2 | N/A2 |
+| AgencyBench (Li et al., 2026a) | ✗ | ✓ | ✓ | ✓ | ✓ | 138 | 4.31^3 | 90 |
+| MemoryArena | ✓ | ✓ | ✓ | ✓ | ✓ | 766 | 6.9 | 57 |
+
+- **Limitations of existing benchmarks**: Experimental results show that agents achieving near-saturated performance on existing long-context memory benchmarks (e.g., LoCoMo) perform poorly in MemoryArena's agentic setting.
+- **Exposure of evaluation gap**: This exposes a significant gap in current agent memory evaluations, as existing methods fail to adequately capture the role of memory in guiding multi-session, interdependent tasks.
+- **Challenge of MemoryArena**: The interdependent and multi-session nature of MemoryArena tasks places higher demands on agents' memory and reasoning capabilities.
+- **Future research directions**: The findings highlight the necessity of developing more advanced memory mechanisms and agent architectures to better handle complex real-world scenarios where memory and action are tightly coupled.
+*(Inferred from title/venue; full paper not read.)*

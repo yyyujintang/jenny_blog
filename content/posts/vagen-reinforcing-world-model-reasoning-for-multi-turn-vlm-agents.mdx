@@ -1,0 +1,168 @@
+---
+title: "VAGEN: Reinforcing World Model Reasoning for Multi-Turn VLM Agents"
+date: 2026-04-25
+paper_date: 2025-10-19
+excerpt: "VAGEN通过显式视觉状态推理强化VLM智能体的世界模型，实现多轮任务的显著性能提升"
+excerpt_en: "VAGEN enhances VLM agents' world models through explicit visual state reasoning, achieving significant performance gains in multi-turn tasks"
+tags:
+  - paper-notes
+  - Method
+  - Internal
+  - RL-based
+  - Episodic
+  - Multimodal
+paper_id: vagen-reinforcing-world-model-reasoning-for-multi-turn-vlm-agents
+paper_venue: "NeurIPS25"
+paper_link: "https://arxiv.org/abs/2510.16907"
+paper_code: "https://github.com/mll-lab-nu/VAGEN"
+auto_generated: true
+notes_hash: f2fa5a2e42a2ccb6
+---
+
+## Motivation
+
+与LLM智能体不同，VLM智能体面临从文本状态到复杂视觉观测的转变，这引入了部分可观测性并需要强大的世界建模能力。
+
+我们提出了一个核心问题：VLM智能体能否通过显式视觉状态推理来构建内部世界模型？
+
+现有方法在处理多轮VLM智能体的复杂视觉环境时，往往难以有效地进行状态估计和转换建模。
+
+## Contribution
+
+- **架构强化与奖励机制**: 通过RL在架构上强制并奖励智能体的推理过程，将其建模为POMDP。
+- **推理分解**: 将智能体的推理分解为“状态估计”（当前状态是什么？）和“转换建模”（接下来会发生什么？），这被证明是成功的关键。
+- **内部信念表示研究**: 发现最优的内部信念表示是任务依赖的：自然语言擅长捕捉通用任务中的语义关系，而结构化格式对于精确操作和控制不可或缺。
+- **世界建模奖励**: 设计了一种世界建模奖励，为准确的状态预测提供密集的、回合级的监督。
+- **Bi-Level GAE**: 引入了Bi-Level General Advantage Estimation (Bi-Level GAE)，用于回合感知的信用分配。
+- **VAGEN框架**: 提出了VAGEN框架，一个可扩展的系统，用于在多样化视觉环境中训练和分析多轮VLM智能体。
+
+## Method
+
+### 1. POMDP Formulation
+
+我们将VLM智能体的推理过程建模为一个POMDP，以应对视觉观测带来的部分可观测性。
+
+### 2. Reasoning Decomposition
+
+智能体的核心推理过程被分解为两个关键部分：
+- **状态估计 (State Estimation)**: 智能体学习回答“当前状态是什么？”。
+- **转换建模 (Transition Modeling)**: 智能体学习预测“接下来会发生什么？”。
+
+### 3. Internal Belief Representation
+
+我们探索了不同的内部信念表示方法：
+- **自然语言**: 适用于捕捉通用任务中的语义关系。
+- **结构化格式**: 对于需要精确操作和控制的任务至关重要。
+
+### 4. World Modeling Reward
+
+设计了一种新的密集奖励机制：
+- **回合级监督**: 为智能体的准确状态预测提供逐回合的监督信号。
+
+### 5. Bi-Level General Advantage Estimation (Bi-Level GAE)
+
+引入了Bi-Level GAE来优化信用分配：
+- **回合感知**: 确保奖励能够有效地归因于导致成功的特定回合动作。
+
+### 6. VAGEN Framework
+
+所有实验和方法都集成在VAGEN框架中，这是一个用于训练和分析多轮VLM智能体的可扩展系统。
+
+## Comparison with Previous Work
+
+- **vs. LLM agents**: VAGEN专注于VLM智能体从文本状态到复杂视觉观测的转变，解决了LLM智能体不涉及的部分可观测性和世界建模挑战。
+- **vs. Untrained VLM agents**: VAGEN通过显式视觉状态推理和强化学习，实现了3倍的性能提升，远超未经训练的VLM智能体。
+- **vs. Proprietary reasoning models (GPT-5, Gemini 2.5 Pro, Claude 4.5)**: VAGEN在多个基准测试中超越了这些专有模型，证明了其在视觉状态推理方面的优越性。
+- **vs. Implicit world modeling approaches**: VAGEN通过架构强制和奖励显式地进行世界模型推理，而不是依赖隐式学习，从而提高了透明度和可控性。
+
+## Experiments
+
+**Table.** VAGEN在五个不同智能体基准上的性能对比。
+
+| Model | Score |
+|---|---|
+| Untrained counterpart | 0.21 |
+| GPT-5 | 0.75 |
+| Gemini 2.5 Pro | 0.67 |
+| Claude 4.5 | 0.62 |
+| VAGEN (3B-parameter) | 0.82 |
+
+- **显著性能提升**: 3B参数的VAGEN模型在五个多样化智能体基准测试中取得了0.82的得分，比未经训练的对应模型（0.21）提高了3倍。
+- **超越专有模型**: VAGEN的性能优于GPT-5 (0.75)、Gemini 2.5 Pro (0.67) 和 Claude 4.5 (0.62) 等专有推理模型。
+- **多样化基准测试**: 实验在五个不同的智能体基准上进行，证明了VAGEN方法的通用性和鲁棒性。
+- **可扩展性与可用性**: 所有实验均在VAGEN框架内进行，代码和数据已公开，方便进一步研究和复现。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+A key challenge in training Vision-Language Model (VLM) agents, compared to Language Model (LLM) agents, lies in the shift from textual states to complex visual observations. This transition introduces partial observability and demands robust world modeling.
+
+We ask: Can VLM agents construct internal world models through explicit visual state reasoning?
+
+Existing methods often struggle with effective state estimation and transition modeling when dealing with the complex visual environments of multi-turn VLM agents.
+
+## Contribution
+
+- **Architectural Enforcement and Reward**: Architecturally enforce and reward the agent's reasoning process via RL, formulating it as a POMDP.
+- **Reasoning Decomposition**: Decompose the agent's reasoning into "State Estimation" ("what is the current state?") and "Transition Modeling" ("what comes next?"), which is critical for success.
+- **Internal Belief Representation Investigation**: Reveal that the optimal internal belief representation is task-dependent: Natural Language excels at capturing semantic relationships in general tasks, while Structured formats are indispensable for precise manipulation and control.
+- **World Modeling Reward**: Design a World Modeling Reward that provides dense, turn-level supervision for accurate state prediction.
+- **Bi-Level GAE**: Introduce Bi-Level General Advantage Estimation (Bi-Level GAE) for turn-aware credit assignment.
+- **VAGEN Framework**: Propose the VAGEN framework, a scalable system for training and analyzing multi-turn VLM agents in diverse visual environments.
+
+## Method
+
+### 1. POMDP Formulation
+
+We formulate the VLM agent's reasoning process as a Partially Observable Markov Decision Process (POMDP) to address the partial observability introduced by visual observations.
+
+### 2. Reasoning Decomposition
+
+The agent's core reasoning is decomposed into two critical components:
+- **State Estimation**: The agent learns to answer "what is the current state?".
+- **Transition Modeling**: The agent learns to predict "what comes next?".
+
+### 3. Internal Belief Representation
+
+We investigate different approaches for representing internal beliefs:
+- **Natural Language**: Effective for capturing semantic relationships in general tasks.
+- **Structured Formats**: Indispensable for tasks requiring precise manipulation and control.
+
+### 4. World Modeling Reward
+
+A novel dense reward mechanism is designed:
+- **Turn-level Supervision**: Provides turn-level supervision for accurate state prediction by the agent.
+
+### 5. Bi-Level General Advantage Estimation (Bi-Level GAE)
+
+Bi-Level GAE is introduced to optimize credit assignment:
+- **Turn-aware**: Ensures that rewards are effectively attributed to specific turn actions that lead to success.
+
+### 6. VAGEN Framework
+
+All experiments and methods are integrated within the VAGEN framework, a scalable system for training and analyzing multi-turn VLM agents.
+
+## Comparison with Previous Work
+
+- **vs. LLM agents**: VAGEN specifically addresses the transition from textual states to complex visual observations in VLM agents, tackling partial observability and world modeling challenges not present in LLM agents.
+- **vs. Untrained VLM agents**: VAGEN achieves a 3x performance improvement through explicit visual state reasoning and reinforcement learning, significantly outperforming untrained VLM counterparts.
+- **vs. Proprietary reasoning models (GPT-5, Gemini 2.5 Pro, Claude 4.5)**: VAGEN outperforms these proprietary models across multiple benchmarks, demonstrating its superior capability in visual state reasoning.
+- **vs. Implicit world modeling approaches**: VAGEN explicitly enforces and rewards world model reasoning architecturally, rather than relying on implicit learning, leading to increased transparency and control.
+
+## Experiments
+
+**Table.** Performance comparison of VAGEN on five diverse agent benchmarks.
+
+| Model | Score |
+|---|---|
+| Untrained counterpart | 0.21 |
+| GPT-5 | 0.75 |
+| Gemini 2.5 Pro | 0.67 |
+| Claude 4.5 | 0.62 |
+| VAGEN (3B-parameter) | 0.82 |
+
+- **Significant Performance Improvement**: A 3B-parameter VAGEN model achieves a score of 0.82 across five diverse agent benchmarks, representing a 3x improvement over its untrained counterpart (0.21).
+- **Outperforms Proprietary Models**: VAGEN's performance surpasses proprietary reasoning models such as GPT-5 (0.75), Gemini 2.5 Pro (0.67), and Claude 4.5 (0.62).
+- **Diverse Benchmarks**: Experiments are conducted across five diverse agent benchmarks, demonstrating the generality and robustness of the VAGEN approach.
+- **Scalability and Availability**: All experiments are conducted within the VAGEN framework, with code and data publicly available for further research and reproducibility.

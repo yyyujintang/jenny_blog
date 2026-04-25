@@ -1,0 +1,167 @@
+---
+title: "VideoLucy: Deep Memory Backtracking for Long Video Understanding"
+date: 2026-04-25
+paper_date: 2025-10-14
+excerpt: "VideoLucy提出一种分层记忆回溯框架，通过Agent迭代机制，从粗到细地理解长视频，超越SOTA模型"
+excerpt_en: "VideoLucy introduces a hierarchical memory backtracking framework with an agent-based iterative mechanism for coarse-to-fine long video understanding, outperforming SOTA models."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - SFT
+  - Episodic
+  - Multimodal
+paper_id: videolucy-deep-memory-backtracking-for-long-video-understanding
+paper_venue: "NeurIPS25"
+paper_link: "https://arxiv.org/abs/2510.12422"
+auto_generated: true
+notes_hash: fa069a7e57ca5569
+---
+
+## Motivation
+
+长视频理解中的Agent-based LLM系统面临两大挑战：一是它们通常在单个帧上进行建模和推理，难以捕捉连续帧的时间上下文。
+二是为降低密集帧级标注成本，这些系统采用稀疏帧采样，这可能导致关键信息丢失。
+本研究旨在通过模拟人类从粗到细的回忆过程，解决这些限制，从而实现对长视频的有效时间理解和细节保留。
+
+## Contribution
+
+*   **分层记忆结构 (Hierarchical Memory Structure)**：受人类回忆过程启发，VideoLucy采用具有渐进粒度的分层记忆结构，明确定义了不同层次记忆的细节水平和时间范围。
+*   **Agent-based 迭代回溯机制 (Agent-based Iterative Backtracking Mechanism)**：通过Agent驱动的迭代回溯，系统性地挖掘视频中与问题相关的深层记忆，直到收集到足够信息以提供可靠答案。
+*   **新基准 EgoMem (New Benchmark EgoMem)**：引入了EgoMem，一个用于长视频理解的新基准，旨在全面评估模型理解复杂事件和捕捉极长视频中细粒度细节的能力。
+*   **卓越的性能 (Superior Performance)**：VideoLucy在多个长视频理解基准测试中显著优于SOTA方法，甚至超越了最新的专有模型如GPT-4o。
+
+## Method
+
+VideoLucy是一个深度记忆回溯框架，其核心在于模拟人类从粗到细的回忆过程，通过Agent-based迭代机制来理解长视频。
+
+1.  **分层记忆初始化 (Hierarchical Memory Initialization)**：
+    *   首先，系统对长视频进行稀疏采样，并利用LLM生成粗粒度的视频描述，形成初始的“粗记忆”。
+    *   这些粗记忆在时间上覆盖整个视频，但细节较少，类似于人类对事件的初步印象。
+2.  **Agent-based 迭代回溯 (Agent-based Iterative Backtracking)**：
+    *   当接收到用户问题时，一个“定位Agent”会根据当前记忆（初始粗记忆或后续细化记忆）判断哪些时间段可能包含与问题相关的关键信息。
+    *   如果现有信息不足以自信地回答问题，定位Agent会选择一个最相关的粗粒度时间段，并指示一个“指令Agent”对该时间段进行更密集的采样和更详细的描述。
+    *   这个过程会生成更细粒度的记忆，并将其添加到记忆结构中。
+    *   系统会迭代执行这个“定位-细化-整合”的循环，直到收集到足够的信息来提供一个自信的答案。
+3.  **记忆整合与推理 (Memory Integration and Reasoning)**：
+    *   在每次迭代中，所有收集到的记忆（从粗到细）都会被LLM整合，用于回答问题。
+    *   这种机制确保了在保持时间上下文的同时，能够深入挖掘关键细节，避免了稀疏采样可能带来的信息丢失。
+
+## Comparison with Previous Work
+
+*   **vs. 传统帧级处理方法 (vs. Traditional Frame-level Processing Methods)**：
+    *   传统方法通常独立处理视频帧，难以捕捉连续帧之间的时间依赖和上下文。VideoLucy通过其分层记忆结构和迭代回溯机制，显式地建模时间上下文，并能从粗到细地理解事件的演变。
+*   **vs. 稀疏采样方法 (vs. Sparse Frame Sampling Methods)**：
+    *   现有Agent-based系统为降低成本常采用稀疏帧采样，但可能丢失关键细节。VideoLucy通过Agent驱动的“回溯”机制，在需要时对特定时间段进行细粒度采样，有效缓解了信息丢失问题。
+*   **vs. 其他Agent-based系统 (vs. Other Agent-based Systems)**：
+    *   VideoLucy的独特之处在于其受人类回忆启发的“从粗到细”的分层记忆管理和迭代回溯策略，这使得它在处理长视频的复杂性和细节捕捉方面优于许多现有Agent-based系统。
+
+## Experiments
+
+**Table. VideoLucy在Video-MME基准测试中的表现，与SOTA模型进行比较。**
+
+| Method | Short | Medium | Long | Avg |
+| --- | --- | --- | --- | --- |
+| Proprietary Models |  |  |  |  |
+| Gemini 1.5 Flash [42] | 78.8 | 68.8 | 61.1 | 70.3 |
+| GPT-4o-20240513 [1] | 80.0 | 70.3 | 65.3 | 71.9 |
+| Gemini 1.5 pro [42] | 81.7 | 74.3 | 67.4 | 75.0 |
+| Leading Open-sourced MLLMs |  |  |  |  |
+| Qwen2-VL-72B [43] | 80.1 | 71.3 | 62.2 | 71.2 |
+| AdaReTake-72B [46] | 80.6 | 74.9 | 65.0 | 73.5 |
+| InternVL2.5-72B [7] | 82.8 | 70.9 | 62.6 | 72.1 |
+| LLaVA-OneVision-72B [18] | 76.7 | 62.2 | 60.0 | 66.3 |
+| LLaVA-Video-72B [63] | 81.4 | 68.9 | 61.5 | 70.6 |
+| VideoChat-Flash-7B [24] | 78.0 | 67.8 | 55.6 | 65.3 |
+| VideoLLaMA3-7B [58] | 80.1 | 63.7 | 54.9 | 66.2 |
+| LiveCC-7B [4] | 74.8 | 63.9 | 53.7 | 64.1 |
+| ViLAMP-7B [8] | 78.9 | 65.8 | 57.8 | 67.5 |
+| LinVT-7B [12] | 79.0 | 71.6 | 63.2 | 70.3 |
+| Agent-based Systems |  |  |  |  |
+| VideoAgent [9] | - | - | 46.4 | - |
+| VideoTree [48] | 67.8 | 59.9 | 54.2 | 60.6 |
+| DrVideo [32] | - | - | 51.7 | - |
+| MemVid [56] | 73.9 | 63.1 | 55.0 | 64.0 |
+| Video-RAG-7B [31] | 66.4 | 60.2 | 59.8 | 62.1 |
+| VCA [52] | - | - | 56.3 | - |
+| \rowcolorlightgray VideoLucy | 78.6 | 72.1 | 66.8 | 72.5 |
+
+*   **SOTA性能**：VideoLucy在多个长视频理解基准测试中表现出卓越性能，在Video-MME上，其平均得分达到72.5，超越了所有Agent-based系统和大多数领先的开源MLLM。
+*   **超越专有模型**：在某些基准测试中，VideoLucy甚至超越了最新的专有模型如GPT-4o，这表明其记忆回溯机制的有效性。
+*   **EgoMem基准测试**：在提出的新基准EgoMem上，VideoLucy在事件理解和细节捕捉方面均显著优于其他领先的开源MLLM和Agent-based系统，平均得分高达56.7。
+*   **开源基础**：VideoLucy基于开源模型构建，但其性能却能与甚至超越闭源的SOTA模型，展示了其架构设计的强大。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Agent-based LLM systems for long video understanding face two major challenges. Firstly, they typically perform modeling and reasoning on individual frames, struggling to capture the temporal context of consecutive frames.
+Secondly, to reduce the cost of dense frame-level captioning, these systems adopt sparse frame sampling, which risks discarding crucial information.
+This research aims to overcome these limitations by mimicking the human recollection process from coarse to fine, thereby enabling effective temporal understanding and critical detail preservation in long videos.
+
+## Contribution
+
+*   **Hierarchical Memory Structure**: Inspired by human recollection, VideoLucy employs a hierarchical memory structure with progressive granularity, explicitly defining the detail level and temporal scope of memory at different depths.
+*   **Agent-based Iterative Backtracking Mechanism**: Through an agent-driven iterative backtracking mechanism, VideoLucy systematically mines video-wide, question-relevant deep memories until sufficient information is gathered to provide a confident answer.
+*   **New Benchmark EgoMem**: We introduce EgoMem, a new benchmark for long video understanding, designed to comprehensively evaluate a model's ability to understand complex events and capture fine-grained details in extremely long videos.
+*   **Superior Performance**: VideoLucy significantly outperforms state-of-the-art methods on multiple long video understanding benchmarks, achieving performance even surpassing the latest proprietary models such as GPT-4o.
+
+## Method
+
+VideoLucy is a deep memory backtracking framework whose core lies in simulating the human recollection process from coarse to fine, using an agent-based iterative mechanism to understand long videos.
+
+1.  **Hierarchical Memory Initialization**:
+    *   First, the system sparsely samples the long video and uses an LLM to generate coarse-grained video descriptions, forming initial "coarse memories."
+    *   These coarse memories cover the entire video temporally but lack detail, similar to a human's initial impression of an event.
+2.  **Agent-based Iterative Backtracking**:
+    *   Upon receiving a user query, a "localization agent" assesses which time periods, based on current memories (initial coarse memories or subsequent refined memories), likely contain key information relevant to the question.
+    *   If existing information is insufficient for a confident answer, the localization agent selects the most relevant coarse-grained time period and instructs an "instruction agent" to perform more dense sampling and detailed description for that specific period.
+    *   This process generates finer-grained memories, which are then added to the memory structure.
+    *   The system iteratively performs this "localize-refine-integrate" loop until enough information is gathered to provide a confident answer.
+3.  **Memory Integration and Reasoning**:
+    *   In each iteration, all collected memories (from coarse to fine) are integrated by the LLM to answer the question.
+    *   This mechanism ensures that critical details can be deeply mined while maintaining temporal context, effectively mitigating information loss from sparse sampling.
+
+## Comparison with Previous Work
+
+*   **vs. Traditional Frame-level Processing Methods**:
+    *   Traditional methods often process video frames independently, struggling to capture temporal dependencies and context between consecutive frames. VideoLucy explicitly models temporal context through its hierarchical memory structure and iterative backtracking, understanding event evolution from coarse to fine.
+*   **vs. Sparse Sampling Methods**:
+    *   Existing agent-based systems often use sparse frame sampling to reduce costs, but this can lead to the loss of crucial details. VideoLucy's agent-driven "backtracking" mechanism allows for fine-grained sampling of specific time periods when needed, effectively alleviating the problem of information loss.
+*   **vs. Other Agent-based Systems**:
+    *   VideoLucy's unique "coarse-to-fine" hierarchical memory management and iterative backtracking strategy, inspired by human recollection, allows it to outperform many existing agent-based systems in handling the complexity and detail capture of long videos.
+
+## Experiments
+
+**Table. VideoLucy's performance on the Video-MME benchmark, comparing against SOTA models.**
+
+| Method | Short | Medium | Long | Avg |
+| --- | --- | --- | --- | --- |
+| Proprietary Models |  |  |  |  |
+| Gemini 1.5 Flash [42] | 78.8 | 68.8 | 61.1 | 70.3 |
+| GPT-4o-20240513 [1] | 80.0 | 70.3 | 65.3 | 71.9 |
+| Gemini 1.5 pro [42] | 81.7 | 74.3 | 67.4 | 75.0 |
+| Leading Open-sourced MLLMs |  |  |  |  |
+| Qwen2-VL-72B [43] | 80.1 | 71.3 | 62.2 | 71.2 |
+| AdaReTake-72B [46] | 80.6 | 74.9 | 65.0 | 73.5 |
+| InternVL2.5-72B [7] | 82.8 | 70.9 | 62.6 | 72.1 |
+| LLaVA-OneVision-72B [18] | 76.7 | 62.2 | 60.0 | 66.3 |
+| LLaVA-Video-72B [63] | 81.4 | 68.9 | 61.5 | 70.6 |
+| VideoChat-Flash-7B [24] | 78.0 | 67.8 | 55.6 | 65.3 |
+| VideoLLaMA3-7B [58] | 80.1 | 63.7 | 54.9 | 66.2 |
+| LiveCC-7B [4] | 74.8 | 63.9 | 53.7 | 64.1 |
+| ViLAMP-7B [8] | 78.9 | 65.8 | 57.8 | 67.5 |
+| LinVT-7B [12] | 79.0 | 71.6 | 63.2 | 70.3 |
+| Agent-based Systems |  |  |  |  |
+| VideoAgent [9] | - | - | 46.4 | - |
+| VideoTree [48] | 67.8 | 59.9 | 54.2 | 60.6 |
+| DrVideo [32] | - | - | 51.7 | - |
+| MemVid [56] | 73.9 | 63.1 | 55.0 | 64.0 |
+| Video-RAG-7B [31] | 66.4 | 60.2 | 59.8 | 62.1 |
+| VCA [52] | - | - | 56.3 | - |
+| \rowcolorlightgray VideoLucy | 78.6 | 72.1 | 66.8 | 72.5 |
+
+*   **SOTA Performance**: VideoLucy demonstrates superior performance across multiple long video understanding benchmarks. On Video-MME, it achieves an average score of 72.5, outperforming all other agent-based systems and most leading open-source MLLMs.
+*   **Outperforming Proprietary Models**: In certain benchmarks, VideoLucy even surpasses the latest proprietary models like GPT-4o, highlighting the effectiveness of its memory backtracking mechanism.
+*   **EgoMem Benchmark**: On the newly proposed EgoMem benchmark, VideoLucy significantly outperforms other leading open-source MLLMs and agent-based systems in both event understanding and detail capture, achieving an impressive average score of 56.7.
+*   **Open-Source Foundation**: VideoLucy is built on open-source models, yet its performance rivals and even exceeds that of closed-source SOTA models, demonstrating the power of its architectural design.

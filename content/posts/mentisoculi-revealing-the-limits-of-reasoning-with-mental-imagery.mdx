@@ -1,0 +1,99 @@
+---
+title: "MentisOculi: Revealing the Limits of Reasoning with Mental Imagery"
+date: 2026-04-25
+paper_date: 2026-02-02
+excerpt: "MentisOculi 评估发现，尽管统一多模态模型能生成视觉内容，但其视觉推理能力仍有显著局限"
+excerpt_en: "MentisOculi reveals that while unified multimodal models can generate visuals, their visual reasoning capabilities remain significantly limited"
+tags:
+  - paper-notes
+  - Benchmark
+  - Embodied
+paper_id: mentisoculi-revealing-the-limits-of-reasoning-with-mental-imagery
+paper_link: "https://arxiv.org/abs/2602.02465"
+auto_generated: true
+notes_hash: 2a96154a839b5f86
+---
+
+## Motivation
+
+当前前沿模型正从单纯摄取视觉信息的多模态大语言模型 (MLLMs) 转向能够原生交错生成统一多模态模型 (UMMs)。
+这种转变激发了人们对使用中间可视化作为推理辅助手段的兴趣，类似于人类的心理意象。
+其核心思想是模型能够以目标导向的方式形成、维护和操纵视觉表征。
+
+## Contribution
+
+- **MentisOculi 基准**: 开发了一个程序化、分层的多步推理问题套件，这些问题适用于视觉解决方案，并旨在挑战前沿模型。
+- **视觉策略评估**: 评估了从 latent tokens 到显式生成图像的各种视觉策略，发现它们普遍未能改善模型性能。
+- **UMM 局限性分析**: 揭示了 UMMs 的一个关键局限性：尽管它们具备解决任务的文本推理能力，有时也能生成正确的视觉内容，但它们存在复合生成错误，并且未能有效利用即使是 ground-truth 的可视化信息。
+- **未来研究基础**: MentisOculi 为分析和弥合不同模型家族在视觉推理方面的差距奠定了必要的基础。
+
+## Method
+
+### MentisOculi 基准设计
+1. **程序化生成**: 问题是程序化生成的，确保了任务的多样性和可控性。
+2. **分层难度**: 任务被设计为分层难度，从简单到复杂，逐步增加对视觉推理能力的要求。
+3. **多步推理**: 每个任务都需要多步推理，并且可以通过视觉解决方案来辅助或完成。
+4. **视觉解决方案适用性**: 任务被精心设计，使其能够从视觉表征的形成、维护和操作中受益。
+
+### 评估策略
+1. **Latent Tokens**: 评估模型在内部使用 latent tokens 进行视觉表征和推理的能力。
+2. **显式生成图像**: 评估模型生成外部图像作为推理辅助，并利用这些图像进行后续推理的能力。
+3. **Ground-truth 可视化**: 测试模型在给定正确可视化信息时，是否能有效利用这些信息来改善推理性能。
+
+## Comparison with Previous Work
+
+- **vs. 传统 MLLMs**: 我们的工作关注 UMMs 的原生交错生成能力，这与传统 MLLMs 仅摄取视觉信息有所不同，更接近人类的心理意象。
+- **vs. 现有推理基准**: MentisOculi 专注于需要形成、维护和操纵视觉表征的多步推理问题，这与许多侧重于文本或单一模态推理的现有基准不同。
+- **vs. 简单视觉问答**: 我们的任务超越了简单的视觉问答，要求模型进行更深层次的视觉思考和规划。
+
+## Experiments
+
+MentisOculi 评估了多种视觉策略，包括 latent tokens 和显式生成的图像，结果如下：
+
+- **视觉策略效果不佳**: 无论是 latent tokens 还是显式生成的图像，普遍未能有效改善模型的性能。
+- **UMM 复合生成错误**: UMMs 在生成视觉内容时存在复合错误，这些错误会累积并阻碍其推理能力。
+- **未能利用 Ground-truth 可视化**: 即使提供了 ground-truth 的可视化信息，UMMs 也未能有效利用这些信息来提升推理表现，这表明其在整合视觉信息方面存在深层问题。
+- **文本推理与视觉推理脱节**: 模型虽然具备解决任务的文本推理能力，但其视觉推理能力与文本推理能力之间存在显著脱节。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Frontier models are currently transitioning from multimodal large language models (MLLMs) that merely ingest visual information to unified multimodal models (UMMs) capable of native interleaved generation.
+This shift has sparked interest in using intermediate visualizations as a reasoning aid, akin to human mental imagery.
+Central to this idea is the ability to form, maintain, and manipulate visual representations in a goal-oriented manner.
+
+## Contribution
+
+- **MentisOculi Benchmark**: Developed a procedural, stratified suite of multi-step reasoning problems amenable to visual solution, specifically tuned to challenge frontier models.
+- **Visual Strategy Evaluation**: Evaluated visual strategies ranging from latent tokens to explicit generated imagery, finding that they generally fail to improve performance.
+- **UMM Limitation Analysis**: Exposed a critical limitation in UMMs: while they possess the textual reasoning capacity to solve a task and can sometimes generate correct visuals, they suffer from compounding generation errors and fail to leverage even ground-truth visualizations.
+- **Foundation for Future Research**: MentisOculi establishes the necessary foundation to analyze and close this gap across diverse model families in visual reasoning.
+
+## Method
+
+### MentisOculi Benchmark Design
+1. **Procedural Generation**: Problems are procedurally generated, ensuring diversity and controllability of tasks.
+2. **Stratified Difficulty**: Tasks are designed with stratified difficulty, ranging from simple to complex, progressively increasing the demands on visual reasoning capabilities.
+3. **Multi-step Reasoning**: Each task requires multi-step reasoning and can be aided or solved through visual solutions.
+4. **Visual Solution Amenability**: Tasks are carefully crafted to benefit from the formation, maintenance, and manipulation of visual representations.
+
+### Evaluation Strategies
+1. **Latent Tokens**: Assessing the model's ability to internally use latent tokens for visual representation and reasoning.
+2. **Explicit Generated Imagery**: Evaluating the model's capacity to generate external images as reasoning aids and utilize these images for subsequent reasoning.
+3. **Ground-truth Visualizations**: Testing whether models can effectively leverage correct visualization information when provided, to improve reasoning performance.
+
+## Comparison with Previous Work
+
+- **vs. Traditional MLLMs**: Our work focuses on the native interleaved generation capabilities of UMMs, which differs from traditional MLLMs that merely ingest visual information, aligning more closely with human mental imagery.
+- **vs. Existing Reasoning Benchmarks**: MentisOculi specifically targets multi-step reasoning problems requiring the formation, maintenance, and manipulation of visual representations, distinguishing it from many existing benchmarks focused on textual or single-modality reasoning.
+- **vs. Simple Visual Question Answering**: Our tasks go beyond simple visual question answering, demanding deeper visual thought and planning from the models.
+
+## Experiments
+
+MentisOculi evaluated various visual strategies, including latent tokens and explicit generated imagery, with the following key findings:
+
+- **Ineffectiveness of Visual Strategies**: Both latent tokens and explicit generated imagery generally failed to improve model performance.
+- **Compounding Generation Errors in UMMs**: UMMs exhibited compounding errors when generating visual content, which accumulated and hindered their reasoning abilities.
+- **Failure to Leverage Ground-truth Visualizations**: Even when provided with ground-truth visualization information, UMMs failed to effectively utilize it to enhance reasoning performance, indicating a deeper issue in integrating visual information.
+- **Disconnection between Textual and Visual Reasoning**: While models possess the textual reasoning capacity to solve tasks, there is a significant disconnect between their textual and visual reasoning capabilities.

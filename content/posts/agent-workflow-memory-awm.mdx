@@ -1,0 +1,133 @@
+---
+title: "Agent Workflow Memory (AWM)"
+date: 2026-04-24
+paper_date: 2024-09-11
+excerpt: "引入Agent Workflow Memory (AWM)，通过学习和复用任务工作流，显著提升AI代理在复杂长时任务上的表现"
+excerpt_en: "Introducing Agent Workflow Memory (AWM) to significantly improve AI agent performance on complex, long-horizon tasks by learning and reusing task workflows"
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Procedural
+paper_id: agent-workflow-memory-awm
+paper_venue: "ICML26"
+paper_link: "https://arxiv.org/abs/2409.07429"
+paper_code: "https://github.com/zorazrw/agent-workflow-memory"
+auto_generated: true
+notes_hash: 71651ab62db70bd1
+---
+
+## Motivation
+
+尽管基于语言模型的代理在解决如网页导航等实际任务方面潜力巨大，但它们在处理具有复杂动作轨迹的长时任务时仍然面临挑战。
+
+人类可以灵活地从过往经验中学习可复用的任务工作流，并利用这些工作流来指导未来的行动，从而有效地解决复杂任务。
+
+为了让AI代理也能从这一过程中受益，我们旨在开发一种方法，使其能够像人类一样学习和应用这些可复用的任务工作流。
+
+## Contribution
+
+- **Agent Workflow Memory (AWM)**：提出一种新方法，通过诱导和选择性地提供常用工作流来指导代理的后续生成，从而解决长时任务。
+- **灵活的部署场景**：AWM既可应用于离线场景（预先从训练示例中诱导工作流），也可应用于在线场景（根据测试查询即时诱导工作流）。
+- **显著的性能提升**：在Mind2Web和WebArena两大网页导航基准测试中，AWM相对成功率分别提升了24.6%和51.1%，并减少了解决WebArena任务所需的步骤数。
+- **强大的泛化能力**：在线AWM在跨任务、跨网站和跨领域评估中表现出强大的泛化能力，在训练-测试任务分布差距扩大时，绝对分数超越基线8.9至14.0个百分点。
+
+## Method
+
+AWM旨在通过学习和复用任务工作流来提升AI代理在长时任务中的表现。
+
+### 工作流诱导 (Workflow Induction)
+
+1.  **从经验中学习**：AWM从过去的任务经验中识别并诱导常用的例程，即工作流。这些工作流可以是预先从训练数据中学习的（离线），也可以是根据当前任务实时学习的（在线）。
+2.  **工作流表示**：诱导出的工作流被表示为一系列动作或子任务，它们代表了解决特定类型问题的常见模式。
+
+### 工作流检索与应用 (Workflow Retrieval and Application)
+
+1.  **情境感知检索**：当代理遇到新任务时，AWM会根据当前任务的上下文和目标，选择性地检索最相关的工作流。
+2.  **指导生成**：检索到的工作流被用作指导信息，注入到语言模型代理的生成过程中，帮助代理规划更有效、更符合逻辑的动作序列。这有助于代理避免重复错误，并更快地收敛到解决方案。
+
+## Comparison with Previous Work
+
+- **vs. 缺乏记忆的语言模型代理**：传统语言模型代理在处理长时任务时，往往难以维持一致性和效率，容易陷入循环或偏离目标。AWM通过引入结构化的工作流记忆，提供了更高级别的指导和规划能力。
+- **vs. 仅依赖短期记忆或RAG**：虽然RAG等方法可以提供相关信息，但它们通常侧重于片段式或事实性检索。AWM则专注于学习和复用任务级别的“操作流程”，这是一种更高级别的抽象和指导，超越了简单的信息检索。
+- **vs. 人工设计工作流**：一些方法依赖于人类工程师手动设计任务工作流。AWM能够自动从数据中学习这些工作流，大大减少了人工干预的需求，并能适应更广泛的任务和领域。
+- **vs. 传统的RL方法**：传统的RL方法在复杂、稀疏奖励的任务中学习效率低下，且泛化能力有限。AWM通过引入可复用的工作流，为代理提供了更强的结构化先验知识，加速了学习过程并提升了泛化能力。
+
+## Experiments
+
+**Table. WebArena上使用gpt-4的任务成功率，以及五个网站拆分的得分细分。**
+
+| Method | Total SR | Shopping | CMS | Reddit | GitLab | Maps | # Steps |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| With human engineered workflows |  |  |  |  |  |  |  |
+| *SteP (Sodhi et al., 2023) | 33.0 | 37.0 | 24.0 | 59.0 | 32.0 | 30.0 | - |
+| Autonomous agent only |  |  |  |  |  |  |  |
+| WebArena (Zhou et al., 2024) | 14.9 | 14.0 | 11.0 | 6.0 | 15.0 | 16.0 | - |
+| AutoEval (Pan et al., 2024) | 20.2 | 25.5 | 18.1 | 25.4 | 28.6 | 31.9 | 46.7 |
+| BrowserGym (Drouin et al., 2024) | 23.5 | - | - | - | - | - | - |
+| BrowserGymax-tree | 15.0 | 17.2 | 14.8 | 20.2 | 19.0 | 25.5 | 7.9 |
+| AWM (ours) | 35.5 | 30.8 | 29.1 | 50.9 | 31.8 | 43.3 | 5.9 |
+
+- **显著提升任务成功率**：AWM在WebArena基准测试中达到了35.5%的总成功率，显著优于所有自主代理基线，甚至超越了部分人工设计工作流的方法。
+- **减少完成任务所需步骤**：AWM在WebArena任务上成功解决任务所需的平均步骤数仅为5.9步，远低于其他自主代理方法，表明其效率更高。
+- **在Mind2Web上表现优异**：AWM在Mind2Web上的相对成功率提升了24.6% (使用GPT-3.5) 和 51.1% (使用GPT-4)，显示了其在不同模型上的有效性。
+- **强大的泛化能力**：在线AWM在跨任务、跨网站和跨领域泛化评估中，相比基线方法有8.9到14.0个绝对百分点的提升，证明了其在面对未知或分布外任务时的鲁棒性。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Despite the potential of language model-based agents to solve real-world tasks such as web navigation, current methods still struggle with long-horizon tasks that involve complex action trajectories.
+
+In contrast, humans can flexibly solve complex tasks by learning reusable task workflows from past experiences and effectively using them to guide future actions.
+
+To build agents that can similarly benefit from this process, we aim to develop a method that allows AI agents to learn and apply these reusable task workflows, much like humans do.
+
+## Contribution
+
+- **Agent Workflow Memory (AWM)**: We introduce a novel method that induces commonly reused routines, or workflows, and selectively provides them to the agent to guide subsequent generations, addressing long-horizon tasks.
+- **Flexible Application Scenarios**: AWM is versatile, applying to both offline scenarios where workflows are induced from training examples beforehand, and online scenarios where workflows are induced from test queries on the fly.
+- **Substantial Performance Improvement**: AWM significantly improves baseline results by 24.6% and 51.1% relative success rate on Mind2Web and WebArena, respectively, while also reducing the number of steps taken to solve WebArena tasks successfully.
+- **Robust Generalization**: Online AWM demonstrates robust generalization in cross-task, cross-website, and cross-domain evaluations, surpassing baselines by 8.9 to 14.0 absolute points as train-test task distribution gaps widen.
+
+## Method
+
+AWM aims to enhance AI agent performance in long-horizon tasks by learning and reusing task workflows.
+
+### Workflow Induction
+
+1.  **Learning from Experience**: AWM identifies and induces commonly reused routines, or workflows, from past task experiences. These workflows can be learned beforehand from training data (offline) or in real-time based on the current task (online).
+2.  **Workflow Representation**: The induced workflows are represented as sequences of actions or sub-tasks, embodying common patterns for solving specific types of problems.
+
+### Workflow Retrieval and Application
+
+1.  **Context-Aware Retrieval**: When an agent encounters a new task, AWM selectively retrieves the most relevant workflows based on the current task's context and objectives.
+2.  **Guiding Generation**: The retrieved workflows are then used as guiding information, injected into the language model agent's generation process. This helps the agent plan more effective and logical action sequences, avoiding repetitive errors and converging to solutions more quickly.
+
+## Comparison with Previous Work
+
+- **vs. Memory-less Language Model Agents**: Traditional language model agents often struggle with consistency and efficiency in long-horizon tasks, frequently falling into loops or deviating from goals. AWM introduces structured workflow memory, providing a higher level of guidance and planning capability.
+- **vs. Relying Solely on Short-Term Memory or RAG**: While methods like RAG can provide relevant information, they typically focus on episodic or factual retrieval. AWM, in contrast, focuses on learning and reusing task-level "operational procedures," which is a higher-level abstraction and guidance beyond simple information retrieval.
+- **vs. Human-Engineered Workflows**: Some approaches rely on human engineers to manually design task workflows. AWM automates the learning of these workflows from data, significantly reducing the need for manual intervention and adapting to a broader range of tasks and domains.
+- **vs. Traditional RL Methods**: Traditional RL methods often suffer from low learning efficiency and limited generalization in complex tasks with sparse rewards. By introducing reusable workflows, AWM provides agents with stronger structured prior knowledge, accelerating the learning process and improving generalization.
+
+## Experiments
+
+**Table. Task success rate on WebArena using gpt-4, and score breakdown on five website splits.**
+
+| Method | Total SR | Shopping | CMS | Reddit | GitLab | Maps | # Steps |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| With human engineered workflows |  |  |  |  |  |  |  |
+| *SteP (Sodhi et al., 2023) | 33.0 | 37.0 | 24.0 | 59.0 | 32.0 | 30.0 | - |
+| Autonomous agent only |  |  |  |  |  |  |  |
+| WebArena (Zhou et al., 2024) | 14.9 | 14.0 | 11.0 | 6.0 | 15.0 | 16.0 | - |
+| AutoEval (Pan et al., 2024) | 20.2 | 25.5 | 18.1 | 25.4 | 28.6 | 31.9 | 46.7 |
+| BrowserGym (Drouin et al., 2024) | 23.5 | - | - | - | - | - | - |
+| BrowserGymax-tree | 15.0 | 17.2 | 14.8 | 20.2 | 19.0 | 25.5 | 7.9 |
+| AWM (ours) | 35.5 | 30.8 | 29.1 | 50.9 | 31.8 | 43.3 | 5.9 |
+
+- **Significant Improvement in Task Success Rate**: AWM achieves a total success rate of 35.5% on the WebArena benchmark, substantially outperforming all autonomous agent baselines and even surpassing some methods relying on human-engineered workflows.
+- **Reduced Steps to Task Completion**: AWM successfully solves WebArena tasks with an average of only 5.9 steps, significantly fewer than other autonomous agent methods, indicating higher efficiency.
+- **Strong Performance on Mind2Web**: AWM demonstrates a relative success rate improvement of 24.6% (with GPT-3.5) and 51.1% (with GPT-4) on Mind2Web, showcasing its effectiveness across different models.
+- **Robust Generalization Capabilities**: In cross-task, cross-website, and cross-domain generalization evaluations, online AWM shows an absolute improvement of 8.9 to 14.0 percentage points over baseline methods, proving its robustness when facing unseen or out-of-distribution tasks.

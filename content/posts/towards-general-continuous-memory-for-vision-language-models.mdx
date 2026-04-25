@@ -1,0 +1,139 @@
+---
+title: "Towards General Continuous Memory for Vision-Language Models"
+date: 2026-04-24
+paper_date: 2025-05-23
+excerpt: "提出CoMEM，一种高效的连续记忆系统，利用VLM作为编码器，增强多模态和多语言推理能力"
+excerpt_en: "CoMEM proposes an efficient continuous memory system that leverages VLMs as encoders to enhance multimodal and multilingual reasoning."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Internal
+  - SFT
+  - Episodic
+  - Multimodal
+  - Semantic
+paper_id: towards-general-continuous-memory-for-vision-language-models
+paper_venue: "NeurIPS25"
+paper_link: "https://arxiv.org/abs/2505.17670"
+auto_generated: true
+notes_hash: 51c4e838918ca5f6
+---
+
+## Motivation
+
+大型语言模型（LMs）及其扩展的多模态语言模型（VLMs）在各种任务中表现出色，但在需要复杂的多模态或多语言真实世界知识的推理任务上仍面临挑战。
+
+为了支持这些高级能力，一个能够高效提供相关多模态信息的外部记忆系统至关重要。
+
+现有方法通常将图像和文本 token 拼接成一个长序列作为记忆，但这会显著增加上下文长度，甚至可能降低性能。
+
+## Contribution
+
+- **连续记忆系统（CoMEM）**: 提出一种紧凑的密集嵌入集作为连续记忆，更有效、高效地表示多模态和多语言知识。
+- **VLM作为记忆编码器**: 创新性地利用VLM自身作为连续记忆编码器，无需额外的复杂架构。
+- **数据和参数高效的微调方法**: 仅需模型参数的1.2%和15.6K自合成样本的小型语料库即可微调VLM成为记忆编码器。
+- **即插即用模块**: 推理时VLM保持冻结，使CoMEM模块可以灵活地按需集成。
+- **多模态和多语言知识编码**: 能够将任意多模态和多语言知识编码为仅8个连续嵌入。
+
+## Method
+
+1.  **VLM作为连续记忆编码器**: 核心思想是利用预训练的VLM作为其自身的连续记忆编码器。这意味着VLM能够将输入的多模态和多语言信息压缩成紧凑的密集嵌入。
+2.  **记忆表示**: 将多模态和多语言知识表示为一组紧凑的密集嵌入（continuous memory），而非传统的长序列 token。本文中，这些记忆被编码为8个连续嵌入。
+3.  **数据高效微调**:
+    *   使用15.6K个自合成样本的小型语料库进行训练。
+    *   仅微调VLM中1.2%的参数，以使其更好地作为记忆编码器。
+4.  **即插即用集成**:
+    *   在推理阶段，VLM的主体部分保持冻结，确保了CoMEM模块的灵活性和易于集成。
+    *   CoMEM作为外部记忆系统，可以根据需要动态地为VLM提供相关知识，而不会改变VLM的核心结构。
+
+## Comparison with Previous Work
+
+- **vs. 传统RAG方法**: 传统RAG通常将原始图像和文本 token 拼接成上下文，导致上下文长度大幅增加，可能降低性能。CoMEM使用紧凑的连续嵌入，避免了这一问题。
+- **vs. 基于长序列的记忆方法**: 许多现有方法依赖于长序列的 token 作为记忆，如一些 multimodal-RAG 和 context-compression 方法。CoMEM的连续记忆表示更高效，且避免了长上下文带来的性能下降。
+- **vs. 其他连续记忆方法**: 尽管也有其他连续记忆方法，但CoMEM的独特之处在于它利用VLM自身作为编码器，并且在数据和参数效率上表现突出，例如，比EchoSight、ReflectiVA等在训练成本上有显著优势。
+- **vs. 仅文本记忆系统**: 许多现有记忆系统主要关注文本信息，如xRAG、KV-Distill等。CoMEM支持多模态和多语言知识的编码，适用范围更广。
+
+## Experiments
+
+**Table. CoMEM与其他代表性工作的对比。**
+
+| | | Properties | Scenarios | Training Cost | | | |
+|---|---|---|---|---|---|---|---|
+| Category | Method | Continuous | Pulg-and-Play | Multimodal | Multilingual | Data | Parameters |
+| Multimodal-RAG | EchoSight echosight | ✗ | ✓ | ✗Text | ✗ | 900K | 300M |
+| ReflectiVA reflectiva | ✗ | ✗ | ✓Image+Text | ✗ | 6.82M | 8B | |
+| RoRA-VLM roravlm | ✗ | ✗ | ✓Image+Text | ✗ | 1M | 7B | |
+| Context-Compression | xRAG xrag | ✓ | ✓ | ✗Text | ✗ | 3M | 40M |
+| KV-Distill Chari2025KVDistillNL | ✗ | ✓ | ✗Text | ✗ | 500K+ | 150M | |
+| VoCo-LLaMA vocolama | ✓ | ✗ | ✓Image/Video | ✗ | 665K | 7B | |
+| LM Memory | LONGMEM wang2023longmem | ✓ | ✓ | ✗Text | ✗ | 114M | 558M |
+| MA-LMM he2024malmm | ✓ | ✓ | ✓Video+Text | ✗ | NA | 200M | |
+| M+ wang2025mplus | ✓ | ✗ | ✗Text | ✗ | 5M | NA | |
+| MemGPT memgpt2024packer | ✗ | ✓ | ✗Text | ✗ | NA | NA | |
+| | CoMEM | ✓ | ✓ | ✓Image+Text | ✓ | 15K | 200M |
+
+*   **卓越的性能提升**: 在八个多模态推理基准测试中，CoMEM显著提高了性能，尤其是在知识密集型VQA任务上。
+*   **多语言能力**: CoMEM在多语言知识密集型VQA基准测试中也表现出色，证明了其处理多语言信息的能力。
+*   **高效的训练成本**: 仅使用15.6K自合成样本和微调1.2%的模型参数，CoMEM在数据和参数效率方面优于大多数现有方法。
+*   **即插即用特性**: 实验证明CoMEM可以作为即插即用模块有效地集成到现有的VLM中，且推理时VLM保持冻结。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Language Models (LMs) and their extensions, Vision-Language Models (VLMs), have achieved remarkable performance across various tasks. However, they still struggle with complex reasoning tasks that require multimodal or multilingual real-world knowledge.
+
+To support such capabilities, an external memory system that can efficiently provide relevant multimodal information is essential.
+
+Existing approaches generally concatenate image and text tokens into a long sequence as memory, which, however, may drastically increase context length and even degrade performance.
+
+## Contribution
+
+- **Continuous Memory System (CoMEM)**: Proposes a compact set of dense embeddings as continuous memory to more effectively and efficiently represent multimodal and multilingual knowledge.
+- **VLM as Memory Encoder**: Innovatively leverages a VLM to serve as its own continuous memory encoder, eliminating the need for complex external architectures.
+- **Data- and Parameter-Efficient Fine-tuning**: Introduces a method to fine-tune the VLM into a memory encoder, requiring only 1.2% of the model's parameters and a small corpus of 15.6K self-synthesized samples.
+- **Plug-and-Play Module**: The inference-time VLM remains frozen, allowing the CoMEM memory module to be flexibly integrated as needed.
+- **Multimodal and Multilingual Knowledge Encoding**: Capable of encoding arbitrary multimodal and multilingual knowledge into just 8 continuous embeddings.
+
+## Method
+
+1.  **VLM as Continuous Memory Encoder**: The core idea is to utilize a pre-trained VLM as its own continuous memory encoder. This means the VLM can compress input multimodal and multilingual information into compact, dense embeddings.
+2.  **Memory Representation**: Multimodal and multilingual knowledge is represented as a compact set of dense embeddings (continuous memory), rather than traditional long sequences of tokens. In this work, this memory is encoded into just 8 continuous embeddings.
+3.  **Data-Efficient Fine-tuning**:
+    *   Training is performed using a small corpus of 15.6K self-synthesized samples.
+    *   Only 1.2% of the VLM's parameters are fine-tuned to optimize its role as a memory encoder.
+4.  **Plug-and-Play Integration**:
+    *   During inference, the main body of the VLM remains frozen, ensuring the flexibility and ease of integration for the CoMEM module.
+    *   CoMEM acts as an external memory system, dynamically providing relevant knowledge to the VLM as needed, without altering the VLM's core architecture.
+
+## Comparison with Previous Work
+
+- **vs. Traditional RAG approaches**: Traditional RAG often concatenates raw image and text tokens into the context, leading to significantly increased context length and potential performance degradation. CoMEM uses compact continuous embeddings to avoid this issue.
+- **vs. Long-sequence based memory methods**: Many existing methods rely on long sequences of tokens for memory, such as some multimodal-RAG and context-compression approaches. CoMEM's continuous memory representation is more efficient and avoids the performance drop associated with long contexts.
+- **vs. Other continuous memory methods**: While other continuous memory methods exist, CoMEM's uniqueness lies in leveraging the VLM itself as an encoder and its superior data and parameter efficiency, outperforming methods like EchoSight and ReflectiVA in training costs.
+- **vs. Text-only memory systems**: Many existing memory systems primarily focus on textual information, such as xRAG and KV-Distill. CoMEM supports encoding both multimodal and multilingual knowledge, offering broader applicability.
+
+## Experiments
+
+**Table. Comparison between our approach and other representative line of work.**
+
+| | | Properties | Scenarios | Training Cost | | | |
+|---|---|---|---|---|---|---|---|
+| Category | Method | Continuous | Pulg-and-Play | Multimodal | Multilingual | Data | Parameters |
+| Multimodal-RAG | EchoSight echosight | ✗ | ✓ | ✗Text | ✗ | 900K | 300M |
+| ReflectiVA reflectiva | ✗ | ✗ | ✓Image+Text | ✗ | 6.82M | 8B | |
+| RoRA-VLM roravlm | ✗ | ✗ | ✓Image+Text | ✗ | 1M | 7B | |
+| Context-Compression | xRAG xrag | ✓ | ✓ | ✗Text | ✗ | 3M | 40M |
+| KV-Distill Chari2025KVDistillNL | ✗ | ✓ | ✗Text | ✗ | 500K+ | 150M | |
+| VoCo-LLaMA vocolama | ✓ | ✗ | ✓Image/Video | ✗ | 665K | 7B | |
+| LM Memory | LONGMEM wang2023longmem | ✓ | ✓ | ✗Text | ✗ | 114M | 558M |
+| MA-LMM he2024malmm | ✓ | ✓ | ✓Video+Text | ✗ | NA | 200M | |
+| M+ wang2025mplus | ✓ | ✗ | ✗Text | ✗ | 5M | NA | |
+| MemGPT memgpt2024packer | ✗ | ✓ | ✗Text | ✗ | NA | NA | |
+| | CoMEM | ✓ | ✓ | ✓Image+Text | ✓ | 15K | 200M |
+
+*   **Significant Performance Improvement**: CoMEM demonstrates remarkable performance improvements across eight multimodal reasoning benchmarks, particularly on knowledge-intensive VQA tasks.
+*   **Multilingual Capability**: The approach also performs strongly on multilingual knowledge-intensive VQA benchmarks, showcasing its ability to handle diverse linguistic information.
+*   **Efficient Training Cost**: With only 15.6K self-synthesized samples and fine-tuning just 1.2% of the model's parameters, CoMEM is highly data- and parameter-efficient compared to most existing methods.
+*   **Plug-and-Play Nature**: Experiments confirm that CoMEM can be effectively integrated as a plug-and-play module into existing VLMs, with the VLM remaining frozen during inference.

@@ -1,0 +1,151 @@
+---
+title: "Retrieval Augmented Generation and Understanding in Vision: A Survey and New Outlook"
+date: 2026-04-24
+paper_date: 2025-03-23
+excerpt: "本文全面综述了计算机视觉领域中检索增强生成（RAG）技术的最新进展、局限性及未来方向"
+excerpt_en: "This survey comprehensively reviews the current state, limitations, and future directions of retrieval-augmented generation (RAG) techniques in computer vision."
+tags:
+  - paper-notes
+  - Survey
+paper_id: retrieval-augmented-generation-and-understanding-in-vision-a-survey-and-new-outl
+paper_authors: "Xuming Hu"
+paper_link: "https://arxiv.org/abs/2503.18016"
+auto_generated: true
+notes_hash: fcda77b2852f6e07
+---
+
+## Motivation
+
+RAG已成为AI领域，特别是LLMs中，通过访问外部知识源来增强模型能力的关键技术。
+在AIGC背景下，RAG通过补充相关信息显著提升了模型输出质量。
+最近，RAG的潜力已扩展到NLP之外，开始与计算机视觉（CV）领域结合，旨在通过整合权威的外部知识库来弥补模型内部知识的局限性。
+
+## Contribution
+
+- **全面综述**: 对CV领域中检索增强技术的当前状态进行了全面回顾，涵盖视觉理解和视觉生成两大主要领域。
+- **任务分类**: 系统地回顾了视觉理解任务，从图像识别到医学报告生成和多模态问答；并检查了RAG在图像、视频和3D生成中的应用。
+- **具身AI应用**: 探讨了RAG在具身AI中的最新进展，特别关注规划、任务执行、多模态感知、交互和专业领域。
+- **局限性与未来方向**: 强调了当前方法的关键局限性，并提出了未来研究方向，以推动这一有前景领域的发展。
+
+## Method
+
+本文作为一篇综述论文，主要通过以下方式组织和呈现内容：
+
+1.  **引言**: 介绍RAG在LLMs和AIGC中的重要性，并引出其在CV领域的应用潜力。
+2.  **RAG在视觉理解中的应用**:
+    *   **基础图像识别**: 如何利用RAG增强图像分类、目标检测等任务。
+    *   **复杂视觉理解**: 探讨RAG在医学报告生成、多模态问答等高级任务中的作用。
+3.  **RAG在视觉生成中的应用**:
+    *   **图像生成**: 讨论RAG如何提升图像、视频和3D内容的生成质量和真实性。
+    *   **视频生成**: 结合外部知识库生成更连贯、准确的视频内容。
+    *   **3D生成**: 探索RAG在3D模型和场景生成中的潜力。
+4.  **RAG在具身AI中的应用**:
+    *   **规划与任务执行**: RAG如何帮助具身智能体进行更有效的规划和执行。
+    *   **多模态感知与交互**: 增强具身智能体对环境的感知和交互能力。
+    *   **专业领域应用**: 探讨RAG在特定具身AI场景中的应用。
+5.  **当前局限性与未来方向**: 分析现有RAG方法在CV领域面临的挑战，并提出潜在的研究方向。
+
+*(基于标题与领域常识推断,未读全文)*
+
+## Comparison with Previous Work
+
+**Table.** 现有RAG综述论文的对比。
+
+| Year | Paper | Focused Areas | Main Context | GitHub |
+| --- | --- | --- | --- | --- |
+| 2023 | Gao et al. [1] | LLMs / NLP | RAG paradigms and components | - |
+| 2024 | Fan et al. [2] | LLMs / NLP | RA-LLMs’ architectures, training, and applications | link |
+| 2024 | Hu et al. [3] | LLMs / NLP | RA-LMs’ components, evaluation, and limitations | link |
+| 2024 | Zhao et al. [4] | LLMs / NLP | challenges in data-augmented LLMs | - |
+| 2024 | Gupta et al. [5] | LLMs / NLP | Advancements and downstream tasks of RAG | - |
+| 2024 | Zhao et al. [6] | RAG in AIGC | RAG applications across modalities | link |
+| 2024 | Yu et al. [7] | LLMs / NLP | Unified evalutaiton process of RAG | link |
+| 2024 | Procko et al. [8] | Graph Learning | Knowledge graphs with LLM RAG | - |
+| 2024 | Zhou et al. [9] | Trustworthiness AI | Six dimensions and benchmarks about Trustworthy RAG | link |
+| 2025 | Singh et al. [10] | AI Agent | Participles and evaluation | link |
+| 2025 | Ni et al. [11] | Trustworthiness AI | Road-map and discussion | link |
+| 2025 | Ours | Computer Vision | RAG for visual understanding and generation | link |
+
+- **vs. 现有RAG综述**: 大多数现有RAG综述（如Gao et al. [1], Fan et al. [2]）主要集中在LLMs和NLP领域。
+- **vs. 跨模态RAG综述**: Zhao et al. [6] 涵盖了AIGC中的RAG应用，但本文更深入地专注于计算机视觉的特定挑战和机遇。
+- **本文的独特之处**: 本文是首批专门针对计算机视觉领域中RAG技术进行全面、深入综述的论文之一，系统地划分了视觉理解和视觉生成任务，并探讨了具身AI中的应用。
+
+## Experiments
+
+本文作为一篇综述论文，不包含新的实验结果。它主要通过回顾和分析现有文献来支撑其论点。
+
+- 综述了RAG在各种视觉理解任务（如VQA、医学报告生成）中的应用效果。
+- 分析了RAG如何提升图像、视频和3D生成任务的质量和真实感。
+- 讨论了RAG在具身AI（如规划、任务执行）中带来的性能提升。
+- 强调了RAG在缓解视觉模型幻觉问题上的潜力。
+
+*(基于标题与领域常识推断,未读全文)*
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Retrieval-augmented generation (RAG) has emerged as a pivotal technique in AI, particularly for enhancing LLMs by enabling access to external knowledge sources.
+In the context of AI-Generated Content (AIGC), RAG has proven invaluable by augmenting model outputs with supplementary, relevant information, thereby improving their quality.
+Recently, the potential of RAG has extended beyond natural language processing, with emerging methods integrating retrieval-augmented strategies into the computer vision (CV) domain to address limitations of relying solely on internal model knowledge.
+
+## Contribution
+
+- **Comprehensive Review**: Provides a comprehensive review of the current state of retrieval-augmented techniques in CV, focusing on visual understanding and visual generation.
+- **Task Categorization**: Systematically reviews visual understanding tasks ranging from basic image recognition to complex applications like medical report generation and multimodal question answering; also examines RAG's application in image, video, and 3D generation.
+- **Embodied AI Applications**: Explores recent advancements of RAG in embodied AI, with a particular focus on planning, task execution, multimodal perception, interaction, and specialized domains.
+- **Limitations and Future Directions**: Highlights key limitations of current approaches and proposes future research directions to drive the development of this promising area.
+
+## Method
+
+As a survey paper, this work primarily organizes and presents its content through the following structure:
+
+1.  **Introduction**: Introduces the significance of RAG in LLMs and AIGC, leading to its potential applications in the CV domain.
+2.  **RAG in Visual Understanding**:
+    *   **Basic Image Recognition**: How RAG enhances tasks like image classification and object detection.
+    *   **Complex Visual Understanding**: Discusses RAG's role in advanced tasks such as medical report generation and multimodal question answering.
+3.  **RAG in Visual Generation**:
+    *   **Image Generation**: How RAG improves the quality and realism of image, video, and 3D content generation.
+    *   **Video Generation**: Generating more coherent and accurate video content by incorporating external knowledge bases.
+    *   **3D Generation**: Exploring RAG's potential in 3D model and scene generation.
+4.  **RAG in Embodied AI**:
+    *   **Planning and Task Execution**: How RAG assists embodied agents in more effective planning and execution.
+    *   **Multimodal Perception and Interaction**: Enhancing embodied agents' perception of and interaction with their environment.
+    *   **Specialized Domain Applications**: Discussing RAG's use in specific embodied AI scenarios.
+5.  **Current Limitations and Future Directions**: Analyzes challenges faced by existing RAG methods in CV and proposes potential research avenues.
+
+*(Inferred from title/venue; full paper not read.)*
+
+## Comparison with Previous Work
+
+**Table.** Comparison of related survey papers on the RAG topic.
+
+| Year | Paper | Focused Areas | Main Context | GitHub |
+| --- | --- | --- | --- | --- |
+| 2023 | Gao et al. [1] | LLMs / NLP | RAG paradigms and components | - |
+| 2024 | Fan et al. [2] | LLMs / NLP | RA-LLMs’ architectures, training, and applications | link |
+| 2024 | Hu et al. [3] | LLMs / NLP | RA-LMs’ components, evaluation, and limitations | link |
+| 2024 | Zhao et al. [4] | LLMs / NLP | challenges in data-augmented LLMs | - |
+| 2024 | Gupta et al. [5] | LLMs / NLP | Advancements and downstream tasks of RAG | - |
+| 2024 | Zhao et al. [6] | RAG in AIGC | RAG applications across modalities | link |
+| 2024 | Yu et al. [7] | LLMs / NLP | Unified evalutaiton process of RAG | link |
+| 2024 | Procko et al. [8] | Graph Learning | Knowledge graphs with LLM RAG | - |
+| 2024 | Zhou et al. [9] | Trustworthiness AI | Six dimensions and benchmarks about Trustworthy RAG | link |
+| 2025 | Singh et al. [10] | AI Agent | Participles and evaluation | link |
+| 2025 | Ni et al. [11] | Trustworthiness AI | Road-map and discussion | link |
+| 2025 | Ours | Computer Vision | RAG for visual understanding and generation | link |
+
+- **vs. Existing RAG Surveys**: Most existing RAG surveys (e.g., Gao et al. [1], Fan et al. [2]) primarily focus on LLMs and NLP domains.
+- **vs. Cross-Modal RAG Surveys**: While Zhao et al. [6] covers RAG applications in AIGC, this paper offers a more in-depth focus on the specific challenges and opportunities within computer vision.
+- **Uniqueness of this Work**: This paper is among the first to provide a comprehensive and in-depth survey specifically on RAG techniques in the computer vision domain, systematically categorizing visual understanding and generation tasks, and exploring applications in embodied AI.
+
+## Experiments
+
+As a survey paper, this work does not present new experimental results. Instead, it supports its arguments by reviewing and analyzing existing literature.
+
+- It surveys the effectiveness of RAG in various visual understanding tasks (e.g., VQA, medical report generation).
+- It analyzes how RAG improves the quality and realism of image, video, and 3D generation tasks.
+- It discusses the performance enhancements brought by RAG in embodied AI (e.g., planning, task execution).
+- It highlights RAG's potential in mitigating hallucination issues in visual models.
+
+*(Inferred from title/venue; full paper not read.)*

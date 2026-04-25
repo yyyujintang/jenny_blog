@@ -1,0 +1,141 @@
+---
+title: "Measuring Agents in Production"
+date: 2026-04-25
+paper_date: 2025-12-02
+excerpt: "对生产环境中LLM代理的首次系统性研究，揭示了其构建方式、评估方法及主要挑战"
+excerpt_en: "The first systematic study of LLM agents in production, revealing how they are built, evaluated, and their primary challenges"
+tags:
+  - paper-notes
+  - Survey
+paper_id: measuring-agents-in-production
+paper_authors: "Shuicheng Yan, Guibin Zhang"
+paper_link: "https://arxiv.org/abs/2512.04123"
+auto_generated: true
+notes_hash: c779fe28acb2aeda
+---
+
+## Motivation
+
+目前，LLM代理已在多个行业投入生产，但我们对其成功部署的技术方法知之甚少。
+现有研究缺乏对生产环境中代理的真实理解，多集中于高层行业报告、学术综述或特定应用演示，缺乏第一手数据。
+这种知识空白阻碍了研究社区了解实际部署的挑战和未被充分探索的研究方向。
+
+## Contribution
+
+- **首次系统性研究 (MAP)**：对生产环境中的LLM代理进行了首次系统性研究，名为MAP (Measuring Agents in Production)。
+- **第一手数据收集**：通过20个深度访谈案例研究和对26个领域306名从业者的调查，收集了关于代理开发的第一手数据。
+- **揭示代理构建实践**：发现生产代理倾向于使用简单、可控的方法：68%的代理在人工干预前执行不超过10步，70%依赖于现成模型的prompting而非权重调优。
+- **明确评估方法**：发现74%的生产代理主要依赖人工评估。
+- **识别核心挑战**：将可靠性（随时间推移保持一致的正确行为）确定为最主要的开发挑战，目前主要通过系统级设计来解决。
+- **提供研究方向**：为研究社区提供了对实际部署情况的可见性，并指出了未被充分探索的研究途径。
+
+## Method
+
+### 数据收集
+1.  **案例研究**：
+    *   进行了20个深入访谈的案例研究，以获取关于代理开发过程的详细见解。
+    *   访谈涵盖了代理构建的原因、方式、评估方法以及面临的主要挑战。
+2.  **大规模调查**：
+    *   对来自26个不同领域的306名从业者进行了问卷调查。
+    *   调查旨在收集更广泛的量化数据，以补充案例研究的定性发现。
+
+### 数据分析
+1.  **构建方法分析**：
+    *   分析代理在人工干预前执行的步数，以及对prompting或权重调优的依赖程度。
+    *   量化了生产代理倾向于简单、可控方法的趋势。
+2.  **评估策略分析**：
+    *   调查了代理评估中人工评估和自动化评估的使用比例。
+    *   确定了人工评估在当前生产代理中的主导地位。
+3.  **挑战识别**：
+    *   通过访谈和调查，识别并归类了代理开发面临的主要挑战。
+    *   特别关注了可靠性问题及其当前的解决方案（系统级设计）。
+
+*(基于标题与领域常识推断,未读全文)*
+
+## Comparison with Previous Work
+
+- **vs. 高层行业报告**: 现有许多行业报告提供了关于LLM代理的宏观视角，但往往缺乏具体的技术细节和方法论。MAP通过深入访谈和大规模调查，提供了第一手的、详细的生产数据。
+- **vs. 学术综述**: 之前的学术综述通常是对现有研究的综合，但很少包含来自实际生产环境的原始数据。MAP直接从代理开发者那里收集数据，填补了这一空白。
+- **vs. 特定应用演示**: 许多研究展示了LLM代理在特定应用中的潜力，但这些演示往往缺乏对生产级部署的全面特征描述。MAP专注于生产代理的实际情况，揭示了其在真实世界中的构建和评估方式。
+- **vs. 缺乏系统性研究**: 过去没有对生产环境中LLM代理进行过如此大规模和系统性的研究，MAP是首次全面探索这一领域的尝试。
+
+## Experiments
+
+**Table.** 参与者报告的主要挑战类别。
+
+| Challenge Category | Representative Issues and Focus Areas |
+| --- | --- |
+| Core Technical Performance | Robustness and reliability—ensuring consistent, correct behavior in diverse and unpredictable environments; scalability—supporting growth in users, data, and tasks without performance degradation; real-time responsiveness—meeting latency and timing requirements; resource constraints—managing compute, memory, and energy efficiently. |
+| Data and Model Integrity | Data quality and availability—access to clean, timely, and relevant data; model and concept drift—adapting to changes in data distributions and task definitions; versioning and reproducibility—tracking models, data, and configurations for auditability. |
+| System Integration and Validation | Integration with legacy systems—connecting with existing infrastructure and APIs; testing and validation—simulating and verifying agent behavior before deployment; security and adversarial robustness—defending against manipulation and exploitation. |
+| Transparency and Governance | Explainability and interpretability—making decisions understandable to humans; bias and fairness—preventing discriminatory or unjust outcomes; accountability and responsibility—clarifying who is liable for agentic decisions. |
+| Compliance and User Trust | Privacy and data protection—ensuring adherence to data regulations (e.g., GDPR); user trust and adoption—building confidence through transparency and reliability; regulatory compliance—meeting legal standards for autonomy, safety, and transparency. |
+
+- **简单可控的构建方式**: 68%的生产代理在人工干预前执行的步骤不超过10步，表明开发者倾向于采用更简单、更易于控制的代理设计。
+- **Prompting而非微调**: 70%的代理主要依赖于对现成模型的prompting，而非通过权重调优来定制模型，这强调了prompt工程在生产环境中的重要性。
+- **人工评估的主导地位**: 74%的生产代理主要依赖人工评估来验证其性能和质量，这凸显了当前自动化评估方法的局限性。
+- **可靠性是首要挑战**: 可靠性（即随时间推移保持一致的正确行为）被认为是生产代理面临的最大开发挑战，目前主要通过系统级设计来应对。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+LLM-based agents are already operating in production across many industries, yet we lack a clear understanding of the technical methods that contribute to their successful deployment.
+Existing research often consists of high-level industry accounts, academic surveys of existing literature, or application-specific demonstrations, without providing first-hand data from production environments.
+This knowledge gap prevents the research community from gaining visibility into deployment realities and identifying under-explored research avenues.
+
+## Contribution
+
+- **First Systematic Study (MAP)**: Presents the first systematic study of LLM agents in production, named MAP (Measuring Agents in Production).
+- **First-Hand Data Collection**: Gathers first-hand data from agent developers through 20 in-depth interview case studies and a survey of 306 practitioners across 26 domains.
+- **Revealing Agent Construction Practices**: Finds that production agents are built using simple, controllable approaches: 68% execute at most 10 steps before human intervention, and 70% rely on prompting off-the-shelf models instead of weight tuning.
+- **Clarifying Evaluation Methods**: Discovers that 74% of production agents primarily depend on human evaluation.
+- **Identifying Core Challenges**: Identifies reliability (consistent correct behavior over time) as the top development challenge, which practitioners currently address through systems-level design.
+- **Providing Research Directions**: Offers the research community visibility into deployment realities and highlights under-explored research avenues.
+
+## Method
+
+### Data Collection
+1.  **Case Studies**:
+    *   Conducted 20 in-depth interview case studies to gather detailed insights into the agent development process.
+    *   Interviews covered why organizations build agents, how they build them, how they evaluate them, and their top development challenges.
+2.  **Large-Scale Survey**:
+    *   Surveyed 306 practitioners from 26 different domains.
+    *   The survey aimed to collect broader quantitative data to complement the qualitative findings from the case studies.
+
+### Data Analysis
+1.  **Construction Method Analysis**:
+    *   Analyzed the number of steps agents execute before human intervention and their reliance on prompting versus weight tuning.
+    *   Quantified the trend towards simple, controllable approaches in production agents.
+2.  **Evaluation Strategy Analysis**:
+    *   Investigated the proportion of human versus automated evaluation used for agents.
+    *   Determined the predominant role of human evaluation in current production agents.
+3.  **Challenge Identification**:
+    *   Identified and categorized the main challenges faced in agent development through both interviews and surveys.
+    *   Focused particularly on reliability issues and current solutions (systems-level design).
+
+*(Inferred from title/venue; full paper not read.)*
+
+## Comparison with Previous Work
+
+- **vs. High-Level Industry Accounts**: Many existing industry reports offer a macroscopic view of LLM agents but often lack specific technical details and methodologies. MAP provides first-hand, detailed production data through in-depth interviews and a large-scale survey.
+- **vs. Academic Surveys**: Prior academic surveys typically synthesize existing research but rarely include raw data from actual production environments. MAP directly collects data from agent developers, filling this gap.
+- **vs. Application-Specific Demonstrations**: Numerous studies showcase the potential of LLM agents in specific applications, but these demonstrations often lack a comprehensive characterization of production-grade deployments. MAP focuses on the realities of production agents, revealing how they are built and evaluated in the real world.
+- **vs. Lack of Systematic Studies**: There has been no prior large-scale and systematic study of LLM agents in production, making MAP the first comprehensive exploration of this domain.
+
+## Experiments
+
+**Table.** Major categories of challenges reported by participants.
+
+| Challenge Category | Representative Issues and Focus Areas |
+| --- | --- |
+| Core Technical Performance | Robustness and reliability—ensuring consistent, correct behavior in diverse and unpredictable environments; scalability—supporting growth in users, data, and tasks without performance degradation; real-time responsiveness—meeting latency and timing requirements; resource constraints—managing compute, memory, and energy efficiently. |
+| Data and Model Integrity | Data quality and availability—access to clean, timely, and relevant data; model and concept drift—adapting to changes in data distributions and task definitions; versioning and reproducibility—tracking models, data, and configurations for auditability. |
+| System Integration and Validation | Integration with legacy systems—connecting with existing infrastructure and APIs; testing and validation—simulating and verifying agent behavior before deployment; security and adversarial robustness—defending against manipulation and exploitation. |
+| Transparency and Governance | Explainability and interpretability—making decisions understandable to humans; bias and fairness—preventing discriminatory or unjust outcomes; accountability and responsibility—clarifying who is liable for agentic decisions. |
+| Compliance and User Trust | Privacy and data protection—ensuring adherence to data regulations (e.g., GDPR); user trust and adoption—building confidence through transparency and reliability; regulatory compliance—meeting legal standards for autonomy, safety, and transparency. |
+
+- **Simple, Controllable Construction**: 68% of production agents execute at most 10 steps before human intervention, indicating a preference for simpler, more controllable agent designs among developers.
+- **Prompting over Fine-tuning**: 70% of agents primarily rely on prompting off-the-shelf models rather than weight tuning, highlighting the importance of prompt engineering in production settings.
+- **Dominance of Human Evaluation**: 74% of production agents depend primarily on human evaluation to validate their performance and quality, underscoring the current limitations of automated evaluation methods.
+- **Reliability as Top Challenge**: Reliability (consistent correct behavior over time) is identified as the foremost development challenge for production agents, currently addressed mainly through systems-level design.

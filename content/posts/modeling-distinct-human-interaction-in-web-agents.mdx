@@ -1,0 +1,111 @@
+---
+title: "Modeling Distinct Human Interaction in Web Agents"
+date: 2026-04-25
+paper_date: 2026-02-19
+excerpt: "本文通过建模人类与AI agent的四种交互模式，显著提升了agent对用户干预的预测准确性和实用性"
+excerpt_en: "This paper models four distinct human-AI agent interaction patterns to significantly improve agent prediction accuracy of user intervention and overall usefulness."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Episodic
+paper_id: modeling-distinct-human-interaction-in-web-agents
+paper_link: "https://arxiv.org/abs/2602.17588"
+auto_generated: true
+notes_hash: 109d37344a1cd9be
+---
+
+## Motivation
+
+尽管自主web agent发展迅速，但在任务执行过程中，人类的参与对于塑造偏好和纠正agent行为仍然至关重要。
+然而，当前的agent系统缺乏对人类何时以及为何干预的原则性理解，经常在关键决策点自主前进或请求不必要的确认。
+这导致了协作效率低下和用户体验不佳。
+
+## Contribution
+
+- **人类干预建模任务**: 首次引入了建模人类干预的任务，以支持协作式web任务执行。
+- **CowCorpus数据集**: 构建并发布了CowCorpus数据集，包含400条真实用户web导航轨迹和超过4,200个交错的人类与agent动作。
+- **四种用户交互模式**: 识别并定义了用户与agent交互的四种独特模式：hands-off supervision（放手监督）、hands-on oversight（动手监督）、collaborative task-solving（协作解决任务）和full user takeover（完全用户接管）。
+- **干预预测模型**: 训练语言模型（LMs）根据用户交互风格预测用户何时可能干预，将干预预测准确率比基线LMs提高了61.4-63.4%。
+- **用户研究验证**: 将这些干预感知模型部署到实时web导航agent中，并通过用户研究发现用户对agent有用性的评价提高了26.5%。
+
+## Method
+
+1.  **数据收集**: 收集真实用户在web导航任务中的交互轨迹，构建CowCorpus数据集。
+2.  **交互模式识别**: 分析数据集，识别并定义四种主要的用户与agent交互模式：
+    *   **Hands-off supervision**: 用户仅进行高层级监督，很少直接干预。
+    *   **Hands-on oversight**: 用户偶尔介入纠正或引导agent。
+    *   **Collaborative task-solving**: 用户与agent交替执行任务步骤，共同完成目标。
+    *   **Full user takeover**: 用户完全接管任务，agent退居次要地位。
+3.  **特征工程**: 从交互轨迹中提取特征，包括agent的动作历史、用户的干预历史、任务上下文等，以表征用户的交互风格。
+4.  **LM训练**: 使用提取的特征训练语言模型，预测在给定当前状态和用户交互风格下，用户在下一步进行干预的可能性。
+5.  **模型部署与评估**: 将训练好的干预预测模型集成到实时web导航agent中，并在用户研究中评估其对用户体验和agent有用性的影响。
+
+## Comparison with Previous Work
+
+-   **vs. 传统自主agent**: 传统agent倾向于最大化自主性，缺乏对人类干预的理解和适应能力，可能在关键时刻自主决策或不必要地请求确认。本文工作通过预测干预来增强协作性。
+-   **vs. 仅依赖任务上下文的预测**: 现有的一些工作可能仅根据任务的复杂性或当前状态来预测干预。本文工作进一步考虑了用户的“交互风格”，提供了更细致和个性化的预测。
+-   **vs. 缺乏真实用户数据的研究**: 许多关于人机协作的研究依赖模拟数据或小规模实验。本文通过大规模的CowCorpus数据集，提供了基于真实用户行为的扎实证据。
+
+## Experiments
+
+**Table.** 干预预测模型在不同基线上的准确率提升。
+
+|  | LM | +61.4% | +63.4% |
+| --- | --- | --- | --- |
+|  | Base LM | | |
+|  | Intervention-aware LM | | |
+
+*   干预感知语言模型（Intervention-aware LM）在干预预测准确率上比基线LM有显著提升，分别达到61.4%和63.4%的改进。
+*   用户研究表明，部署了干预感知模型的web导航agent在用户评定的有用性方面提升了26.5%。
+*   这些结果共同证明了结构化建模人类干预能够带来更具适应性和协作性的agent。
+*   研究识别的四种用户交互模式为理解人机协作提供了新的视角。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Despite rapid progress in autonomous web agents, human involvement remains essential for shaping preferences and correcting agent behavior as tasks unfold.
+However, current agentic systems lack a principled understanding of when and why humans intervene, often proceeding autonomously past critical decision points or requesting unnecessary confirmation.
+This leads to inefficient collaboration and a suboptimal user experience.
+
+## Contribution
+
+-   **Human Intervention Modeling Task**: Introduces the novel task of modeling human intervention to support collaborative web task execution.
+-   **CowCorpus Dataset**: Collects and releases CowCorpus, a dataset of 400 real-user web navigation trajectories containing over 4,200 interleaved human and agent actions.
+-   **Four Distinct User Interaction Patterns**: Identifies and characterizes four distinct patterns of user interaction with agents: hands-off supervision, hands-on oversight, collaborative task-solving, and full user takeover.
+-   **Intervention Prediction Models**: Trains language models (LMs) to anticipate when users are likely to intervene based on their interaction styles, yielding a 61.4-63.4% improvement in intervention prediction accuracy over base LMs.
+-   **User Study Validation**: Deploys these intervention-aware models in live web navigation agents and evaluates them in a user study, finding a 26.5% increase in user-rated agent usefulness.
+
+## Method
+
+1.  **Data Collection**: Gathers real-user interaction trajectories during web navigation tasks to construct the CowCorpus dataset.
+2.  **Interaction Pattern Identification**: Analyzes the dataset to identify and define four primary user-agent interaction patterns:
+    *   **Hands-off supervision**: Users provide high-level oversight with minimal direct intervention.
+    *   **Hands-on oversight**: Users occasionally intervene to correct or guide the agent.
+    *   **Collaborative task-solving**: Users and agents alternate in performing task steps, working together towards a goal.
+    *   **Full user takeover**: Users completely assume control of the task, with the agent taking a secondary role.
+3.  **Feature Engineering**: Extracts features from interaction trajectories, including agent action history, user intervention history, and task context, to characterize user interaction styles.
+4.  **LM Training**: Trains language models using the extracted features to predict the likelihood of user intervention at the next step, given the current state and user interaction style.
+5.  **Model Deployment and Evaluation**: Integrates the trained intervention prediction models into live web navigation agents and assesses their impact on user experience and agent usefulness through a user study.
+
+## Comparison with Previous Work
+
+-   **vs. Traditional Autonomous Agents**: Traditional agents prioritize autonomy and lack an understanding of or adaptability to human intervention, potentially making autonomous decisions at critical junctures or requesting unnecessary confirmations. This work enhances collaboration by predicting intervention.
+-   **vs. Task-Context-Only Prediction**: Some existing works might predict intervention solely based on task complexity or current state. This paper further incorporates the user's "interaction style," providing more nuanced and personalized predictions.
+-   **vs. Research Lacking Real-User Data**: Many studies on human-AI collaboration rely on simulated data or small-scale experiments. This work provides robust evidence based on real-user behavior through the large-scale CowCorpus dataset.
+
+## Experiments
+
+**Table.** Accuracy improvement of intervention prediction models over different baselines.
+
+|  | LM | +61.4% | +63.4% |
+| --- | --- | --- | --- |
+|  | Base LM | | |
+|  | Intervention-aware LM | | |
+
+*   The intervention-aware language models show a significant improvement in intervention prediction accuracy over base LMs, with gains of 61.4% and 63.4% respectively.
+*   A user study demonstrates that web navigation agents equipped with these intervention-aware models achieve a 26.5% increase in user-rated usefulness.
+*   Together, these results indicate that structured modeling of human intervention leads to more adaptive and collaborative agents.
+*   The identified four distinct user interaction patterns provide new insights into understanding human-AI collaboration.

@@ -1,0 +1,123 @@
+---
+title: "PRIME: Large Language Model Personalization with Cognitive Dual-Memory and Personalized Thought Process"
+date: 2026-04-25
+paper_date: 2025-07-07
+excerpt: "PRIME通过认知双记忆模型和个性化思维过程，提升LLM的个性化能力"
+excerpt_en: "PRIME enhances LLM personalization by integrating a cognitive dual-memory model and a personalized thought process."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Episodic
+  - Semantic
+paper_id: prime-large-language-model-personalization-with-cognitive-dual-memory-and-person
+paper_venue: "EMNLP25, Main"
+paper_link: "https://arxiv.org/abs/2507.04607"
+auto_generated: true
+notes_hash: 44b1877c34a28658
+---
+
+## Motivation
+
+大型语言模型（LLM）的个性化旨在使模型输出与用户的独特偏好和观点保持一致。尽管现有方法已取得进展，但仍缺乏一个统一的理论框架来系统地理解有效个性化的驱动因素。
+
+我们认为，认知科学中的双记忆模型（episodic memory和semantic memory）可以为LLM个性化提供一个强大的理论基础。通过将用户历史互动映射到episodic memory，将长期演变的用户信念映射到semantic memory，我们可以更全面地捕捉用户画像。
+
+## Contribution
+
+*   **统一的认知双记忆框架**: 首次将认知双记忆模型（episodic memory和semantic memory）系统地整合到LLM个性化中，并提出了PRIME框架。
+*   **个性化思维能力**: 引入了受“慢思考”策略启发的个性化思维能力，进一步增强了模型的推理和响应质量。
+*   **新基准数据集**: 构建了一个基于Reddit Change My View (CMV) 的长上下文个性化数据集，以解决现有基准的不足。
+*   **全面的实验验证**: 在长上下文和短上下文场景中对PRIME进行了广泛验证，证明了其在捕捉动态个性化方面的有效性。
+
+## Method
+
+PRIME框架通过以下核心组件实现LLM个性化：
+
+### 1. 记忆实例化 (Memory Instantiations)
+
+*   **Episodic Memory (情景记忆)**: 镜像用户的历史互动，捕捉具体事件和上下文。这包括用户过去的对话、偏好选择等。
+*   **Semantic Memory (语义记忆)**: 对应用户长期、演变的信念和偏好。通过对情景记忆的抽象和泛化形成，代表了用户更稳定的个性特征。
+
+### 2. 个性化思维过程 (Personalized Thought Process)
+
+*   **慢思考策略 (Slow Thinking Strategy)**: 借鉴人类的慢思考模式，PRIME在生成最终响应之前，会进行一个内部的、多步骤的推理过程。这个过程利用双记忆中的信息，更深入地理解用户意图和偏好，从而生成更细致、更个性化的输出。
+
+## Comparison with Previous Work
+
+*   **vs. 现有个性化方法**: 现有方法通常侧重于单一的记忆形式（如RAG或微调），缺乏一个统一的理论框架。PRIME通过整合认知双记忆，提供了更全面的用户画像。
+*   **vs. RAG (Retrieval-Augmented Generation)**: RAG主要依赖于检索相关文档，类似于一种简单的episodic memory。PRIME在此基础上增加了semantic memory和个性化思维过程，能够捕捉更深层次的用户信念和推理。
+*   **vs. 微调/偏好学习**: 微调和偏好学习通常需要大量数据，且难以适应用户偏好的动态变化。PRIME的记忆机制能够更灵活地更新和适应用户画像。
+
+## Experiments
+
+**Table.** CMV评估集上的聚合结果（10次运行的平均值）。
+
+|  | Non-P | EM | SM | DUAL | PRIME |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | Hit@3 | Avg | Hit@3 | Avg | Hit@3 | Avg | Hit@3 | Avg | Hit@3 | Avg |
+| Llama-3.2-3B | 38.65 | 26.44 | 37.89 | 26.27 | 43.61 | 30.25 | 41.95 | 28.87 | 42.93 | 29.95 |
+| Llama-3.1-8B | 36.77 | 26.58 | 37.22 | 26.88 | 43.01 | 31.24 | 44.59 | 32.24 | 45.79 | 34.13 |
+| Ministral-8B | 36.77 | 25.60 | 38.27 | 26.67 | 40.83 | 27.97 | 40.83 | 28.39 | 40.75 | 28.99 |
+| Qwen2.5-7B | 39.10 | 27.89 | 37.47 | 25.51 | 43.38 | 30.20 | 41.58 | 28.71 | 45.19 | 32.29 |
+| Qwen2.5-14B | 41.28 | 30.24 | 43.01 | 30.65 | 51.35 | 37.22 | 52.03 | 37.68 | 52.03 | 38.15 |
+| Phi-4 | 41.50 | 29.63 | 42.93 | 30.31 | 42.63 | 31.09 | 43.98 | 32.61 | 47.29 | 35.15 |
+
+*   **PRIME的显著优势**: PRIME在CMV评估集上，相对于非个性化基线（Non-P）以及仅使用episodic memory (EM) 或semantic memory (SM) 的模型，展现出显著的性能提升。
+*   **双记忆的协同效应**: 结合episodic memory和semantic memory (DUAL) 的模型表现优于单一记忆模型，验证了双记忆模型的有效性。
+*   **个性化思维的价值**: PRIME在DUAL的基础上进一步提升了性能，表明其个性化思维能力有效地增强了模型对用户偏好的理解和推理。
+*   **超越流行度偏差**: 进一步分析证实，PRIME能够有效捕捉动态个性化，而不仅仅是流行度偏差，这对于真正的用户对齐至关重要。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Large language model (LLM) personalization aims to align model outputs with individuals' unique preferences and opinions. While recent efforts have implemented various personalization methods, a unified theoretical framework that can systematically understand the drivers of effective personalization is still lacking.
+
+We posit that the well-established cognitive dual-memory model can provide a robust theoretical foundation for LLM personalization. By mirroring episodic memory to historical user engagements and semantic memory to long-term, evolving user beliefs, we can capture a more comprehensive user profile.
+
+## Contribution
+
+*   **Unified Cognitive Dual-Memory Framework**: We are the first to systematically integrate the cognitive dual-memory model (episodic and semantic memory) into LLM personalization, proposing the PRIME framework.
+*   **Personalized Thinking Capability**: We introduce a novel personalized thinking capability, inspired by the "slow thinking" strategy, to further enhance the model's reasoning and response quality.
+*   **New Benchmark Dataset**: We developed a long-context personalization dataset using Change My View (CMV) from Reddit, addressing the limitations of existing benchmarks.
+*   **Extensive Experimental Validation**: We conducted comprehensive experiments across both long- and short-context scenarios, validating PRIME's effectiveness in capturing dynamic personalization.
+
+## Method
+
+The PRIME framework achieves LLM personalization through the following core components:
+
+### 1. Memory Instantiations
+
+*   **Episodic Memory**: Mirrors historical user engagements, capturing specific events and contexts. This includes past conversations, preference choices, and other interactions.
+*   **Semantic Memory**: Corresponds to long-term, evolving user beliefs and preferences. It is formed by abstracting and generalizing from episodic memory, representing more stable user characteristics.
+
+### 2. Personalized Thought Process
+
+*   **Slow Thinking Strategy**: Inspired by human slow thinking, PRIME performs an internal, multi-step reasoning process before generating a final response. This process leverages information from both episodic and semantic memory to deeply understand user intent and preferences, leading to more nuanced and personalized outputs.
+
+## Comparison with Previous Work
+
+*   **vs. Existing Personalization Methods**: Current methods often focus on a single form of memory (e.g., RAG or fine-tuning) and lack a unified theoretical framework. PRIME, by integrating cognitive dual-memory, provides a more comprehensive user profile.
+*   **vs. RAG (Retrieval-Augmented Generation)**: RAG primarily relies on retrieving relevant documents, akin to a simpler form of episodic memory. PRIME builds upon this by adding semantic memory and a personalized thought process, enabling it to capture deeper user beliefs and reasoning.
+*   **vs. Fine-tuning/Preference Learning**: Fine-tuning and preference learning typically require extensive data and struggle to adapt to dynamic user preference changes. PRIME's memory mechanisms allow for more flexible updating and adaptation of user profiles.
+
+## Experiments
+
+**Table.** Aggregated results on CMV evaluation set (average of 10 runs).
+
+|  | Non-P | EM | SM | DUAL | PRIME |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | Hit@3 | Avg | Hit@3 | Avg | Hit@3 | Avg | Hit@3 | Avg | Hit@3 | Avg |
+| Llama-3.2-3B | 38.65 | 26.44 | 37.89 | 26.27 | 43.61 | 30.25 | 41.95 | 28.87 | 42.93 | 29.95 |
+| Llama-3.1-8B | 36.77 | 26.58 | 37.22 | 26.88 | 43.01 | 31.24 | 44.59 | 32.24 | 45.79 | 34.13 |
+| Ministral-8B | 36.77 | 25.60 | 38.27 | 26.67 | 40.83 | 27.97 | 40.83 | 28.39 | 40.75 | 28.99 |
+| Qwen2.5-7B | 39.10 | 27.89 | 37.47 | 25.51 | 43.38 | 30.20 | 41.58 | 28.71 | 45.19 | 32.29 |
+| Qwen2.5-14B | 41.28 | 30.24 | 43.01 | 30.65 | 51.35 | 37.22 | 52.03 | 37.68 | 52.03 | 38.15 |
+| Phi-4 | 41.50 | 29.63 | 42.93 | 30.31 | 42.63 | 31.09 | 43.98 | 32.61 | 47.29 | 35.15 |
+
+*   **Significant Performance Gains**: PRIME consistently demonstrates significant performance improvements over non-personalized baselines (Non-P) and models using only episodic memory (EM) or semantic memory (SM) on the CMV evaluation set.
+*   **Synergistic Effect of Dual Memory**: Models combining both episodic and semantic memory (DUAL) outperform single-memory models, validating the effectiveness of the dual-memory approach.
+*   **Value of Personalized Thinking**: PRIME further enhances performance beyond DUAL, indicating that its personalized thinking capability effectively improves the model's understanding and reasoning about user preferences.
+*   **Beyond Popularity Biases**: Further analysis confirms that PRIME effectively captures dynamic personalization beyond mere popularity biases, which is crucial for true user alignment.

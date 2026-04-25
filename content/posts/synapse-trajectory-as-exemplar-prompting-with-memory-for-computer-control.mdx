@@ -1,0 +1,117 @@
+---
+title: "Synapse: Trajectory-as-Exemplar Prompting with Memory for Computer Control"
+date: 2026-04-24
+paper_date: 2023-06-13
+excerpt: "Synapse提出状态抽象、轨迹作为范例提示和范例记忆，以提升LLM在计算机控制任务中的表现"
+excerpt_en: "Synapse introduces state abstraction, trajectory-as-exemplar prompting, and exemplar memory to enhance LLM performance in computer control tasks"
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Episodic
+  - Procedural
+paper_id: synapse-trajectory-as-exemplar-prompting-with-memory-for-computer-control
+paper_link: "https://arxiv.org/abs/2306.07863"
+paper_code: "https://github.com/ltzheng/Synapse"
+auto_generated: true
+notes_hash: bc51a82e5ed1b2b1
+---
+
+## Motivation
+
+大型语言模型（LLMs）在计算机控制领域展现出巨大潜力，但现有方法面临多重挑战。
+首先，LLM有限的上下文长度和复杂的计算机状态限制了可用的范例数量，单个网页信息就可能耗尽整个上下文。
+其次，当前范例（如高层计划或多选问题）无法完整表示轨迹，导致在长程任务中表现不佳。
+最后，现有计算机智能体依赖任务特定范例，忽略了任务间的相似性，泛化能力差。
+
+## Contribution
+
+- **状态抽象 (State Abstraction)**：从原始状态中过滤掉与任务无关的信息，从而在有限的上下文窗口中容纳更多范例。
+- **轨迹作为范例提示 (Trajectory-as-Exemplar Prompting)**：使用抽象状态和动作的完整轨迹来提示LLM，以改进多步骤决策能力。
+- **范例记忆 (Exemplar Memory)**：存储范例的嵌入表示，并通过相似性搜索进行检索，以增强对新任务的泛化能力。
+
+## Method
+
+Synapse智能体包含三个核心组件：
+1.  **状态抽象**：该模块负责从原始计算机状态中提取与当前任务相关的关键信息，去除冗余细节。这使得LLM能够在有限的上下文窗口中处理更密集的有效信息。
+2.  **轨迹作为范例提示**：在获得抽象状态后，系统会构建包含完整状态-动作序列的轨迹作为范例。这些轨迹被直接用于提示LLM，指导其进行多步决策，而非仅仅提供高层计划或单步选择。
+3.  **范例记忆**：为了提升泛化能力，Synapse维护一个范例库。每个范例（即完整的状态-动作轨迹）都被编码成嵌入向量并存储起来。当面临新任务时，系统会通过相似性搜索从记忆中检索最相关的范例，以辅助LLM的决策过程。
+
+## Comparison with Previous Work
+
+- **vs. 现有ICL方法**：Synapse通过状态抽象克服了LLM上下文长度限制，允许更多有效范例。
+- **vs. 传统范例表示**：Synapse使用完整的“轨迹作为范例”而非高层计划或多选问题，显著提升了多步决策的性能。
+- **vs. 任务特定范例**：Synapse引入了范例记忆和相似性搜索，实现了范例的跨任务复用，增强了对新任务的泛化能力。
+- **vs. MindAct**：在Mind2Web基准测试中，Synapse在状态抽象后直接生成，优于MindAct使用的MCQ格式提示，并在加入轨迹作为范例和记忆后进一步提升。
+
+## Experiments
+
+**Table.** Mind2Web使用CodeLlama-7B和GPT-3.5的结果与消融研究。
+
+| Method | Cross-Task | Cross-Website | Cross-Domain |  |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | Ele. Acc | Step SR | SR | Ele. Acc | Step SR | SR | Ele. Acc | Step SR | SR |
+| MindAct (CodeLlama-7B) | 11.2 | 7.7 | 0.4 | 12.4 | 9.0 | 0.6 | 13.8 | 9.9 | 0.2 |
+| Synapse w/ state abstraction | 21.4 | 15.5 | 0.8 | 19.5 | 13.5 | 0.6 | 20.0 | 15.6 | 1.2 |
+| Synapse w/ state abstraction + TaE | 27.0 | 24.5 | 1.2 | 21.4 | 17.9 | 0.0 | 22.1 | 19.9 | 0.7 |
+| Synapse w/ state abstraction + TaE + memory | 29.4 | 26.4 | 3.2 | 22.9 | 18.9 | 0.6 | 22.6 | 19.7 | 0.3 |
+| MindAct (GPT-3.5) | 20.3 | 17.4 | 0.8 | 19.3 | 16.2 | 0.6 | 21.6 | 18.6 | 1.0 |
+| Synapse w/ state abstraction | 29.8 | 25.2 | 2.0 | 26.1 | 19.6 | 0.6 | 28.0 | 24.3 | 1.8 |
+| Synapse w/ state abstraction + TaE | 32.8 | 29.2 | 2.0 | 28.0 | 22.7 | 0.6 | 29.0 | 26.2 | 1.8 |
+| Synapse w/ state abstraction + TaE + memory | 34.0 | 30.6 | 2.4 | 29.1 | 24.2 | 0.6 | 29.6 | 26.4 | 1.5 |
+
+- **MiniWoB++基准测试**：Synapse在64个任务中实现了99.2%的平均成功率，相对于基线方法有10%的相对提升，仅使用了48个任务的演示。
+- **首次解决book-flight任务**：Synapse是第一个通过ICL方法成功解决MiniWoB++中“book-flight”任务的智能体。
+- **Mind2Web基准测试**：Synapse在Mind2Web上的平均步骤成功率比现有SOTA提示方案提高了56%。
+- **模块化贡献**：消融实验表明，状态抽象、轨迹作为范例提示和范例记忆这三个组件都对Synapse的性能提升做出了显著贡献。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Building agents with Large Language Models (LLMs) for computer control is a rapidly growing field, yet existing methods face several challenges.
+Firstly, the limited context length of LLMs and the complexity of computer states restrict the number of exemplars that can be used, as a single webpage can consume the entire context.
+Secondly, current exemplars, such as high-level plans or multi-choice questions, fail to represent complete trajectories, leading to suboptimal performance in long-horizon tasks.
+Finally, existing computer agents rely on task-specific exemplars and overlook similarities among tasks, resulting in poor generalization to novel tasks.
+
+## Contribution
+
+- **State Abstraction**: Filters out task-irrelevant information from raw states, allowing more exemplars within the limited context window.
+- **Trajectory-as-Exemplar Prompting**: Prompts the LLM with complete trajectories of abstracted states and actions to improve multi-step decision-making.
+- **Exemplar Memory**: Stores embeddings of exemplars and retrieves them via similarity search for generalization to novel tasks.
+
+## Method
+
+Synapse, a computer agent, features three key components:
+1.  **State Abstraction**: This module is responsible for extracting crucial, task-relevant information from raw computer states, discarding redundant details. This allows the LLM to process more concentrated, effective information within its limited context window.
+2.  **Trajectory-as-Exemplar Prompting**: After state abstraction, the system constructs exemplars as complete state-action trajectories. These trajectories are directly used to prompt the LLM, guiding its multi-step decision-making process, rather than just providing high-level plans or single-step choices.
+3.  **Exemplar Memory**: To enhance generalization, Synapse maintains a library of exemplars. Each exemplar (a complete state-action trajectory) is encoded into an embedding vector and stored. When faced with a novel task, the system retrieves the most relevant exemplars from memory via similarity search to aid the LLM's decision-making.
+
+## Comparison with Previous Work
+
+- **vs. Existing ICL methods**: Synapse overcomes LLM context length limitations through state abstraction, enabling more effective exemplars.
+- **vs. Traditional exemplar representations**: Synapse uses complete "trajectories as exemplars" instead of high-level plans or multi-choice questions, significantly improving multi-step decision-making performance.
+- **vs. Task-specific exemplars**: Synapse introduces exemplar memory and similarity search, allowing for cross-task reuse of exemplars and enhanced generalization to novel tasks.
+- **vs. MindAct**: In the Mind2Web benchmark, Synapse, with state abstraction, uses direct generation, outperforming MindAct's MCQ-formatted prompting, and further improves with trajectory-as-exemplar prompting and memory.
+
+## Experiments
+
+**Table.** Mind2Web results and ablations with CodeLlama-7B (top) and GPT-3.5 (bottom).
+
+| Method | Cross-Task | Cross-Website | Cross-Domain |  |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | Ele. Acc | Step SR | SR | Ele. Acc | Step SR | SR | Ele. Acc | Step SR | SR |
+| MindAct (CodeLlama-7B) | 11.2 | 7.7 | 0.4 | 12.4 | 9.0 | 0.6 | 13.8 | 9.9 | 0.2 |
+| Synapse w/ state abstraction | 21.4 | 15.5 | 0.8 | 19.5 | 13.5 | 0.6 | 20.0 | 15.6 | 1.2 |
+| Synapse w/ state abstraction + TaE | 27.0 | 24.5 | 1.2 | 21.4 | 17.9 | 0.0 | 22.1 | 19.9 | 0.7 |
+| Synapse w/ state abstraction + TaE + memory | 29.4 | 26.4 | 3.2 | 22.9 | 18.9 | 0.6 | 22.6 | 19.7 | 0.3 |
+| MindAct (GPT-3.5) | 20.3 | 17.4 | 0.8 | 19.3 | 16.2 | 0.6 | 21.6 | 18.6 | 1.0 |
+| Synapse w/ state abstraction | 29.8 | 25.2 | 2.0 | 26.1 | 19.6 | 0.6 | 28.0 | 24.3 | 1.8 |
+| Synapse w/ state abstraction + TaE | 32.8 | 29.2 | 2.0 | 28.0 | 22.7 | 0.6 | 29.0 | 26.2 | 1.8 |
+| Synapse w/ state abstraction + TaE + memory | 34.0 | 30.6 | 2.4 | 29.1 | 24.2 | 0.6 | 29.6 | 26.4 | 1.5 |
+
+- **MiniWoB++ Benchmark**: Synapse achieves a 99.2% average success rate across 64 tasks, representing a 10% relative improvement over baselines, using demonstrations from only 48 tasks.
+- **First to solve book-flight**: Synapse is the first ICL method to successfully solve the "book-flight" task in MiniWoB++.
+- **Mind2Web Benchmark**: Synapse demonstrates a 56% relative improvement in average step success rate over the previous state-of-the-art prompting scheme in Mind2Web.
+- **Modular Contributions**: Ablation studies confirm that each of the three key components—state abstraction, trajectory-as-exemplar prompting, and exemplar memory—contributes significantly to Synapse's performance gains.

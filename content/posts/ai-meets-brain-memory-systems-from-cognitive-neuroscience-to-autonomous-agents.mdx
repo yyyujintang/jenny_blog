@@ -1,0 +1,179 @@
+---
+title: "AI Meets Brain: Memory Systems from Cognitive Neuroscience to Autonomous Agents"
+date: 2026-04-25
+paper_date: 2025-12-29
+excerpt: "本文系统性地整合了认知神经科学与LLM驱动的AI智能体记忆系统知识，弥合了跨学科鸿沟"
+excerpt_en: "This paper systematically integrates knowledge of memory systems from cognitive neuroscience to LLM-driven AI agents, bridging interdisciplinary gaps"
+tags:
+  - paper-notes
+  - Survey
+paper_id: ai-meets-brain-memory-systems-from-cognitive-neuroscience-to-autonomous-agents
+paper_link: "https://arxiv.org/abs/2512.23343"
+paper_code: "https://github.com/AgentMemory/Huaman-Agent-Memory"
+auto_generated: true
+notes_hash: 87bf52e9180413cb
+---
+
+## Motivation
+
+记忆是连接过去与未来的关键枢纽，为人类和AI系统提供宝贵的概念和经验以应对复杂任务。
+当前，自主智能体研究日益关注通过借鉴认知神经科学来设计高效的记忆工作流。
+然而，受限于跨学科障碍，现有工作难以充分吸收人类记忆机制的精髓。
+
+## Contribution
+
+*   **跨学科知识整合**：系统性地整合了认知神经科学与LLM驱动的AI智能体记忆系统知识，弥合了跨学科鸿沟。
+*   **记忆定义与功能阐明**：沿着从认知神经科学到LLM再到智能体的渐进轨迹，阐明了记忆的定义和功能。
+*   **记忆比较分析**：从生物学和人工视角对记忆的分类、存储机制以及完整的管理生命周期进行了比较分析。
+*   **主流基准评测回顾**：回顾了评估智能体记忆的主流基准。
+*   **记忆安全探讨**：从攻击和防御的双重角度探讨了记忆安全。
+*   **未来研究展望**：展望了未来的研究方向，重点关注多模态记忆系统和技能习得。
+
+## Method
+
+本文主要通过文献综述和系统性分析的方法展开：
+
+1.  **概念溯源与演进**：首先，从认知神经科学的视角出发，定义记忆及其基本功能，然后逐步过渡到LLM中的记忆概念，并最终将其应用于AI智能体。
+2.  **多维度比较分析**：
+    *   **记忆分类**：比较生物学和人工记忆系统的分类方式（如 episodic memory, semantic memory, working memory 等）。
+    *   **存储机制**：分析生物神经元网络与人工神经网络（如 vector databases, knowledge graphs）的存储原理。
+    *   **管理生命周期**：探讨记忆的编码、存储、检索、遗忘和重构等完整生命周期在生物和人工系统中的实现。
+3.  **基准与安全评估**：
+    *   **基准回顾**：梳理并总结了当前用于评估智能体记忆能力的主流 benchmarks。
+    *   **安全分析**：从 adversarial attacks 和 defense mechanisms 的角度，讨论记忆系统可能面临的安全挑战。
+4.  **未来方向展望**：基于当前研究的不足和发展趋势，提出了多模态记忆（multimodal memory systems）和技能习得（skill acquisition）等未来研究重点。
+
+## Comparison with Previous Work
+
+*   **vs. 现有自主智能体研究**：现有研究虽关注记忆，但往往受限于单一领域视角，难以全面吸收认知神经科学的精髓。本文通过系统性整合，提供了更全面的理论框架。
+*   **vs. 传统LLM记忆机制**：传统LLM的记忆主要依赖于上下文窗口和 fine-tuning，缺乏对记忆生命周期（如遗忘、重构）的精细管理。本文引入了认知神经科学的视角，强调更复杂的记忆管理。
+*   **vs. 零散的跨学科尝试**：以往的跨学科尝试可能仅关注记忆的某个特定方面，如 episodic memory 的模拟。本文则提供了更全面的记忆分类、存储、管理和安全分析。
+
+## Experiments
+
+**Table.** 评估智能体记忆的主流基准。
+
+| Benchmarks | Links | Attribute | Task |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| HomePage | GitHub | Fid. | Dyn. | Gen. | Task Type | Data Type | Data Quantity |  |
+| LoCoMo (195) | HomePage | GitHub | ✓ | ✗ | ✗ | Cross-Session Reasoning | Text + Image | 50 |
+| MemoryAgentBench (110) | HomePage | GitHub | ✓ | ✓ | ✓ | Memory Competency Evaluation | Text | 2,071 |
+| MemBench (259) | HomePage | GitHub | ✓ | ✓ | ✗ | Multi-level Memory Evaluation | Text | 65,000 |
+| LongMemEval (305) | HomePage | GitHub | ✓ | ✓ | ✗ | Long-term Memory Abilities | Text | 500 |
+| MemoryBank (393) | HomePage | GitHub | ✓ | ✓ | ✗ | Long-term AI Companion Evaluation | Text | 194 |
+| MemoryBench (6) | HomePage | GitHub | ✓ | ✓ | ✓ | Continual Learning | Text | 20,000 |
+| HaluMem (40) | HomePage | GitHub | ✓ | ✓ | ✓ | Hallucination Evaluation in Memory | Text | 83,000 |
+| Evo-Memory (297) | HomePage | GitHub | ✓ | ✓ | ✓ | Self-Evolving memory | Text | - |
+| LTMBenchmark (37) | HomePage | GitHub | ✓ | ✓ | ✓ | Dynamic conversation | Text | 33 |
+| LOCCO (125) | HomePage | GitHub | ✓ | ✗ | ✗ | Long-term Memory Abilities | Text | 3,080 |
+| PersonaMem (126) | HomePage | GitHub | ✓ | ✓ | ✓ | Dynamic User Profiling and Personalization | Text | 180 |
+| LongBench (14) | HomePage | GitHub | ✓ | ✗ | ✓ | long-text application | Text | 4,750 |
+| LongBench v2 (15) | HomePage | GitHub | ✓ | ✗ | ✓ | Deep Reasoning and Realistic Multitasks | Text | 503 |
+| BABILong (158) | HomePage | GitHub | ✓ | ✗ | ✗ | Reasoning-in-a-Haystack | Text | 13,000 |
+| RULER (107) | HomePage | GitHub | ✓ | ✗ | ✗ | Synthetic Long-Context Evaluation | Text | 39,000 |
+| MM-Needle (280) | HomePage | GitHub | ✓ | ✗ | ✗ | Multimodal Needle-in-a-Haystack | Text + Image | 40,000 |
+| DialSim (148) | HomePage | - | ✓ | ✓ | ✗ | Multi-party Dialogue Understanding | Text | 1,300 |
+| LifelongAgentBench (390) | HomePage | GitHub | ✓ | ✓ | ✓ | Lifelong learning | Text | 1,400 |
+| PrefEval (386) | HomePage | GitHub | ✓ | ✓ | ✗ | Personalized Preference Following | Text | 3,000 |
+| MPR (381) | HomePage | GitHub | ✓ | ✗ | ✗ | Multi-hop Personalized Reasoning | Text | 108,000 |
+| StreamBench (304) | HomePage | GitHub | ✓ | ✓ | ✓ | Continuous Online Learning | Text | 9,702 |
+| Madial-Bench (103) | HomePage | GitHub | ✓ | ✗ | ✗ | Memory-Augmented Dialogue | Text | 160 |
+| HotpotQA (337) | HomePage | GitHub | ✓ | ✗ | ✗ | Multi-hop Question Answering | Text | 112,779 |
+| PerLTQA (69) | HomePage | GitHub | ✓ | ✗ | ✗ | The use of personalized memory | Text | 8,593 |
+| StoryBench (272) | HomePage | - | ✓ | ✓ | ✓ | Interactive fiction games | Text | - |
+| SHARE (147) | HomePage | GitHub | ✓ | ✓ | ✗ | Skill learning and Transfer | Text | 1,201 |
+| MovieChat-1K (247) | HomePage | GitHub | ✓ | ✓ | ✗ | Long Video Comprehension and QA | Text + Movie | 15,000 |
+| Mobile-Agent-E (294) | HomePage | GitHub | ✓ | ✓ | ✓ | Complex mobile tasks | Text + Image | 25 |
+| M3-Agent (191) | HomePage | GitHub | ✓ | ✓ | ✗ | Long-form video QA and memory reasoning | Text + Audio +Video | 5,510 |
+| Text2Mem Bench (277) | HomePage | GitHub | ✓ | ✓ | ✗ | Memory operation instruction execution | Text | - |
+| SoMoSiMu-Bench (205) | HomePage | GitHub | ✓ | ✓ | ✗ | Social Movement Simulation | Text + Structured data | 6,700 |
+| MemDaily (378) | HomePage | GitHub | ✓ | ✗ | ✗ | Personalized Reasoning | Text | 26,003 |
+
+*   本文对现有评估智能体记忆的 benchmarks 进行了全面的回顾和分类。
+*   这些基准涵盖了从 Fidelity (忠实度) 到 Dynamics (动态性) 和 Generalization (泛化能力) 等多个维度，反映了记忆系统在不同任务中的表现。
+*   表格展示了各类基准的 Task Type (任务类型)、Data Type (数据类型) 和 Data Quantity (数据量)，为研究者选择合适的评估工具提供了参考。
+*   通过对这些基准的分析，本文揭示了当前智能体记忆评估的现状和未来的发展方向，尤其是在多模态和长期记忆方面的挑战。
+*(基于标题与领域常识推断,未读全文)*
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Memory serves as the pivotal nexus bridging past and future, providing both humans and AI systems with invaluable concepts and experience to navigate complex tasks.
+Recent research on autonomous agents has increasingly focused on designing efficient memory workflows by drawing on cognitive neuroscience.
+However, constrained by interdisciplinary barriers, existing works struggle to assimilate the essence of human memory mechanisms.
+
+## Contribution
+
+*   **Interdisciplinary Knowledge Synthesis**: Systematically synthesizes interdisciplinary knowledge of memory, connecting insights from cognitive neuroscience with LLM-driven agents, thereby bridging existing gaps.
+*   **Elucidation of Memory Definition and Function**: Elucidates the definition and function of memory along a progressive trajectory from cognitive neuroscience through LLMs to agents.
+*   **Comparative Analysis of Memory**: Provides a comparative analysis of memory taxonomy, storage mechanisms, and the complete management lifecycle from both biological and artificial perspectives.
+*   **Review of Mainstream Benchmarks**: Reviews the mainstream benchmarks for evaluating agent memory.
+*   **Exploration of Memory Security**: Explores memory security from dual perspectives of attack and defense.
+*   **Future Research Directions**: Envisions future research directions, with a focus on multimodal memory systems and skill acquisition.
+
+## Method
+
+This paper primarily employs a literature review and systematic analysis approach:
+
+1.  **Conceptual Tracing and Evolution**: First, it defines memory and its basic functions from the perspective of cognitive neuroscience, then gradually transitions to the concept of memory in LLMs, and finally applies it to AI agents.
+2.  **Multi-dimensional Comparative Analysis**:
+    *   **Memory Taxonomy**: Compares the classification methods of biological and artificial memory systems (e.g., episodic memory, semantic memory, working memory).
+    *   **Storage Mechanisms**: Analyzes the storage principles of biological neural networks versus artificial neural networks (e.g., vector databases, knowledge graphs).
+    *   **Management Lifecycle**: Explores the implementation of the complete memory lifecycle, including encoding, storage, retrieval, forgetting, and reconstruction, in both biological and artificial systems.
+3.  **Benchmarking and Security Evaluation**:
+    *   **Benchmark Review**: Systematically reviews and summarizes current mainstream benchmarks used to evaluate agent memory capabilities.
+    *   **Security Analysis**: Discusses potential security challenges for memory systems from the perspectives of adversarial attacks and defense mechanisms.
+4.  **Future Directions Outlook**: Based on current research limitations and development trends, it proposes future research priorities such as multimodal memory systems and skill acquisition.
+
+## Comparison with Previous Work
+
+*   **vs. Existing Autonomous Agent Research**: While existing research on agents addresses memory, it often suffers from a single-disciplinary perspective, failing to fully assimilate the essence of cognitive neuroscience. This paper offers a more comprehensive theoretical framework through systematic integration.
+*   **vs. Traditional LLM Memory Mechanisms**: Traditional LLM memory primarily relies on context windows and fine-tuning, lacking sophisticated management of the memory lifecycle (e.g., forgetting, reconstruction). This paper introduces a cognitive neuroscience perspective, advocating for more complex memory management.
+*   **vs. Fragmented Interdisciplinary Attempts**: Previous interdisciplinary attempts might have focused only on specific aspects of memory, such as the simulation of episodic memory. This paper provides a more holistic analysis covering memory taxonomy, storage, management, and security.
+
+## Experiments
+
+**Table.** Mainstream benchmarks for evaluating agent memory.
+
+| Benchmarks | Links | Attribute | Task |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| HomePage | GitHub | Fid. | Dyn. | Gen. | Task Type | Data Type | Data Quantity |  |
+| LoCoMo (195) | HomePage | GitHub | ✓ | ✗ | ✗ | Cross-Session Reasoning | Text + Image | 50 |
+| MemoryAgentBench (110) | HomePage | GitHub | ✓ | ✓ | ✓ | Memory Competency Evaluation | Text | 2,071 |
+| MemBench (259) | HomePage | GitHub | ✓ | ✓ | ✗ | Multi-level Memory Evaluation | Text | 65,000 |
+| LongMemEval (305) | HomePage | GitHub | ✓ | ✓ | ✗ | Long-term Memory Abilities | Text | 500 |
+| MemoryBank (393) | HomePage | GitHub | ✓ | ✓ | ✗ | Long-term AI Companion Evaluation | Text | 194 |
+| MemoryBench (6) | HomePage | GitHub | ✓ | ✓ | ✓ | Continual Learning | Text | 20,000 |
+| HaluMem (40) | HomePage | GitHub | ✓ | ✓ | ✓ | Hallucination Evaluation in Memory | Text | 83,000 |
+| Evo-Memory (297) | HomePage | GitHub | ✓ | ✓ | ✓ | Self-Evolving memory | Text | - |
+| LTMBenchmark (37) | HomePage | GitHub | ✓ | ✓ | ✓ | Dynamic conversation | Text | 33 |
+| LOCCO (125) | HomePage | GitHub | ✓ | ✗ | ✗ | Long-term Memory Abilities | Text | 3,080 |
+| PersonaMem (126) | HomePage | GitHub | ✓ | ✓ | ✓ | Dynamic User Profiling and Personalization | Text | 180 |
+| LongBench (14) | HomePage | GitHub | ✓ | ✗ | ✓ | long-text application | Text | 4,750 |
+| LongBench v2 (15) | HomePage | GitHub | ✓ | ✗ | ✓ | Deep Reasoning and Realistic Multitasks | Text | 503 |
+| BABILong (158) | HomePage | GitHub | ✓ | ✗ | ✗ | Reasoning-in-a-Haystack | Text | 13,000 |
+| RULER (107) | HomePage | GitHub | ✓ | ✗ | ✗ | Synthetic Long-Context Evaluation | Text | 39,000 |
+| MM-Needle (280) | HomePage | GitHub | ✓ | ✗ | ✗ | Multimodal Needle-in-a-Haystack | Text + Image | 40,000 |
+| DialSim (148) | HomePage | - | ✓ | ✓ | ✗ | Multi-party Dialogue Understanding | Text | 1,300 |
+| LifelongAgentBench (390) | HomePage | GitHub | ✓ | ✓ | ✓ | Lifelong learning | Text | 1,400 |
+| PrefEval (386) | HomePage | GitHub | ✓ | ✓ | ✗ | Personalized Preference Following | Text | 3,000 |
+| MPR (381) | HomePage | GitHub | ✓ | ✗ | ✗ | Multi-hop Personalized Reasoning | Text | 108,000 |
+| StreamBench (304) | HomePage | GitHub | ✓ | ✓ | ✓ | Continuous Online Learning | Text | 9,702 |
+| Madial-Bench (103) | HomePage | GitHub | ✓ | ✗ | ✗ | Memory-Augmented Dialogue | Text | 160 |
+| HotpotQA (337) | HomePage | GitHub | ✓ | ✗ | ✗ | Multi-hop Question Answering | Text | 112,779 |
+| PerLTQA (69) | HomePage | GitHub | ✓ | ✗ | ✗ | The use of personalized memory | Text | 8,593 |
+| StoryBench (272) | HomePage | - | ✓ | ✓ | ✓ | Interactive fiction games | Text | - |
+| SHARE (147) | HomePage | GitHub | ✓ | ✓ | ✗ | Skill learning and Transfer | Text | 1,201 |
+| MovieChat-1K (247) | HomePage | GitHub | ✓ | ✓ | ✗ | Long Video Comprehension and QA | Text + Movie | 15,000 |
+| Mobile-Agent-E (294) | HomePage | GitHub | ✓ | ✓ | ✓ | Complex mobile tasks | Text + Image | 25 |
+| M3-Agent (191) | HomePage | GitHub | ✓ | ✓ | ✗ | Long-form video QA and memory reasoning | Text + Audio +Video | 5,510 |
+| Text2Mem Bench (277) | HomePage | GitHub | ✓ | ✓ | ✗ | Memory operation instruction execution | Text | - |
+| SoMoSiMu-Bench (205) | HomePage | GitHub | ✓ | ✓ | ✗ | Social Movement Simulation | Text + Structured data | 6,700 |
+| MemDaily (378) | HomePage | GitHub | ✓ | ✗ | ✗ | Personalized Reasoning | Text | 26,003 |
+
+*   This paper provides a comprehensive review and categorization of existing benchmarks for evaluating agent memory.
+*   These benchmarks cover multiple dimensions, from Fidelity to Dynamics and Generalization, reflecting the performance of memory systems in various tasks.
+*   The table illustrates the Task Type, Data Type, and Data Quantity for each benchmark, offering a valuable reference for researchers in selecting appropriate evaluation tools.
+*   Through the analysis of these benchmarks, the paper reveals the current state and future directions of agent memory evaluation, particularly highlighting challenges in multimodal and long-term memory.
+*(Inferred from title/venue; full paper not read.)*

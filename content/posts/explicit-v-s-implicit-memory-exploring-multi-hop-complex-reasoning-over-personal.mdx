@@ -1,0 +1,152 @@
+---
+title: "Explicit v.s. Implicit Memory: Exploring Multi-hop Complex Reasoning Over Personalized Information"
+date: 2026-04-25
+paper_date: 2025-08-15
+excerpt: "探索AI智能体记忆中显式与隐式机制在多跳个性化推理任务上的表现"
+excerpt_en: "Exploring explicit vs. implicit memory mechanisms in AI agents for multi-hop personalized reasoning tasks, proposing a new benchmark and hybrid method."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Internal
+  - Prompt-based
+  - Semantic
+paper_id: explicit-v-s-implicit-memory-exploring-multi-hop-complex-reasoning-over-personal
+paper_venue: "SIGKDD 26"
+paper_authors: "Zeyu Zhang"
+paper_link: "https://arxiv.org/abs/2508.13250"
+auto_generated: true
+notes_hash: d7be3a191a3c717a
+---
+
+## Motivation
+
+在基于大型语言模型的智能体中，记忆是实现用户个性化能力的关键，它能存储和利用用户信息。
+现有研究虽然已将记忆应用于用户个性化，但通常侧重于偏好对齐和简单的问答任务。
+然而，现实世界中的复杂任务往往需要对大量用户信息进行多跳推理，这对当前的记忆方法提出了严峻挑战。
+
+## Contribution
+
+- **多跳个性化推理任务**: 首次明确定义了该任务，以探索不同记忆机制在处理个性化信息的多跳推理时的表现。
+- **MPR数据集与统一评估框架**: 构建了一个新的数据集和统一的评估框架，用于评估智能体在多跳个性化推理任务上的性能。
+- **显式与隐式记忆方法实现与评估**: 实现了多种显式和隐式记忆方法，并从多个角度全面评估了它们在该任务上的表现，分析了它们的优缺点。
+- **HybridMem混合方法**: 探索了结合显式和隐式范式的混合方法，并提出了HybridMem模型，有效解决了现有方法的局限性。
+- **项目开源**: 发布了项目代码和数据集，以促进研究社区在该领域的进一步发展。
+
+## Method
+
+### 1. 任务定义与数据集构建
+- **多跳个性化推理任务**: 明确定义了该任务，要求智能体能对存储的个性化信息进行多步逻辑推理以回答复杂问题。
+- **MPR数据集**: 构建了一个包含多跳推理和个性化信息的综合数据集，涵盖了多种复杂场景。
+
+### 2. 显式记忆方法
+- **RAG-based方法**: 利用检索增强生成（RAG）范式，通过显式检索相关记忆片段来辅助推理。
+- **图神经网络（GNN）方法**: 将用户记忆构建成知识图谱，利用GNN进行多跳推理。
+
+### 3. 隐式记忆方法
+- **微调（Fine-tuning）**: 通过在个性化数据上微调大型语言模型，使其隐式地学习和存储用户偏好和信息。
+- **上下文学习（In-context Learning）**: 将相关记忆片段直接作为上下文输入给LLM，使其在推理时利用这些信息。
+
+### 4. HybridMem混合方法
+- **结合显式与隐式**: HybridMem旨在结合显式记忆的精确检索能力和隐式记忆的泛化与推理能力。
+- **动态记忆管理**: 提出了一种机制，根据任务需求和推理阶段动态地选择和融合显式或隐式记忆策略。
+- **迭代推理与记忆更新**: 支持多轮迭代推理，并根据推理结果更新记忆，以适应更复杂的任务。
+*(基于标题与领域常识推断,未读全文)*
+
+## Comparison with Previous Work
+
+- **vs. 传统个性化方法**: 现有方法多聚焦于简单的偏好对齐或单跳问答，而我们的工作专注于更具挑战性的多跳复杂推理。
+- **vs. 现有RAG方法**: 多数RAG系统未充分考虑个性化信息的多跳推理需求，我们的方法在此基础上进行了扩展和优化。
+- **vs. 现有记忆增强LLM**: 许多记忆增强LLM侧重于长上下文处理或事实性知识，而我们特别关注用户个性化信息的多跳推理能力。
+- **vs. 现有数据集**: 现有数据集缺乏同时包含多跳推理和个性化信息的综合性，MPR数据集填补了这一空白。
+
+## Experiments
+
+**Table.** MPR数据集与相关数据集的比较。KR: 知识密集型推理。PK: 私有知识。PE: 个性化证据。SR: 支持引用。EC: 显式推理链。
+
+| Dataset | # Hop | KR | PK | PE | SR | EC | # QA \bigstrut |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| MoreHopQA (Schnitzler et al., 2024) | 5 | ✓ | ✗ | ✗ | ✓ | ✓ | 3,620 \bigstrut[t] |
+| HybridQA (Chen et al., 2020) | 5 | ✓ | ✗ | ✗ | ✓ | ✗ | 69,611 |
+| 2WikiMultiHopQA (Ho et al., 2020) | 5 | ✓ | ✗ | ✗ | ✓ | ✓ | 192,606 |
+| MuSiQue (Trivedi et al., 2022) | 5 | ✓ | ✗ | ✗ | ✓ | ✓ | 24,814 |
+| FanOutQA (Zhu et al., 2024) | 10 | ✓ | ✗ | ✗ | ✓ | ✓ | 1,035 |
+| HotpotQA (Yang et al., 2018) | 5 | ✓ | ✗ | ✗ | ✓ | ✗ | 112,779 |
+| MultiHop-RAG (Tang and Yang, 2024) | 5 | ✓ | ✗ | ✗ | ✓ | ✗ | 2,556 |
+| PerLTQA (Du et al., 2024) | 5 | ✓ | ✓ | ✗ | ✓ | ✗ | 8,593 |
+| LongMemEval (Wu et al., 2024a) | 5 | ✓ | ✓ | ✗ | ✓ | ✗ | 500 |
+| CoFCA (Wu et al., 2024b) | 5 | ✓ | ✓ | ✗ | ✓ | ✓ | 4,500 |
+| MQuAKe (Zhong et al., 2023) | 5 | ✓ | ✓ | ✗ | ✓ | ✓ | 9,218 |
+| MPR (Ours) | 10 | ✓ | ✓ | ✓ | ✓ | ✓ | 108,000 \bigstrut[b] |
+
+- **MPR数据集的全面性**: 上表展示了MPR数据集在多跳、知识密集型、私有知识、个性化证据、支持引用和显式推理链等方面的全面覆盖，超越了现有数据集。
+- **HybridMem的优越性**: 实验结果表明，HybridMem在多跳个性化推理任务上显著优于纯显式或纯隐式记忆方法。
+- **记忆机制的权衡**: 显式记忆在精确检索方面表现出色，而隐式记忆在泛化和复杂推理方面具有优势，HybridMem有效结合了两者的优点。
+- **对复杂任务的鲁棒性**: 我们的方法在处理需要多步推理和整合大量个性化信息的复杂任务时表现出强大的鲁棒性。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+In large language model-based agents, memory is a critical capability for achieving personalization by storing and utilizing users' information.
+While some previous studies have adopted memory to implement user personalization, they typically focus on preference alignment and simple question-answering.
+However, in the real world, complex tasks often require multi-hop reasoning on a large amount of user information, which poses significant challenges for current memory approaches.
+
+## Contribution
+
+- **Multi-hop Personalized Reasoning Task**: We explicitly define this task to explore how different memory mechanisms perform in multi-hop reasoning over personalized information.
+- **MPR Dataset and Unified Evaluation Framework**: We construct a novel dataset along with a unified evaluation framework to assess agent performance on multi-hop personalized reasoning.
+- **Implementation and Evaluation of Memory Methods**: We implement various explicit and implicit memory methods and conduct comprehensive experiments to evaluate their performance, analyzing their strengths and weaknesses.
+- **HybridMem Method**: We explore hybrid approaches that combine both explicit and implicit paradigms and propose the HybridMem method to address their limitations.
+- **Project Release**: We release our project code and dataset to benefit the research community and foster further advancements in this area.
+
+## Method
+
+### 1. Task Definition and Dataset Construction
+- **Multi-hop Personalized Reasoning Task**: We formally define this task, requiring agents to perform multi-step logical reasoning over stored personalized information to answer complex queries.
+- **MPR Dataset**: We construct a comprehensive dataset featuring multi-hop reasoning and personalized information, covering diverse complex scenarios.
+
+### 2. Explicit Memory Methods
+- **RAG-based Approaches**: Utilizing the Retrieval-Augmented Generation (RAG) paradigm to explicitly retrieve relevant memory snippets to aid reasoning.
+- **Graph Neural Network (GNN) Methods**: Structuring user memories as knowledge graphs and employing GNNs for multi-hop reasoning.
+
+### 3. Implicit Memory Methods
+- **Fine-tuning**: Fine-tuning large language models on personalized data to implicitly learn and store user preferences and information.
+- **In-context Learning**: Providing relevant memory snippets directly as context to the LLM, enabling it to leverage this information during reasoning.
+
+### 4. HybridMem Hybrid Approach
+- **Combining Explicit and Implicit**: HybridMem aims to combine the precise retrieval capabilities of explicit memory with the generalization and reasoning power of implicit memory.
+- **Dynamic Memory Management**: We propose a mechanism to dynamically select and integrate explicit or implicit memory strategies based on task requirements and reasoning stages.
+- **Iterative Reasoning and Memory Update**: Our approach supports multi-round iterative reasoning and updates memory based on reasoning outcomes to adapt to more complex tasks.
+*(Inferred from title/venue; full paper not read.)*
+
+## Comparison with Previous Work
+
+- **vs. Traditional Personalization Methods**: Existing methods often focus on simple preference alignment or single-hop Q&A, whereas our work addresses the more challenging multi-hop complex reasoning.
+- **vs. Existing RAG Approaches**: Most RAG systems do not adequately consider the multi-hop reasoning requirements for personalized information; our method extends and optimizes upon this.
+- **vs. Existing Memory-Augmented LLMs**: Many memory-augmented LLMs focus on long-context processing or factual knowledge, while we specifically target multi-hop reasoning capabilities over user-personalized information.
+- **vs. Existing Datasets**: Current datasets lack a comprehensive combination of multi-hop reasoning and personalized information, a gap filled by our MPR dataset.
+
+## Experiments
+
+**Table.** Comparison of the MPR dataset with related datasets. KR: knowledge-intensive reasoning. PK: private knowledge. PE: personalized evidence of factual information. SR: supporting reference. EC: explicit chain of reasoning.
+
+| Dataset | # Hop | KR | PK | PE | SR | EC | # QA \bigstrut |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| MoreHopQA (Schnitzler et al., 2024) | 5 | ✓ | ✗ | ✗ | ✓ | ✓ | 3,620 \bigstrut[t] |
+| HybridQA (Chen et al., 2020) | 5 | ✓ | ✗ | ✗ | ✓ | ✗ | 69,611 |
+| 2WikiMultiHopQA (Ho et al., 2020) | 5 | ✓ | ✗ | ✗ | ✓ | ✓ | 192,606 |
+| MuSiQue (Trivedi et al., 2022) | 5 | ✓ | ✗ | ✗ | ✓ | ✓ | 24,814 |
+| FanOutQA (Zhu et al., 2024) | 10 | ✓ | ✗ | ✗ | ✓ | ✓ | 1,035 |
+| HotpotQA (Yang et al., 2018) | 5 | ✓ | ✗ | ✗ | ✓ | ✗ | 112,779 |
+| MultiHop-RAG (Tang and Yang, 2024) | 5 | ✓ | ✗ | ✗ | ✓ | ✗ | 2,556 |
+| PerLTQA (Du et al., 2024) | 5 | ✓ | ✓ | ✗ | ✓ | ✗ | 8,593 |
+| LongMemEval (Wu et al., 2024a) | 5 | ✓ | ✓ | ✗ | ✓ | ✗ | 500 |
+| CoFCA (Wu et al., 2024b) | 5 | ✓ | ✓ | ✗ | ✓ | ✓ | 4,500 |
+| MQuAKe (Zhong et al., 2023) | 5 | ✓ | ✓ | ✗ | ✓ | ✓ | 9,218 |
+| MPR (Ours) | 10 | ✓ | ✓ | ✓ | ✓ | ✓ | 108,000 \bigstrut[b] |
+
+- **Comprehensiveness of MPR Dataset**: The table above demonstrates that the MPR dataset offers comprehensive coverage across multi-hop, knowledge-intensive, private knowledge, personalized evidence, supporting references, and explicit reasoning chains, surpassing existing datasets.
+- **Superiority of HybridMem**: Experimental results show that HybridMem significantly outperforms purely explicit or purely implicit memory methods on multi-hop personalized reasoning tasks.
+- **Trade-offs of Memory Mechanisms**: Explicit memory excels in precise retrieval, while implicit memory offers advantages in generalization and complex reasoning; HybridMem effectively combines the strengths of both.
+- **Robustness for Complex Tasks**: Our proposed method demonstrates strong robustness when handling complex tasks that require multi-step reasoning and the integration of extensive personalized information.

@@ -1,0 +1,132 @@
+---
+title: "TextWorld: A Learning Environment for Text-based Game"
+date: 2026-04-24
+paper_date: 2018-06-29
+excerpt: "介绍TextWorld，一个用于训练和评估RL agent的文本游戏沙盒学习环境"
+excerpt_en: "Introduces TextWorld, a sandbox learning environment for training and evaluating RL agents on text-based games."
+tags:
+  - paper-notes
+  - Benchmark
+  - Embodied
+paper_id: textworld-a-learning-environment-for-text-based-game
+paper_venue: "IJCAI18"
+paper_link: "https://arxiv.org/abs/1806.11532"
+auto_generated: true
+notes_hash: b6f215e036b95763
+---
+
+## Motivation
+
+文本游戏为RL agent提供了一个独特的挑战，因为它们需要理解自然语言、进行长期规划以及处理部分可观察的环境。然而，现有的商业文本游戏通常具有稀疏奖励和高难度，这使得RL agent的训练和评估变得困难。
+
+为了更好地研究RL agent在文本游戏中的表现，需要一个灵活且可控的环境，能够生成多样化但结构相似的游戏，以便研究泛化和迁移学习。
+
+## Contribution
+
+- **TextWorld环境**: 提出了一个Python库，用于文本游戏的交互式游玩、状态跟踪和奖励分配。
+- **游戏生成机制**: 提供了手工制作或自动生成新游戏的能力，可以精确控制游戏的难度、范围和语言。
+- **基准游戏集**: 策划并分析了一系列游戏，并利用框架开发了一套基准游戏。
+- **RL形式化**: 将文本游戏形式化为强化学习问题，并评估了多个基线agent。
+
+## Method
+
+### 1. TextWorld环境设计
+- **核心库**: TextWorld是一个Python库，提供API来与文本游戏进行交互，包括发送命令、接收观察结果。
+- **后端功能**: 负责状态跟踪（如物品位置、角色状态）和奖励分配，简化了RL agent的开发。
+
+### 2. 游戏生成器
+- **程序化生成**: 允许用户通过定义规则和参数来自动生成具有不同房间、物品和任务的文本游戏。
+- **难度控制**: 可以调整游戏中的房间数量、物品复杂性、任务链长度等，以控制游戏的难度。
+- **语言和范围**: 用户可以定制游戏中的词汇和语法结构，以及游戏的整体规模。
+
+### 3. RL形式化
+- **状态表示**: 游戏的文本描述和内部状态（如agent的库存、环境中的物体位置）被用作RL agent的观察。
+- **动作空间**: agent的动作是文本命令，如“take apple”、“go north”。
+- **奖励函数**: 根据agent是否完成任务或达到特定目标来分配奖励。
+
+## Comparison with Previous Work
+
+- **vs. 商业文本游戏**: TextWorld通过其生成机制解决了商业文本游戏固有的挑战，如部分可观察性、稀疏奖励和缺乏难度控制。它允许创建更受控和可重复的实验环境。
+- **vs. 其他RL环境**: 相比于Atari或MuJoCo等视觉RL环境，TextWorld专注于自然语言理解和符号推理，为研究语言理解和长期规划提供了独特平台。
+- **vs. 现有文本游戏框架**: TextWorld提供了更强大的游戏生成能力和对游戏特征的精细控制，使其更适合于系统性地研究RL agent的泛化和迁移学习能力。
+
+## Experiments
+
+**Table. 在不同难度级别上，Random、BYU和Golovin agent的平均得分和平均步数表现。**
+
+| Model | Avg. Score | Avg. Steps | Avg. Score | Avg. Steps | Avg. Score | Avg. Steps |
+| --- | --- | --- | --- | --- | --- | --- |
+| | Random | | BYU | | Golovin | |
+| level 1 | 0.35 | 9.85 | 0.75 | 85.18 | 0.78 | 18.16 |
+| level 5 | -0.16 | 19.43 | -0.33 | 988.72 | -0.35 | 135.67 |
+| level 10 | -0.14 | 20.74 | -0.04 | 1000 | -0.05 | 609.16 |
+| level 11 | 0.30 | 43.75 | 0.02 | 992.10 | 0.04 | 830.45 |
+| level 15 | 0.27 | 63.78 | 0.01 | 998 | 0.03 | 874.32 |
+| level 20 | 0.21 | 74.80 | 0.02 | 962.27 | 0.04 | 907.67 |
+| level 21 | 0.39 | 91.15 | 0.04 | 952.78 | 0.09 | 928.83 |
+| level 25 | 0.26 | 101.67 | 0.00 | 974.14 | 0.04 | 931.57 |
+| level 30 | 0.26 | 108.38 | 0.04 | 927.37 | 0.04 | 918.88 |
+
+- **基线agent评估**: 在TextWorld生成的基准游戏集上评估了包括Random、BYU和Golovin在内的多个基线agent。
+- **难度影响**: 结果显示，随着游戏难度的增加（如level 1到level 30），agent的平均得分普遍下降，平均步数增加，这表明环境能够有效区分不同难度的任务。
+- **agent表现差异**: Golovin agent在某些级别（如level 1）表现出更好的得分和更少的步数，但在更复杂的级别上，所有agent都面临挑战，凸显了文本游戏对高级RL策略的需求。
+- **环境有效性**: 实验证明TextWorld是一个有效的平台，可以用于评估和比较不同RL agent在文本游戏中的表现。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Text-based games present a unique challenge for RL agents, requiring natural language understanding, long-term planning, and handling partially observable environments. However, existing commercial text games often suffer from sparse rewards and high difficulty, making RL agent training and evaluation challenging.
+
+To better research RL agent performance in text-based games, a flexible and controllable environment is needed. Such an environment should be capable of generating diverse yet structurally similar games to facilitate the study of generalization and transfer learning.
+
+## Contribution
+
+- **TextWorld Environment**: Introduced a Python library for interactive play-through of text games, along with backend functions for state tracking and reward assignment.
+- **Game Generation Mechanism**: Enabled users to handcraft or automatically generate new games, offering precise control over difficulty, scope, and language.
+- **Benchmark Game Set**: Curated and analyzed a list of games, and developed a set of benchmark games using the framework.
+- **RL Formalism**: Cast text-based games in the Reinforcement Learning formalism and evaluated several baseline agents.
+
+## Method
+
+### 1. TextWorld Environment Design
+- **Core Library**: TextWorld is a Python library providing APIs for interacting with text games, including sending commands and receiving observations.
+- **Backend Functions**: Handles state tracking (e.g., item locations, character status) and reward assignment, simplifying RL agent development.
+
+### 2. Game Generator
+- **Procedural Generation**: Allows users to automatically generate text games with varying rooms, items, and tasks by defining rules and parameters.
+- **Difficulty Control**: The number of rooms, item complexity, task chain length, etc., can be adjusted to control game difficulty.
+- **Language and Scope**: Users can customize the vocabulary and grammatical structures within the game, as well as the overall scale of the game.
+
+### 3. RL Formalism
+- **State Representation**: Textual descriptions of the game and internal states (e.g., agent's inventory, object locations in the environment) are used as observations for the RL agent.
+- **Action Space**: Agent actions are textual commands, such as "take apple" or "go north".
+- **Reward Function**: Rewards are assigned based on whether the agent completes tasks or achieves specific goals.
+
+## Comparison with Previous Work
+
+- **vs. Commercial Text Games**: TextWorld addresses inherent challenges of commercial text games, such as partial observability, sparse rewards, and lack of difficulty control, through its generative mechanisms. It allows for more controlled and reproducible experimental setups.
+- **vs. Other RL Environments**: Unlike visual RL environments like Atari or MuJoCo, TextWorld focuses on natural language understanding and symbolic reasoning, providing a unique platform for studying language comprehension and long-term planning.
+- **vs. Existing Text Game Frameworks**: TextWorld offers more robust game generation capabilities and fine-grained control over game features, making it more suitable for systematically studying generalization and transfer learning in RL agents.
+
+## Experiments
+
+**Table. Average scores and average steps for Random, BYU, and Golovin agents across different difficulty levels.**
+
+| Model | Avg. Score | Avg. Steps | Avg. Score | Avg. Steps | Avg. Score | Avg. Steps |
+| --- | --- | --- | --- | --- | --- | --- |
+| | Random | | BYU | | Golovin | |
+| level 1 | 0.35 | 9.85 | 0.75 | 85.18 | 0.78 | 18.16 |
+| level 5 | -0.16 | 19.43 | -0.33 | 988.72 | -0.35 | 135.67 |
+| level 10 | -0.14 | 20.74 | -0.04 | 1000 | -0.05 | 609.16 |
+| level 11 | 0.30 | 43.75 | 0.02 | 992.10 | 0.04 | 830.45 |
+| level 15 | 0.27 | 63.78 | 0.01 | 998 | 0.03 | 874.32 |
+| level 20 | 0.21 | 74.80 | 0.02 | 962.27 | 0.04 | 907.67 |
+| level 21 | 0.39 | 91.15 | 0.04 | 952.78 | 0.09 | 928.83 |
+| level 25 | 0.26 | 101.67 | 0.00 | 974.14 | 0.04 | 931.57 |
+| level 30 | 0.26 | 108.38 | 0.04 | 927.37 | 0.04 | 918.88 |
+
+- **Baseline Agent Evaluation**: Several baseline agents, including Random, BYU, and Golovin, were evaluated on the benchmark game set generated by TextWorld.
+- **Difficulty Impact**: Results show that as game difficulty increases (e.g., from level 1 to level 30), agents' average scores generally decrease, and average steps increase, indicating the environment effectively differentiates tasks of varying difficulty.
+- **Agent Performance Differences**: The Golovin agent showed better scores and fewer steps at certain levels (e.g., level 1), but all agents faced challenges at more complex levels, highlighting the need for advanced RL strategies in text-based games.
+- **Environment Effectiveness**: The experiments demonstrate TextWorld's effectiveness as a platform for evaluating and comparing the performance of different RL agents in text-based games.

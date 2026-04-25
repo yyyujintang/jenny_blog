@@ -1,0 +1,151 @@
+---
+title: "TokMem: Tokenized Procedural Memory for Large Language Models"
+date: 2026-04-25
+paper_date: 2025-10-01
+excerpt: "TokMem将LLM任务程序编译为可训练的记忆token，实现高效、模块化的行为控制"
+excerpt_en: "TokMem compiles LLM task procedures into trainable memory tokens for efficient, modular behavior control with constant-size overhead."
+tags:
+  - paper-notes
+  - Method
+  - Internal
+  - SFT
+  - Procedural
+paper_id: tokmem-tokenized-procedural-memory-for-large-language-models
+paper_link: "https://arxiv.org/abs/2510.00444"
+auto_generated: true
+notes_hash: 37560c4272f77c8b
+---
+
+## Motivation
+
+大型语言模型（LLM）通常通过prompt进行控制，但这种方式存在效率问题，每次新查询都需要重复处理整个prompt。
+此外，prompt的模块化复用也面临挑战，难以将特定任务逻辑封装并独立使用。
+这限制了LLM在需要大量可重用、可组合任务场景中的应用。
+
+## Contribution
+
+- **程序记忆框架TokMem**: 引入一个将可重用任务程序编译为单个可训练记忆token的框架。
+- **恒定开销的行为控制**: 每个记忆token既作为程序索引，又作为生成控制信号，以恒定大小的开销引导生成，实现特定行为。
+- **冻结LLM骨干**: TokMem在添加新程序时保持LLM骨干模型冻结，将程序知识完全存储在这些专用单元中，避免干扰现有知识。
+- **优于RAG和PEFT**: 在原子召回和多步函数调用任务上，TokMem持续优于RAG，并以显著更少的参数匹配或超越parameter-efficient fine-tuning (PEFT)。
+
+## Method
+
+TokMem的核心思想是将每个可重用的任务程序编码为一个独特的、可训练的记忆token。
+
+1.  **程序编译**: 每个特定的任务（例如，“总结文档”或“调用API”）被编译成一个唯一的记忆token。这个token被设计成能够捕捉该任务的语义和执行逻辑。
+2.  **记忆token作为控制信号**: 在LLM生成过程中，这些记忆token被注入到模型的输入序列中。它们充当生成控制信号，直接引导LLM生成与该任务程序相关的输出。
+3.  **冻结LLM骨干**: 训练过程中，LLM的骨干参数保持冻结。只有这些记忆token的嵌入（embeddings）是可训练的。
+4.  **持续添加新程序**: 由于新程序的知识仅存储在新的记忆token中，因此可以持续添加新任务，而不会影响或遗忘已学习的现有任务。
+5.  **恒定大小开销**: 无论有多少个记忆token，每次推理时只需处理相关的记忆token，因此对上下文长度的开销是恒定的。
+
+## Comparison with Previous Work
+
+- **vs. Retrieval-Augmented Generation (RAG)**:
+    - RAG通过检索相关文档来扩充prompt，但每次查询都需要重新处理整个上下文，导致重复的计算开销。
+    - TokMem将程序知识编码为固定大小的token，避免了重复的上下文处理，且在性能上持续优于RAG。
+- **vs. Parameter-Efficient Fine-Tuning (PEFT)**:
+    - PEFT通过微调LLM的少量参数来适应新任务，但可能面临灾难性遗忘问题，且难以模块化地添加新任务。
+    - TokMem通过训练独立的记忆token来存储程序知识，避免了对LLM骨干的修改，实现了更好的模块化和持续学习能力，并以更少的参数达到或超越PEFT的性能。
+- **vs. Standard Prompting**:
+    - 标准prompt需要为每个任务手动设计和重复输入长文本，效率低下且难以复用。
+    - TokMem将复杂程序抽象为单个token，大大简化了控制，并降低了推理时的计算成本。
+
+## Experiments
+
+**Table. SNI原子召回性能（ROUGE-L）。TokMem在不同模型和规模下持续优于微调和RAG，即使在1000个任务时也保持强劲性能。**
+
+| | | Number of Tasks | | | | | |
+|---|---|---|---|---|---|---|---|
+| Model | Method | 10 | 50 | 200 | 500 | 1000 | Avg. |
+| Qwen 2.5 0.5B | Base | 33.9 | 39.0 | 38.8 | 39.1 | 38.5 | 37.9 |
+| RAG | 50.4 | 43.2 | 38.8 | 36.2 | 34.7 | 40.7 | |
+| Fine-Tuing | 52.4 | 48.0 | 40.6 | 41.7 | 43.2 | 45.2 | |
+| Replay Memory | 52.4 | 49.5 | 47.2 | 47.7 | 46.7 | 48.7 | |
+| \cellcolorlightblueTokMem | \cellcolorlightblue52.8 | \cellcolorlightblue51.3 | \cellcolorlightblue49.3 | \cellcolorlightblue50.2 | \cellcolorlightblue50.0 | \cellcolorlightblue50.7 | |
+| | \cellcolorlightblueTokMem+DC | \cellcolorlightblue53.8 | \cellcolorlightblue50.5 | \cellcolorlightblue50.2 | \cellcolorlightblue50.9 | \cellcolorlightblue50.0 | \cellcolorlightblue51.1 |
+| Llama 3.2 3B | Base | 16.6 | 19.9 | 20.0 | 18.7 | 18.2 | 18.7 |
+| RAG | 60.0 | 48.7 | 45.8 | 42.3 | 39.9 | 47.3 | |
+| Fine-Tuing | 67.1 | 59.1 | 59.5 | 58.4 | 57.9 | 60.4 | |
+| Replay Memory | 67.1 | 61.1 | 60.6 | 61.4 | 60.0 | 62.0 | |
+| \cellcolorlightblueTokMem | \cellcolorlightblue68.0 | \cellcolorlightblue62.3 | \cellcolorlightblue61.2 | \cellcolorlightblue61.5 | \cellcolorlightblue61.5 | \cellcolorlightblue62.9 | |
+| | \cellcolorlightblueTokMem+DC | \cellcolorlightblue68.8 | \cellcolorlightblue62.5 | \cellcolorlightblue58.7 | \cellcolorlightblue61.7 | \cellcolorlightblue61.1 | \cellcolorlightblue62.6 |
+| Llama 3.1 8B | Base | 27.2 | 27.8 | 30.4 | 29.6 | 29.5 | 28.9 |
+| RAG | 63.8 | 53.9 | 49.1 | 45.3 | 42.6 | 50.9 | |
+| Fine-Tuing | 75.8 | 64.3 | 63.2 | 58.7 | 61.6 | 64.7 | |
+| Replay Memory | 75.8 | 65.2 | 64.5 | 63.4 | 63.6 | 66.5 | |
+| \cellcolorlightblueTokMem | \cellcolorlightblue75.4 | \cellcolorlightblue65.5 | \cellcolorlightblue65.1 | \cellcolorlightblue64.4 | \cellcolorlightblue64.8 | \cellcolorlightblue67.0 | |
+| | \cellcolorlightblueTokMem+DC | \cellcolorlightblue75.6 | \cellcolorlightblue65.8 | \cellcolorlightblue63.7 | \cellcolorlightblue64.2 | \cellcolorlightblue64.4 | \cellcolorlightblue66.7 |
+
+- **原子召回性能**: 在Super-Natural Instructions (SNI) 任务集上，TokMem在不同模型规模（0.5B到8B）和任务数量（10到1000个）下，ROUGE-L分数持续优于RAG和Fine-Tuning。
+- **可扩展性**: 即使面对1000个任务，TokMem仍能保持强大的性能，表明其在处理大量程序时的出色可扩展性。
+- **路由准确性**: TokMem在任务路由准确性上表现优异，即使在1000个任务时也能达到近乎完美的准确率，远超RAG检索器。
+- **参数效率**: TokMem以显著更少的训练参数，实现了与parameter-efficient fine-tuning相当或更优的性能。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Large language models (LLMs) are typically controlled via prompts, which suffer from inefficiencies as they must be repeatedly re-processed for every new query.
+Furthermore, modular reuse of prompts is challenging, making it difficult to encapsulate and independently utilize specific task logic.
+This limitation restricts LLMs' application in scenarios requiring numerous reusable and composable tasks.
+
+## Contribution
+
+- **Procedural Memory Framework TokMem**: Introduction of a framework that compiles each reusable task procedure into a single trainable memory token.
+- **Constant-Size Overhead Control**: Each memory token serves as both a procedure index and a generation control signal, steering generation with constant-size overhead to enable targeted behaviors.
+- **Frozen LLM Backbone**: TokMem keeps the backbone LLM frozen when adding new procedures, storing procedural knowledge entirely in these dedicated units, thus avoiding interference with existing knowledge.
+- **Outperforms RAG and PEFT**: TokMem consistently outperforms Retrieval-Augmented Generation (RAG) and matches or exceeds parameter-efficient fine-tuning (PEFT) with substantially fewer trainable parameters on both atomic recall and multi-step function-calling tasks.
+
+## Method
+
+The core idea of TokMem is to encode each reusable task procedure into a unique, trainable memory token.
+
+1.  **Procedure Compilation**: Each specific task (e.g., "summarize document" or "call API") is compiled into a unique memory token. This token is designed to capture the semantics and execution logic of that task.
+2.  **Memory Token as Control Signal**: During LLM generation, these memory tokens are injected into the model's input sequence. They act as generation control signals, directly guiding the LLM to produce outputs relevant to the task procedure.
+3.  **Frozen LLM Backbone**: During training, the backbone parameters of the LLM remain frozen. Only the embeddings of these memory tokens are trainable.
+4.  **Continuous Addition of New Procedures**: Since knowledge for new procedures is stored only in new memory tokens, new tasks can be continually added without affecting or causing catastrophic forgetting of existing learned tasks.
+5.  **Constant-Size Overhead**: Regardless of the number of memory tokens, only the relevant memory tokens need to be processed during inference, resulting in a constant overhead to the context length.
+
+## Comparison with Previous Work
+
+- **vs. Retrieval-Augmented Generation (RAG)**:
+    - RAG augments prompts by retrieving relevant documents, but each query requires re-processing the entire context, leading to repeated computational overhead.
+    - TokMem encodes procedural knowledge into fixed-size tokens, avoiding repeated context processing, and consistently outperforms RAG in performance.
+- **vs. Parameter-Efficient Fine-Tuning (PEFT)**:
+    - PEFT adapts LLMs to new tasks by fine-tuning a small number of parameters, but can suffer from catastrophic forgetting and lacks modularity for adding new tasks.
+    - TokMem stores procedural knowledge by training independent memory tokens, avoiding modifications to the LLM backbone, enabling better modularity and continual learning, and achieving comparable or superior performance to PEFT with fewer parameters.
+- **vs. Standard Prompting**:
+    - Standard prompting requires manually designing and repeatedly inputting lengthy text for each task, which is inefficient and difficult to reuse.
+    - TokMem abstracts complex procedures into single tokens, significantly simplifying control and reducing computational costs during inference.
+
+## Experiments
+
+**Table. Atomic recall performance on SNI (ROUGE-L). TokMem consistently outperforms fine-tuning and RAG across models and scales, maintaining strong performance even at 1,000 tasks.**
+
+| | | Number of Tasks | | | | | |
+|---|---|---|---|---|---|---|---|
+| Model | Method | 10 | 50 | 200 | 500 | 1000 | Avg. |
+| Qwen 2.5 0.5B | Base | 33.9 | 39.0 | 38.8 | 39.1 | 38.5 | 37.9 |
+| RAG | 50.4 | 43.2 | 38.8 | 36.2 | 34.7 | 40.7 | |
+| Fine-Tuing | 52.4 | 48.0 | 40.6 | 41.7 | 43.2 | 45.2 | |
+| Replay Memory | 52.4 | 49.5 | 47.2 | 47.7 | 46.7 | 48.7 | |
+| \cellcolorlightblueTokMem | \cellcolorlightblue52.8 | \cellcolorlightblue51.3 | \cellcolorlightblue49.3 | \cellcolorlightblue50.2 | \cellcolorlightblue50.0 | \cellcolorlightblue50.7 | |
+| | \cellcolorlightblueTokMem+DC | \cellcolorlightblue53.8 | \cellcolorlightblue50.5 | \cellcolorlightblue50.2 | \cellcolorlightblue50.9 | \cellcolorlightblue50.0 | \cellcolorlightblue51.1 |
+| Llama 3.2 3B | Base | 16.6 | 19.9 | 20.0 | 18.7 | 18.2 | 18.7 |
+| RAG | 60.0 | 48.7 | 45.8 | 42.3 | 39.9 | 47.3 | |
+| Fine-Tuing | 67.1 | 59.1 | 59.5 | 58.4 | 57.9 | 60.4 | |
+| Replay Memory | 67.1 | 61.1 | 60.6 | 61.4 | 60.0 | 62.0 | |
+| \cellcolorlightblueTokMem | \cellcolorlightblue68.0 | \cellcolorlightblue62.3 | \cellcolorlightblue61.2 | \cellcolorlightblue61.5 | \cellcolorlightblue61.5 | \cellcolorlightblue62.9 | |
+| | \cellcolorlightblueTokMem+DC | \cellcolorlightblue68.8 | \cellcolorlightblue62.5 | \cellcolorlightblue58.7 | \cellcolorlightblue61.7 | \cellcolorlightblue61.1 | \cellcolorlightblue62.6 |
+| Llama 3.1 8B | Base | 27.2 | 27.8 | 30.4 | 29.6 | 29.5 | 28.9 |
+| RAG | 63.8 | 53.9 | 49.1 | 45.3 | 42.6 | 50.9 | |
+| Fine-Tuing | 75.8 | 64.3 | 63.2 | 58.7 | 61.6 | 64.7 | |
+| Replay Memory | 75.8 | 65.2 | 64.5 | 63.4 | 63.6 | 66.5 | |
+| \cellcolorlightblueTokMem | \cellcolorlightblue75.4 | \cellcolorlightblue65.5 | \cellcolorlightblue65.1 | \cellcolorlightblue64.4 | \cellcolorlightblue64.8 | \cellcolorlightblue67.0 | |
+| | \cellcolorlightblueTokMem+DC | \cellcolorlightblue75.6 | \cellcolorlightblue65.8 | \cellcolorlightblue63.7 | \cellcolorlightblue64.2 | \cellcolorlightblue64.4 | \cellcolorlightblue66.7 |
+
+- **Atomic Recall Performance**: On the Super-Natural Instructions (SNI) task set, TokMem consistently outperforms RAG and Fine-Tuning in ROUGE-L scores across various model scales (0.5B to 8B) and numbers of tasks (10 to 1000).
+- **Scalability**: TokMem maintains strong performance even when dealing with 1,000 tasks, demonstrating its excellent scalability in handling a large number of procedures.
+- **Routing Accuracy**: TokMem shows exceptional task routing accuracy, achieving near-perfect accuracy even with 1,000 tasks, significantly surpassing the RAG retriever.
+- **Parameter Efficiency**: TokMem achieves performance comparable to or better than parameter-efficient fine-tuning with substantially fewer trainable parameters.

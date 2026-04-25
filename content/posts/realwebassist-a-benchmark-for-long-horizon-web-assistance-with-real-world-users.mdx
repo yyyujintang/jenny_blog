@@ -1,0 +1,111 @@
+---
+title: "RealWebAssist: A Benchmark for Long-Horizon Web Assistance with Real-World Users"
+date: 2026-04-24
+paper_date: 2025-04-14
+excerpt: "引入RealWebAssist基准，用于评估AI代理在真实世界、长周期、模糊指令下的网页辅助能力"
+excerpt_en: "RealWebAssist is a new benchmark for evaluating AI agents' ability to follow ambiguous, long-horizon, sequential instructions from real users on the web."
+tags:
+  - paper-notes
+  - Benchmark
+  - Web
+paper_id: realwebassist-a-benchmark-for-long-horizon-web-assistance-with-real-world-users
+paper_link: "https://arxiv.org/abs/2504.10445"
+auto_generated: true
+notes_hash: 235ad95cc0191a4e
+---
+
+## Motivation
+
+*   当前的网页代理基准通常侧重于单一、定义明确的任务，这与真实世界中用户指令的复杂性不符。
+*   在现实世界中，用户指令可能模糊不清、需要不同程度的AI辅助，并且会随着用户心智状态的变化而演变。
+*   AI代理需要能够理解用户真实意图、跟踪用户心智状态、理解用户特定例程，并将任务映射到正确的GUI元素上，才能成功完成长周期网页任务。
+
+## Contribution
+
+*   **新基准RealWebAssist**: 引入了一个新基准，用于评估AI代理在真实场景中遵循顺序指令的能力，涉及长周期网页交互、视觉GUI grounding和理解模糊的真实世界用户指令。
+*   **真实用户指令数据集**: 包含一个从真实世界人类用户收集的顺序指令数据集，每个用户指导一个网页助手在多个网站上执行一系列任务。
+*   **多维度挑战**: 强调了现有SOTA模型在理解和grounding用户指令方面的不足，揭示了在长周期网页辅助中遵循真实世界用户指令的关键挑战。
+
+## Method
+
+*   **数据收集**: 从真实世界用户那里收集了顺序指令数据集。每个用户被要求在多个网站上执行一系列任务，并提供口头指令。
+*   **任务设计**: 任务设计旨在模拟真实世界的复杂性，包括模糊指令、需要多步骤操作以及跨多个网站的交互。
+*   **评估指标**: 引入了Task Success、Progress和Step Accuracy等指标来评估代理的性能。
+*   **GUI Grounding**: 代理需要将用户指令中的意图ground到网页上的具体GUI元素。
+*   **用户心智状态跟踪**: 代理需要理解用户指令的演变，并跟踪用户的心智状态和特定例程。
+*(基于标题与领域常识推断,未读全文)*
+
+## Comparison with Previous Work
+
+*   **vs. 现有网页代理基准**: RealWebAssist与现有基准（如ScreenSpot, WebArena, Mind2Web, WebLINX等）不同，它专注于真实用户、顺序指令、真实网站和GUI grounding，并包含了语音输入。
+*   **vs. 单一任务基准**: 现有基准多为单一、清晰定义的任务，而RealWebAssist则关注长周期、模糊且会演变的用户指令。
+*   **vs. 模拟用户**: RealWebAssist的数据集来自真实人类用户，而非模拟用户，这使得其更具现实意义。
+
+## Experiments
+
+**Table.** RealWebAssist与其他现有网页代理基准的特性对比。
+
+| Benchmark | Real User | Sequential Instructions | Real Websites | GUI Grounding | Speech | # Instructions |
+| --- | --- | --- | --- | --- | --- | --- |
+| SreenSpot (cheng2024seeclick) | ✗ | ✗ | ✓ | ✓ | ✗ | 1200+ |
+| WebArena (zhou2023webarena) | ✗ | ✗ | ✗ | ✗ | ✗ | 812 |
+| Mind2Web (deng2024mind2web) | ✗ | ✗ | ✓ | ✗ | ✗ | 2000+ |
+| WebLINX (lu2024weblinx) | ✗ | ✓ | ✓ | ✗ | ✗ | 512 |
+| VideoWebArena (jang2024videowebarena) | ✗ | ✗ | ✗ | ✗ | ✓ | 2021 |
+| WebShop (yao2022webshop) | ✗ | ✗ | ✗ | ✗ | ✗ | 12087 |
+| BearCubs (song2025bearcubs) | ✗ | ✗ | ✓ | ✗ | ✗ | 111 |
+| RealWebAssist (Ours) | ✓ | ✓ | ✓ | ✓ | ✓ | 1885 |
+
+*   实验结果表明，RealWebAssist在“Real User”、“Sequential Instructions”、“Real Websites”、“GUI Grounding”和“Speech”方面均优于现有基准。
+*   在RealWebAssist基准上，SOTA模型在理解和grounding用户指令方面表现不佳。
+*   这凸显了现有AI代理在处理真实世界、长周期、模糊网页辅助任务方面的局限性。
+*   该基准为未来研究提供了明确的方向，以开发更强大的网页辅助AI代理。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+*   Current web-based agent benchmarks typically focus on single, well-defined tasks, which does not reflect the complexity of real-world user instructions.
+*   In real-world scenarios, human instructions can be ambiguous, require varying levels of AI assistance, and may evolve over time, reflecting changes in the user's mental state.
+*   To achieve successful long-horizon web-based assistance, AI agents must be able to reason about true user intent, track user mental states, understand user-specific routines, and ground intended tasks to correct GUI elements.
+
+## Contribution
+
+*   **Novel Benchmark RealWebAssist**: Introduces a new benchmark designed to evaluate sequential instruction-following in realistic scenarios involving long-horizon interactions with the web, visual GUI grounding, and understanding ambiguous real-world user instructions.
+*   **Real-World User Instruction Dataset**: Includes a dataset of sequential instructions collected from real-world human users, where each user instructs a web-based assistant to perform a series of tasks on multiple websites.
+*   **Highlighting Challenges**: Experimental results show that state-of-the-art models struggle to understand and ground user instructions, posing critical challenges in following real-world user instructions for long-horizon web assistance.
+
+## Method
+
+*   **Data Collection**: Sequential instruction datasets were collected from real-world human users. Each user provided verbal instructions to a web-based assistant to perform a series of tasks across multiple websites.
+*   **Task Design**: Tasks were designed to mimic real-world complexity, including ambiguous instructions, multi-step operations, and interactions across various websites.
+*   **Evaluation Metrics**: Metrics such as Task Success, Progress, and Step Accuracy are introduced to evaluate agent performance.
+*   **GUI Grounding**: Agents are required to ground the intent behind user instructions to specific GUI elements on the web page.
+*   **User Mental State Tracking**: Agents need to understand the evolving nature of user instructions and track the user's mental state and specific routines.
+*(Inferred from title/venue; full paper not read.)*
+
+## Comparison with Previous Work
+
+*   **vs. Existing Web Agent Benchmarks**: RealWebAssist differentiates itself from existing benchmarks (e.g., ScreenSpot, WebArena, Mind2Web, WebLINX) by incorporating real users, sequential instructions, real websites, GUI grounding, and speech input.
+*   **vs. Single-Task Benchmarks**: Unlike benchmarks focused on single, clearly defined tasks, RealWebAssist addresses long-horizon, ambiguous, and evolving user instructions.
+*   **vs. Simulated Users**: RealWebAssist's dataset is collected from real human users, offering a more realistic evaluation compared to benchmarks relying on simulated users.
+
+## Experiments
+
+**Table.** Comparison of RealWebAssist features with other existing web-based agent benchmarks.
+
+| Benchmark | Real User | Sequential Instructions | Real Websites | GUI Grounding | Speech | # Instructions |
+| --- | --- | --- | --- | --- | --- | --- |
+| SreenSpot (cheng2024seeclick) | ✗ | ✗ | ✓ | ✓ | ✗ | 1200+ |
+| WebArena (zhou2023webarena) | ✗ | ✗ | ✗ | ✗ | ✗ | 812 |
+| Mind2Web (deng2024mind2web) | ✗ | ✗ | ✓ | ✗ | ✗ | 2000+ |
+| WebLINX (lu2024weblinx) | ✗ | ✓ | ✓ | ✗ | ✗ | 512 |
+| VideoWebArena (jang2024videowebarena) | ✗ | ✗ | ✗ | ✗ | ✓ | 2021 |
+| WebShop (yao2022webshop) | ✗ | ✗ | ✗ | ✗ | ✗ | 12087 |
+| BearCubs (song2025bearcubs) | ✗ | ✗ | ✓ | ✗ | ✗ | 111 |
+| RealWebAssist (Ours) | ✓ | ✓ | ✓ | ✓ | ✓ | 1885 |
+
+*   The experimental results indicate that RealWebAssist excels over existing benchmarks in terms of "Real User," "Sequential Instructions," "Real Websites," "GUI Grounding," and "Speech" features.
+*   State-of-the-art models demonstrate significant struggles in understanding and grounding user instructions on the RealWebAssist benchmark.
+*   This highlights the limitations of current AI agents in handling real-world, long-horizon, and ambiguous web assistance tasks.
+*   The benchmark provides a clear direction for future research to develop more robust web assistance AI agents.

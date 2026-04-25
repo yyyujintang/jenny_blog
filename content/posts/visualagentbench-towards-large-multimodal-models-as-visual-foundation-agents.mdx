@@ -1,0 +1,147 @@
+---
+title: "VisualAgentBench: Towards Large Multimodal Models as Visual Foundation Agents"
+date: 2026-04-24
+paper_date: 2024-08-12
+excerpt: "引入VisualAgentBench (VAB)，一个综合性基准，用于训练和评估大型多模态模型作为视觉基础智能体"
+excerpt_en: "Introducing VisualAgentBench (VAB), a comprehensive benchmark for training and evaluating large multimodal models as visual foundation agents"
+tags:
+  - paper-notes
+  - Benchmark
+  - GUI
+paper_id: visualagentbench-towards-large-multimodal-models-as-visual-foundation-agents
+paper_authors: "THU-Jie Tang"
+paper_link: "https://arxiv.org/abs/2408.06327"
+paper_code: "https://github.com/THUDM/VisualAgentBench"
+auto_generated: true
+notes_hash: d682dd97c0c10ef9
+---
+
+## Motivation
+
+大型多模态模型 (LMMs) 在语言和视觉能力融合方面取得了显著进展，有望成为通用人工智能的视觉基础智能体。
+然而，现有基准未能充分挑战或展示 LMMs 在复杂真实世界环境中的全部潜力。
+因此，需要一个新的基准来弥补这一差距，以更深入地探测 LMMs 的理解和交互能力。
+
+## Contribution
+
+- **综合性基准 (VAB)**：首次引入一个全面且开创性的基准 VisualAgentBench (VAB)，专门用于训练和评估 LMMs 作为视觉基础智能体。
+- **多样化场景**：VAB 涵盖了具身 (Embodied)、图形用户界面 (GUI) 和视觉设计 (Visual Design) 等多样化场景，任务设计旨在深入探究 LMMs 的理解和交互能力。
+- **混合方法轨迹训练集**：通过 Program-based Solvers、LMM Agent Bootstrapping 和 Human Demonstrations 等混合方法构建了轨迹训练集，显著提升了 LMMs 的行为克隆性能。
+- **广泛的评估**：对九个专有 LMM API 和八个开源模型进行了严格测试，展示了这些模型在智能体能力方面的显著进展，但也指出仍有发展空间。
+- **未来发展基础**：VAB 不仅旨在对现有模型进行基准测试，还为未来视觉基础智能体的开发提供了坚实的基础。
+
+## Method
+
+VAB 的核心是其综合性的基准设计和轨迹训练集构建。
+
+### 1. 基准设计
+
+- **多领域任务**：VAB 包含具身 (Embodied)、图形用户界面 (GUI) 和视觉设计 (Visual Design) 三大类任务，旨在模拟真实世界的复杂交互。
+- **交互式环境**：所有任务都在交互式环境中进行，允许 LMMs 执行动作并接收视觉反馈。
+- **细致的评估指标**：采用成功率 (SR) 等指标来衡量 LMMs 完成任务的有效性。
+
+### 2. 轨迹训练集构建
+
+- **Program-based Solvers**：利用程序化求解器为某些任务生成高质量的专家轨迹，确保行为的准确性和效率。
+- **LMM Agent Bootstrapping**：通过 LMMs 自身进行自举，生成初步的轨迹，然后进行筛选和优化，以扩展训练数据。
+- **Human Demonstrations**：引入人类演示来捕获复杂或难以程序化的行为，为 LMMs 提供更丰富、更自然的学习范例。
+- **行为克隆 (Behavior Cloning)**：利用这些混合方法构建的轨迹训练集，通过行为克隆技术对 LMMs 进行微调，以显著提升其性能。
+
+## Comparison with Previous Work
+
+- **vs. 现有基准**：现有基准未能充分挑战 LMMs 在复杂真实世界环境中的潜力，通常缺乏多领域、交互式环境和大规模训练轨迹。
+- **vs. AgentBench**：AgentBench 虽然是多领域基准，但主要侧重于语言任务，且不提供训练轨迹，也不支持多模态智能体评估。
+- **vs. ALFWorld/Alfred/MineDojo**：这些基准虽然提供交互式环境和训练轨迹，但通常局限于单一领域（如家庭或游戏），缺乏 VAB 的多样性和综合性。
+- **vs. Mind2Web/WebArena**：这些是 Web 领域基准，但 Mind2Web 缺乏交互式环境，WebArena 缺乏训练轨迹，且两者都未涵盖具身和视觉设计等更广泛的领域。
+- **VAB 的独特之处**：VAB 是第一个提供交互式环境、支持多模态智能体评估，并为视觉智能体调优提供大规模多样化训练轨迹的综合性多领域智能体基准。
+
+## Experiments
+
+**Table.** VAB 与相关基准的比较。VAB 是第一个提供交互式环境、支持多模态智能体评估、并为视觉智能体调优提供大规模多样化训练轨迹的综合性多领域智能体基准。
+
+| | Category | #Env. | #Test Ins. | #Train Traj. | #Avg. Turns | Multimodal | Interactive Env. |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| ALFWorld [52] | Household | 1 | 134 | 6,374 | 7.54 | ✗ | ✓ |
+| Alfred [51] | Household | 1 | 1,529 | 6,574 | 7.51 | ✓ | ✓ |
+| Behavior-1K [29] | Household | 1 | 1,000 | RL | - | ✓ | ✓ |
+| MineDojo [13] | Game | 1 | 3,141 | RL | - | ✓ | ✓ |
+| SmartPlay [67] | Game | 6 | 20 | - | - | ✗ | ✓ |
+| Mind2Web [10] | Web | 1 | 1,341 | 1,009 | 7.71 | ✓ | ✗ |
+| WebArena [77] | Web | 1 | 812 | - | - | ✓ | ✓ |
+| VisualWebArena [26] | Web | 1 | 910 | - | - | ✓ | ✓ |
+| META-GUI [57] | Mobile | 1 | 483 | 3,692 | 7.64 | ✓ | ✗ |
+| OSWorld [68] | Desktop | 1 | 369 | - | - | ✓ | ✓ |
+| OmniACT [21] | Desktop & Web | 2 | 9,802 | - | - | ✓ | ✗ |
+| AgentBench [35] | Multi-domain | 8 | 1,091 | - | - | ✗ | ✓ |
+| VisualAgentBench | Multi-domain | 5 | 746 | 4,482 | 11.22 | ✓ | ✓ |
+
+- **广泛的模型评估**：对九个专有 LMM API（如 gpt-4o, claude-3.5-sonnet）和八个开源模型（如 InternVL-2, GLM-4V）进行了严格测试。
+- **LMMs 性能表现**：结果显示，专有 LMMs 在 VAB 上的平均成功率最高达到 36.2% (gpt-4o)，而开源 LMMs 经过微调后最高达到 16.0% (InternVL-2)，表明 LMMs 仍有显著的提升空间。
+- **行为克隆的有效性**：通过 VAB 提供的轨迹训练集进行行为克隆，显著提升了 LMMs 的性能，证明了混合方法构建训练集的有效性。
+- **挑战性与潜力**：VAB 成功地展示了 LMMs 作为视觉基础智能体的潜力，同时也揭示了当前模型在处理复杂、多模态任务时仍面临的挑战。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Large Multimodal Models (LMMs) have inaugurated a new era in AI, merging language and vision capabilities to form highly capable Visual Foundation Agents. These agents are hypothesized to excel across a myriad of tasks, potentially approaching general artificial intelligence.
+However, existing benchmarks fail to sufficiently challenge or showcase the full potential of LMMs in complex, real-world environments.
+Therefore, a new benchmark is needed to address this gap and more deeply probe the understanding and interaction capabilities of LMMs.
+
+## Contribution
+
+- **Comprehensive Benchmark (VAB)**: Introduced VisualAgentBench (VAB), a pioneering and comprehensive benchmark specifically designed to train and evaluate LMMs as visual foundation agents.
+- **Diverse Scenarios**: VAB covers diverse scenarios including Embodied, Graphical User Interface (GUI), and Visual Design, with tasks formulated to probe the depth of LMMs' understanding and interaction capabilities.
+- **Hybrid Trajectory Training Set**: Constructed a trajectory training set through hybrid methods including Program-based Solvers, LMM Agent Bootstrapping, and Human Demonstrations, promoting substantial performance improvements in LMMs through behavior cloning.
+- **Extensive Evaluation**: Conducted rigorous testing across nine proprietary LMM APIs and eight open models, demonstrating the considerable yet still developing agent capabilities of these models.
+- **Foundation for Future Development**: VAB not only aims to benchmark existing models but also provides a solid foundation for future development into visual foundation agents.
+
+## Method
+
+The core of VAB lies in its comprehensive benchmark design and the construction of its trajectory training set.
+
+### 1. Benchmark Design
+
+- **Multi-domain Tasks**: VAB includes three main categories of tasks: Embodied, Graphical User Interface (GUI), and Visual Design, aiming to simulate complex real-world interactions.
+- **Interactive Environments**: All tasks are conducted in interactive environments, allowing LMMs to perform actions and receive visual feedback.
+- **Detailed Evaluation Metrics**: Metrics such as success rate (SR) are used to measure the effectiveness of LMMs in completing tasks.
+
+### 2. Trajectory Training Set Construction
+
+- **Program-based Solvers**: Utilizes programmatic solvers to generate high-quality expert trajectories for certain tasks, ensuring accuracy and efficiency of behavior.
+- **LMM Agent Bootstrapping**: Employs LMMs themselves for bootstrapping, generating initial trajectories which are then refined and optimized to expand the training data.
+- **Human Demonstrations**: Incorporates human demonstrations to capture complex or hard-to-program behaviors, providing richer and more natural learning examples for LMMs.
+- **Behavior Cloning**: The trajectory training set constructed through these hybrid methods is used to fine-tune LMMs via behavior cloning, significantly enhancing their performance.
+
+## Comparison with Previous Work
+
+- **vs. Existing Benchmarks**: Current benchmarks often fail to sufficiently challenge LMMs in complex real-world environments, typically lacking multi-domain coverage, interactive environments, and large-scale training trajectories.
+- **vs. AgentBench**: While AgentBench is a multi-domain benchmark, it primarily focuses on language tasks, does not provide training trajectories, and does not support multimodal agent evaluation.
+- **vs. ALFWorld/Alfred/MineDojo**: These benchmarks offer interactive environments and training trajectories but are usually confined to single domains (e.g., household or game), lacking the diversity and comprehensiveness of VAB.
+- **vs. Mind2Web/WebArena**: These are web-domain benchmarks, but Mind2Web lacks interactive environments, and WebArena lacks training trajectories. Neither covers broader domains like embodied and visual design.
+- **VAB's Uniqueness**: VAB is the first comprehensive multi-domain agent benchmark that offers interactive environments, supports multimodal agent evaluation, and provides a large and diverse set of training trajectories for visual agent tuning.
+
+## Experiments
+
+**Table.** Comparison between VAB and related benchmarks. VAB is the first comprehensive multi-domain agent benchmark offering interactive environments, supporting multimodal agent evaluation, and providing a large and diverse set of training trajectories for visual agent tuning.
+
+| | Category | #Env. | #Test Ins. | #Train Traj. | #Avg. Turns | Multimodal | Interactive Env. |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| ALFWorld [52] | Household | 1 | 134 | 6,374 | 7.54 | ✗ | ✓ |
+| Alfred [51] | Household | 1 | 1,529 | 6,574 | 7.51 | ✓ | ✓ |
+| Behavior-1K [29] | Household | 1 | 1,000 | RL | - | ✓ | ✓ |
+| MineDojo [13] | Game | 1 | 3,141 | RL | - | ✓ | ✓ |
+| SmartPlay [67] | Game | 6 | 20 | - | - | ✗ | ✓ |
+| Mind2Web [10] | Web | 1 | 1,341 | 1,009 | 7.71 | ✓ | ✗ |
+| WebArena [77] | Web | 1 | 812 | - | - | ✓ | ✓ |
+| VisualWebArena [26] | Web | 1 | 910 | - | - | ✓ | ✓ |
+| META-GUI [57] | Mobile | 1 | 483 | 3,692 | 7.64 | ✓ | ✗ |
+| OSWorld [68] | Desktop | 1 | 369 | - | - | ✓ | ✓ |
+| OmniACT [21] | Desktop & Web | 2 | 9,802 | - | - | ✓ | ✗ |
+| AgentBench [35] | Multi-domain | 8 | 1,091 | - | - | ✗ | ✓ |
+| VisualAgentBench | Multi-domain | 5 | 746 | 4,482 | 11.22 | ✓ | ✓ |
+
+- **Extensive Model Evaluation**: Rigorous testing was conducted on nine proprietary LMM APIs (e.g., gpt-4o, claude-3.5-sonnet) and eight open models (e.g., InternVL-2, GLM-4V).
+- **LMM Performance**: Results show that proprietary LMMs achieved an average success rate of up to 36.2% (gpt-4o) on VAB, while fine-tuned open LMMs reached up to 16.0% (InternVL-2), indicating significant room for improvement in LMMs.
+- **Effectiveness of Behavior Cloning**: Behavior cloning using the trajectory training set provided by VAB significantly improved LMMs' performance, demonstrating the effectiveness of the hybrid method for constructing training sets.
+- **Challenge and Potential**: VAB successfully showcases the potential of LMMs as visual foundation agents while also revealing the current challenges models face in handling complex, multimodal tasks.

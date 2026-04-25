@@ -1,0 +1,129 @@
+---
+title: "(LoCoMo) Evaluating Very Long-Term Conversational Memory of LLM Agents"
+date: 2026-04-24
+paper_date: 2024-02-27
+excerpt: "本文引入LoCoMo数据集和评估基准，旨在解决LLM在超长期对话记忆方面的挑战"
+excerpt_en: "This paper introduces the LoCoMo dataset and evaluation benchmark to address LLM challenges in very long-term conversational memory."
+tags:
+  - paper-notes
+  - Benchmark
+  - QA
+paper_id: locomo-evaluating-very-long-term-conversational-memory-of-llm-agents
+paper_link: "https://arxiv.org/abs/2402.17753"
+auto_generated: true
+notes_hash: a16f93d66b35ad4b
+---
+
+## Motivation
+
+现有研究主要关注不超过五个对话会话的长期开放域对话，这限制了我们对LLM在更长时间跨度内记忆能力的理解。
+尽管长上下文LLM和RAG技术有所进步，但它们在超长期对话中的有效性尚未得到充分探索。
+当前缺乏一个专门用于评估LLM在多会话、多模态、超长期对话中记忆能力的高质量数据集和评估基准。
+
+## Contribution
+
+- **LoCoMo数据集**: 一个高质量的超长期对话数据集，每段对话平均包含300轮次和9K tokens，跨越多达35个会话，并支持多模态（图像共享）。
+- **机器-人工生成流程**: 提出一种利用LLM代理架构，并基于角色和时间事件图生成对话的流水线，通过人工标注进行验证和编辑，确保长程一致性和事件图的接地性。
+- **综合评估基准**: 基于LoCoMo数据集，建立了一个全面的评估基准，用于衡量模型在问答、事件摘要和多模态对话生成任务中的长期记忆能力。
+- **深入实验分析**: 揭示了LLM在理解长对话以及对话中长程时间与因果动态方面的挑战，并指出长上下文LLM和RAG虽有改进，但仍远低于人类表现。
+
+## Method
+
+### 数据集生成流程
+1.  **LLM代理架构**: 利用LLM构建对话代理，使其能够基于预设的角色（personas）和时间事件图进行对话。
+2.  **多模态能力**: 为每个代理配备共享和响应图像的能力，增加对话的丰富性。
+3.  **对话生成**: 代理根据角色和事件图进行自由对话，生成初步的超长期对话。
+4.  **人工验证与编辑**: 招募人类标注员对生成的对话进行验证和编辑，确保对话的长程一致性、与事件图的准确对应以及整体流畅性。
+
+### 评估基准任务
+1.  **问答 (Question Answering)**: 评估模型从超长对话中检索和理解信息的能力，包括单跳、多跳、时间推理、开放域和对抗性问题。
+2.  **事件摘要 (Event Summarization)**: 评估模型从对话中提取关键事件并进行准确摘要的能力，这需要对对话的因果和时间动态有深刻理解。
+3.  **多模态对话生成 (Multi-modal Dialogue Generation)**: 评估模型在多模态上下文（包含图像）中生成连贯、相关对话响应的能力。
+
+## Comparison with Previous Work
+
+- **vs. 现有长期对话数据集**:
+    - 现有数据集（如MPChat, MMDialog, Daily Dialog, SODA, MSC, Conversation Chronicles）的对话长度、会话数量和时间跨度远小于LoCoMo。
+    - LoCoMo平均每段对话300轮次，35个会话，9K tokens，而多数现有数据集仅有几轮对话和单会话。
+    - LoCoMo支持多模态交互，而许多现有数据集（如Daily Dialog, SODA, MSC, Conversation Chronicles）则不支持。
+- **vs. 仅依赖LLM生成的数据集**:
+    - LoCoMo采用机器-人工混合流水线，确保了数据的高质量和长程一致性，弥补了纯LLM生成数据可能存在的连贯性问题。
+- **vs. 传统RAG和长上下文LLM评估**:
+    - 本文的评估基准专门针对“超长期”对话记忆，超越了传统RAG和长上下文LLM通常评估的“五会话以内”的范围，揭示了它们在更长跨度下的局限性。
+
+## Experiments
+
+**Table.** LoCoMo数据集与现有长期对话数据集的统计对比。
+
+| Dataset | Avg. turns per conv. | Avg. sessions per conv. | Avg. tokens per conv. | Time Interval | Multimodal | Collection |
+| --- | --- | --- | --- | --- | --- | --- |
+| MPChat Ahn et al. (2023) | 2.8 | 1 | 53.3 | - | ✓ | Reddit |
+| MMDialog Feng et al. (2023) | 4.6 | 1 | 72.5 | - | ✓ | Social media |
+| Daily Dialog Li et al. (2017) | 7.9 | 1 | 114.7 | - | ✗ | Crowdsourcing |
+| SODA Kim et al. (2023) | 7.6 | 1 | 122.4 | - | ✗ | LLM-generated |
+| MSC Xu et al. (2022) (train; 1-4 sessions) | 53.3 | 4 | 1,225.9 | few days | ✗ | Crowdsourcing |
+| Conversation Chronicles Jang et al. (2023) | 58.5 | 5 | 1,054.7 | few hours - years | ✗ | LLM-generated |
+| LoCoMo (ours) | 304.9 | 19.3 | 9,209.2 | few months | ✓ | LLM-gen. + crowdsourc. |
+
+- **LLM在超长期记忆方面表现不佳**: 实验结果表明，即使是先进的LLM（如GPT-4-turbo），在LoCoMo的问答任务中，F1分数也远低于人类表现（人类87.9 vs GPT-4-turbo 32.1），尤其在多跳和时间推理方面表现更差。
+- **长上下文LLM和RAG的局限性**: 尽管长上下文LLM（如GPT-3.5-turbo-16K）和RAG策略能带来一定改进，但它们在处理超长对话中的复杂时间与因果动态时，仍然显著落后于人类水平。
+- **多模态对话生成挑战**: 在多模态对话生成任务中，模型在集成图像信息并生成高质量响应方面仍有提升空间，表明多模态长期记忆是一个尚未解决的难题。
+- **对对话理解的挑战**: LLM在理解对话中的长程时间与因果动态方面存在显著挑战，导致信息遗漏、幻觉和对对话线索的误解。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Existing research on long-term open-domain dialogues primarily evaluates model responses within contexts spanning no more than five chat sessions, limiting our understanding of LLM memory over longer periods.
+Despite advancements in long-context LLMs and RAG techniques, their efficacy in very long-term dialogues remains largely unexplored.
+There is a current lack of high-quality datasets and benchmarks specifically designed to evaluate LLMs' memory capabilities in multi-session, multi-modal, very long-term conversations.
+
+## Contribution
+
+- **LoCoMo Dataset**: A high-quality dataset for very long-term conversations, with each conversation averaging 300 turns and 9K tokens, spanning up to 35 sessions, and supporting multimodal interactions (image sharing).
+- **Machine-Human Generation Pipeline**: Introduction of a pipeline that leverages LLM-based agent architectures, grounding dialogues on personas and temporal event graphs, with human annotators verifying and editing for long-range consistency and grounding.
+- **Comprehensive Evaluation Benchmark**: Establishment of a robust benchmark based on LoCoMo, designed to measure long-term memory in models across question answering, event summarization, and multi-modal dialogue generation tasks.
+- **In-depth Experimental Analysis**: Revelation of LLMs' challenges in understanding lengthy conversations and comprehending long-range temporal and causal dynamics within dialogues, indicating that while long-context LLMs and RAG offer improvements, they still substantially lag behind human performance.
+
+## Method
+
+### Dataset Generation Pipeline
+1.  **LLM Agent Architecture**: LLM-based agents are designed to conduct dialogues grounded in predefined personas and temporal event graphs.
+2.  **Multimodal Capability**: Each agent is equipped with the ability to share and react to images, enhancing the richness of conversations.
+3.  **Dialogue Generation**: Agents engage in free-form conversations based on their personas and event graphs to generate initial very long-term dialogues.
+4.  **Human Verification and Editing**: Human annotators verify and edit the generated conversations to ensure long-range consistency, accurate grounding to event graphs, and overall fluency.
+
+### Evaluation Benchmark Tasks
+1.  **Question Answering**: Assesses the model's ability to retrieve and comprehend information from very long dialogues, covering single-hop, multi-hop, temporal, open-domain, and adversarial questions.
+2.  **Event Summarization**: Evaluates the model's capability to extract key events from conversations and summarize them accurately, requiring a deep understanding of causal and temporal dynamics.
+3.  **Multi-modal Dialogue Generation**: Measures the model's performance in generating coherent and relevant dialogue responses within multimodal contexts, including images.
+
+## Comparison with Previous Work
+
+- **vs. Existing Long-Term Dialogue Datasets**:
+    - Current datasets (e.g., MPChat, MMDialog, Daily Dialog, SODA, MSC, Conversation Chronicles) have significantly shorter dialogue lengths, fewer sessions, and smaller time spans compared to LoCoMo.
+    - LoCoMo features an average of 300 turns, 35 sessions, and 9K tokens per conversation, whereas most existing datasets involve only a few turns and single sessions.
+    - LoCoMo supports multimodal interactions, a feature often absent in many prior datasets (e.g., Daily Dialog, SODA, MSC, Conversation Chronicles).
+- **vs. LLM-Generated-Only Datasets**:
+    - LoCoMo employs a hybrid machine-human pipeline, ensuring high data quality and long-range consistency, addressing potential coherence issues found in purely LLM-generated data.
+- **vs. Traditional RAG and Long-Context LLM Evaluations**:
+    - This benchmark specifically targets "very long-term" conversational memory, extending beyond the "within five sessions" scope typically evaluated by traditional RAG and long-context LLMs, revealing their limitations over extended durations.
+
+## Experiments
+
+**Table.** Statistical comparison of the LoCoMo dataset with existing long-term dialogue datasets.
+
+| Dataset | Avg. turns per conv. | Avg. sessions per conv. | Avg. tokens per conv. | Time Interval | Multimodal | Collection |
+| --- | --- | --- | --- | --- | --- | --- |
+| MPChat Ahn et al. (2023) | 2.8 | 1 | 53.3 | - | ✓ | Reddit |
+| MMDialog Feng et al. (2023) | 4.6 | 1 | 72.5 | - | ✓ | Social media |
+| Daily Dialog Li et al. (2017) | 7.9 | 1 | 114.7 | - | ✗ | Crowdsourcing |
+| SODA Kim et al. (2023) | 7.6 | 1 | 122.4 | - | ✗ | LLM-generated |
+| MSC Xu et al. (2022) (train; 1-4 sessions) | 53.3 | 4 | 1,225.9 | few days | ✗ | Crowdsourcing |
+| Conversation Chronicles Jang et al. (2023) | 58.5 | 5 | 1,054.7 | few hours - years | ✗ | LLM-generated |
+| LoCoMo (ours) | 304.9 | 19.3 | 9,209.2 | few months | ✓ | LLM-gen. + crowdsourc. |
+
+- **LLMs struggle with very long-term memory**: Experimental results show that even advanced LLMs (e.g., GPT-4-turbo) perform significantly worse than humans on LoCoMo's QA tasks (Human F1 87.9 vs GPT-4-turbo 32.1), especially in multi-hop and temporal reasoning.
+- **Limitations of long-context LLMs and RAG**: While long-context LLMs (e.g., GPT-3.5-turbo-16K) and RAG strategies offer some improvements, they still substantially lag behind human performance when processing complex temporal and causal dynamics in very long dialogues.
+- **Challenges in multimodal dialogue generation**: In multimodal dialogue generation tasks, models still have room for improvement in integrating image information and generating high-quality responses, indicating that multimodal long-term memory remains an unsolved problem.
+- **Difficulties in dialogue comprehension**: LLMs exhibit significant challenges in understanding long-range temporal and causal dynamics within dialogues, leading to information omission, hallucination, and misunderstanding of dialogue cues.

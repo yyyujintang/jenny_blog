@@ -1,0 +1,123 @@
+---
+title: "Gym-Anything: Turn any Software into an Agent Environment"
+date: 2026-04-25
+paper_date: 2026-04-07
+excerpt: "Gym-Anything将任何软件转化为AI智能体环境，通过多智能体协作创建CUA-World基准，涵盖万级长程任务"
+excerpt_en: "Gym-Anything converts any software into an AI agent environment, creating the CUA-World benchmark with 10K long-horizon tasks via multi-agent collaboration"
+tags:
+  - paper-notes
+  - Benchmark
+  - GUI
+paper_id: gym-anything-turn-any-software-into-an-agent-environment
+paper_link: "https://arxiv.org/abs/2604.06126"
+auto_generated: true
+notes_hash: dbeb6221078e304a
+---
+
+## Motivation
+
+当前计算机使用智能体研究主要集中在短周期任务和有限的软件应用上，这些任务的经济价值有限。
+主要原因是为复杂软件创建环境耗时耗力，难以规模化。
+这限制了智能体在更广泛、更有经济价值的数字活动中的应用潜力。
+
+## Contribution
+
+- **Gym-Anything框架**: 提出一个将任何软件转换为交互式计算机使用环境的框架。
+- **多智能体环境创建**: 将环境创建本身视为一个多智能体任务，包括编码智能体和审计智能体。
+- **CUA-World基准**: 构建了一个包含200个软件应用、10K+长周期任务的集合，覆盖广泛的经济有价值职业。
+- **CUA-World-Long**: 引入一个具有挑战性的长周期基准，任务通常需要超过500步。
+- **蒸馏学习**: 从训练轨迹中蒸馏知识到2B视觉语言模型，性能超越两倍大小的模型。
+- **运行时审计**: 在测试时应用审计原则，通过独立的VLM审查轨迹并提供反馈，提升Gemini-3-Flash在CUA-World-Long上的表现。
+
+## Method
+
+### 环境创建流程
+1.  **编码智能体**: 负责编写设置脚本、下载真实世界数据并配置软件。
+2.  **证据生成**: 编码智能体在设置过程中生成正确设置的证据。
+3.  **审计智能体**: 独立的审计智能体根据质量清单验证环境设置的证据。
+
+### CUA-World构建
+1.  **职业分类**: 基于美国GDP数据中经济有价值的职业分类。
+2.  **软件应用**: 将上述流程应用于200个软件应用，以实现广泛的职业覆盖。
+3.  **任务生成**: 为每个配置的软件生成包含真实世界数据、训练和测试分割的10K+长周期任务。
+
+### 模型训练与评估
+1.  **轨迹蒸馏**: 从CUA-World的训练分割中提取成功的轨迹。
+2.  **VLM训练**: 将蒸馏的轨迹用于训练一个2B的视觉语言模型。
+3.  **运行时反馈**: 在测试时，一个独立的VLM审查已完成的轨迹，并提供关于剩余任务的反馈。
+
+## Comparison with Previous Work
+
+- **vs. 现有基准**: 现有基准主要关注短周期任务，而CUA-World和CUA-World-Long提供了远超现有基准的10K+长周期任务，且任务步骤通常超过500步。
+- **vs. 手动环境创建**: 现有复杂软件环境创建需要大量人工时间和精力，Gym-Anything通过多智能体自动化了这一过程，实现了规模化。
+- **vs. 传统VLM训练**: 传统VLM训练通常依赖大规模通用数据，本文通过从成功轨迹中蒸馏知识，使得2B模型能超越两倍大小的模型。
+- **vs. 缺乏运行时反馈**: 现有方法通常在任务结束后进行评估，本文引入了运行时审计智能体，提供实时反馈以改进智能体表现。
+
+## Experiments
+
+**Table.** CUA-World-Long上Gemini-3-Flash性能对比
+
+| Model | CUA-World-Long Success Rate (%) |
+|---|---|
+| Gemini-3-Flash (baseline) | 11.5 |
+| Gemini-3-Flash + Runtime Auditing | 14.0 |
+
+- **CUA-World-Long挑战性**: CUA-World-Long是一个极具挑战性的长周期基准，任务通常需要超过500步。
+- **运行时审计的有效性**: 独立的VLM在测试时审查轨迹并提供反馈，显著提升了Gemini-3-Flash在CUA-World-Long上的成功率，从11.5%提高到14.0%。
+- **蒸馏学习的效率**: 从训练轨迹中蒸馏知识到2B视觉语言模型，其性能优于两倍大小的模型，显示了数据效率的优势。
+- **广泛的职业覆盖**: CUA-World涵盖了从医学、天文学到工程和企业系统等广泛领域的200个软件应用，为现实世界应用提供了坚实基础。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Current research on computer-use agents largely focuses on short-horizon tasks and a limited set of software applications. These tasks often have limited economic value.
+A key reason for this limitation is that creating environments for complex software demands significant time and human effort, making it difficult to scale.
+This restricts the potential for agents to assist in a wider range of more economically valuable digital activities.
+
+## Contribution
+
+- **Gym-Anything Framework**: Introduction of a framework for converting any software into an interactive computer-use environment.
+- **Multi-Agent Environment Creation**: Framing environment creation itself as a multi-agent task, involving a coding agent and an audit agent.
+- **CUA-World Benchmark**: Construction of a collection of over 10K long-horizon tasks across 200 software applications, covering a broad range of economically valuable occupations.
+- **CUA-World-Long**: Introduction of a challenging long-horizon benchmark where tasks often require over 500 steps.
+- **Distillation Learning**: Distilling successful trajectories from the training split into a 2B vision-language model, outperforming models twice its size.
+- **Runtime Auditing**: Applying an auditing principle at test time, where a separate VLM reviews completed trajectories and provides feedback, improving Gemini-3-Flash's performance on CUA-World-Long.
+
+## Method
+
+### Environment Creation Pipeline
+1.  **Coding Agent**: Responsible for writing setup scripts, downloading real-world data, and configuring the software.
+2.  **Evidence Generation**: The coding agent produces evidence of correct setup during the configuration process.
+3.  **Audit Agent**: An independent audit agent verifies the evidence for environment setup against a quality checklist.
+
+### CUA-World Construction
+1.  **Occupational Taxonomy**: Grounded in a taxonomy of economically valuable occupations derived from U.S. GDP data.
+2.  **Software Applications**: This pipeline is applied to 200 software applications to achieve broad occupational coverage.
+3.  **Task Generation**: Over 10K long-horizon tasks are configured for each software, complete with realistic data and train/test splits.
+
+### Model Training and Evaluation
+1.  **Trajectory Distillation**: Successful trajectories are distilled from the training split of CUA-World.
+2.  **VLM Training**: The distilled trajectories are used to train a 2B vision-language model.
+3.  **Runtime Feedback**: At test time, a separate VLM reviews completed trajectories and provides feedback on what remains to be done.
+
+## Comparison with Previous Work
+
+- **vs. Existing Benchmarks**: Existing benchmarks primarily focus on short-horizon tasks, whereas CUA-World and CUA-World-Long provide over 10K long-horizon tasks, often requiring more than 500 steps, far exceeding current offerings.
+- **vs. Manual Environment Creation**: Creating environments for complex software traditionally requires significant human time and effort. Gym-Anything automates this process through multi-agent collaboration, enabling scalability.
+- **vs. Traditional VLM Training**: While traditional VLM training often relies on large-scale general data, this work demonstrates that distilling knowledge from successful trajectories allows a 2B model to outperform models twice its size.
+- **vs. Lack of Runtime Feedback**: Prior methods typically evaluate agents only after task completion. This work introduces a runtime auditing agent that provides real-time feedback to improve agent performance.
+
+## Experiments
+
+**Table.** Gemini-3-Flash Performance on CUA-World-Long
+
+| Model | CUA-World-Long Success Rate (%) |
+|---|---|
+| Gemini-3-Flash (baseline) | 11.5 |
+| Gemini-3-Flash + Runtime Auditing | 14.0 |
+
+- **CUA-World-Long Challenge**: CUA-World-Long is a highly challenging long-horizon benchmark, with tasks frequently requiring over 500 steps.
+- **Effectiveness of Runtime Auditing**: The independent VLM reviewing trajectories and providing feedback at test time significantly improved Gemini-3-Flash's success rate on CUA-World-Long from 11.5% to 14.0%.
+- **Efficiency of Distillation Learning**: Distilling successful trajectories into a 2B vision-language model resulted in performance exceeding models twice its size, demonstrating data efficiency benefits.
+- **Broad Occupational Coverage**: CUA-World covers 200 software applications across diverse domains from medical science and astronomy to engineering and enterprise systems, providing a robust foundation for real-world agent applications.

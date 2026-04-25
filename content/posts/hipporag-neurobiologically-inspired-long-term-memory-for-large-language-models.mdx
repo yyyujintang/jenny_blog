@@ -1,0 +1,166 @@
+---
+title: "HippoRAG: Neurobiologically Inspired Long-Term Memory for Large Language Models"
+date: 2026-04-24
+paper_date: 2024-05-23
+excerpt: "HippoRAG受海马体记忆启发，通过LLM、知识图和PageRank算法实现LLM高效深度知识整合"
+excerpt_en: "HippoRAG, inspired by hippocampal memory, integrates LLMs, knowledge graphs, and PageRank for efficient and deep knowledge integration in LLMs."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Training-free
+  - Episodic
+  - Semantic
+paper_id: hipporag-neurobiologically-inspired-long-term-memory-for-large-language-models
+paper_venue: "NeurIPS24"
+paper_authors: "Yu Su"
+paper_link: "https://arxiv.org/abs/2405.14831"
+paper_code: "https://github.com/OSU-NLP-Group/HippoRAG"
+auto_generated: true
+notes_hash: e0d6663009785c87
+---
+
+## Motivation
+
+哺乳动物大脑能存储大量知识并持续整合新信息，同时避免灾难性遗忘，以适应不断变化的环境。
+
+尽管大型语言模型（LLM）取得了显著成就，即使结合RAG，在预训练后仍难以高效、有效地整合大量新经验。
+
+现有方法在处理多跳问答和需要深度知识整合的场景时，往往效率低下且性能受限。
+
+## Contribution
+
+- **神经生物学启发的新型检索框架**: 引入HippoRAG，模仿人脑海马体在长期记忆中的索引作用，实现LLM更深层次、更高效的知识整合。
+- **LLM、知识图谱与Personalized PageRank的协同**: 创新性地结合LLM、知识图谱（KG）和Personalized PageRank (PPR) 算法，模拟大脑皮层和海马体在记忆中的不同角色。
+- **显著提升多跳问答性能**: 在多跳问答任务上，HippoRAG的性能比现有SOTA方法高出20%。
+- **高效率与低成本**: 单步检索的HippoRAG与迭代检索方法（如IRCoT）性能相当或更优，但成本降低10-30倍，速度提高6-13倍。
+- **解决新类型场景的能力**: 能够处理现有方法无法应对的新型复杂场景。
+
+## Method
+
+HippoRAG通过以下步骤模仿人脑海马体的记忆机制：
+
+1.  **构建知识图谱 (Knowledge Graph Construction)**:
+    *   利用LLM（如GPT-3.5 Turbo）从原始文本语料中提取三元组（主语-谓语-宾语），构建一个初步的知识图谱。
+    *   通过实体链接和指代消解，确保图谱中的实体一致性。
+    *   添加同义词边，将语义相似的节点连接起来，增强图谱的连接性。
+2.  **查询扩展与图谱激活 (Query Expansion and Graph Activation)**:
+    *   对于给定的查询，LLM首先生成相关的实体和概念作为初始查询节点。
+    *   这些查询节点在知识图谱中被激活，作为Personalized PageRank的起始点。
+3.  **Personalized PageRank (PPR) 检索**:
+    *   在构建好的知识图谱上运行Personalized PageRank算法，以查询节点为个性化起始点。
+    *   PPR算法能有效地在图谱中传播激活，识别与查询最相关的、多跳连接的节点和路径。
+    *   根据PPR得分，检索出最相关的知识片段（ passages）。
+4.  **LLM合成与答案生成 (LLM Synthesis and Answer Generation)**:
+    *   检索到的知识片段被输入到LLM中。
+    *   LLM利用这些上下文信息生成最终的答案，实现深度知识整合。
+
+## Comparison with Previous Work
+
+- **vs. 传统RAG方法 (e.g., BM25, Contriever, ColBERTv2)**:
+    *   传统RAG主要依赖于文本相似度匹配进行单步检索，难以有效处理多跳和需要复杂推理的问答。
+    *   HippoRAG通过知识图谱和PPR实现多跳知识整合，显著提升了在复杂问答上的性能，最高提升20%。
+- **vs. 迭代检索方法 (e.g., IRCoT)**:
+    *   IRCoT等迭代方法通过多次检索逐步构建答案，虽然能处理多跳问题，但计算成本高昂且速度较慢。
+    *   HippoRAG的单步检索在性能上与IRCoT相当或更优，但成本降低10-30倍，速度提高6-13倍。
+- **vs. 仅使用LLM进行知识图谱构建**:
+    *   HippoRAG不仅利用LLM构建KG，更重要的是将KG与PPR算法结合，实现动态、上下文感知的知识检索，而非静态的图谱查询。
+- **vs. 仅使用PageRank或图神经网络**:
+    *   HippoRAG的Personalized PageRank是基于LLM生成的查询节点进行个性化传播，而非全局或预定义的节点重要性，使其更具上下文相关性。
+
+## Experiments
+
+**Table. 单步检索性能对比，HippoRAG在MuSiQue和2WikiMultiHopQA上表现最佳。**
+
+| | MuSiQue | 2Wiki | HotpotQA | Average | | | | |
+|---|---|---|---|---|---|---|---|---|
+| | R@2 | R@5 | R@2 | R@5 | R@2 | R@5 | R@2 | R@5 |
+| BM25 [69] | 32.3 | 41.2 | 51.8 | 61.9 | 55.4 | 72.2 | 46.5 | 58.4 |
+| Contriever [35] | 34.8 | 46.6 | 46.6 | 57.5 | 57.2 | 75.5 | 46.2 | 59.9 |
+| GTR [53] | 37.4 | 49.1 | 60.2 | 67.9 | 59.4 | 73.3 | 52.3 | 63.4 |
+| ColBERTv2 [70] | 37.9 | 49.2 | 59.2 | 68.2 | 64.7 | 79.3 | 53.9 | 65.6 |
+| RAPTOR [71] | 35.7 | 45.3 | 46.3 | 53.8 | 58.1 | 71.2 | 46.7 | 56.8 |
+| RAPTOR (ColBERTv2) | 36.9 | 46.5 | 57.3 | 64.7 | 63.1 | 75.6 | 52.4 | 62.3 |
+| Proposition [10] | 37.6 | 49.3 | 56.4 | 63.1 | 58.7 | 71.1 | 50.9 | 61.2 |
+| Proposition (ColBERTv2) | 37.8 | 50.1 | 55.9 | 64.9 | 63.9 | 78.1 | 52.5 | 64.4 |
+| HippoRAG (Contriever) | 41.0 | 52.1 | 71.5 | 89.5 | 59.0 | 76.2 | 57.2 | 72.6 |
+| HippoRAG (ColBERTv2) | 40.9 | 51.9 | 70.7 | 89.1 | 60.5 | 77.7 | 57.4 | 72.9 |
+
+- **单步检索性能显著提升**: HippoRAG在MuSiQue和2WikiMultiHopQA数据集上显著优于所有基线方法，R@5指标最高提升达20%（例如，在2Wiki上，HippoRAG (ColBERTv2) 的R@5为89.1，远高于ColBERTv2的68.2）。
+- **多步检索的互补增益**: 将HippoRAG与IRCoT等标准多步检索方法结合，在所有三个数据集上都带来了显著的互补性改进，进一步提升了性能。
+- **QA性能与检索性能相关**: HippoRAG在检索性能上的提升直接转化为问答（QA）性能的改进，尤其在EM和F1指标上表现突出。
+- **效率与成本优势**: HippoRAG的单步检索在性能与迭代检索方法相当或更优的同时，实现了10-30倍的成本降低和6-13倍的速度提升。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Mammalian brains have evolved to store vast amounts of knowledge and continuously integrate new information while avoiding catastrophic forgetting, enabling them to thrive in dynamic environments.
+
+Despite the impressive accomplishments of large language models (LLMs), even with retrieval-augmented generation (RAG), they still struggle to efficiently and effectively integrate a large amount of new experiences after pre-training.
+
+Existing methods often prove inefficient and limited in performance when tackling multi-hop question answering and scenarios requiring deep knowledge integration.
+
+## Contribution
+
+- **Neurobiologically Inspired Retrieval Framework**: Introduces HippoRAG, mimicking the hippocampal indexing theory of human long-term memory to enable deeper and more efficient knowledge integration for LLMs.
+- **Synergistic Orchestration of LLMs, Knowledge Graphs, and Personalized PageRank**: Innovatively combines LLMs, Knowledge Graphs (KGs), and the Personalized PageRank (PPR) algorithm to simulate the distinct roles of the neocortex and hippocampus in human memory.
+- **Remarkable Performance Improvement on Multi-hop QA**: HippoRAG outperforms state-of-the-art methods by up to 20% on multi-hop question answering tasks.
+- **High Efficiency and Cost-Effectiveness**: Single-step retrieval with HippoRAG achieves comparable or better performance than iterative retrieval methods like IRCoT, while being 10-30 times cheaper and 6-13 times faster.
+- **Ability to Tackle Novel Scenarios**: The method can address new types of complex scenarios that are beyond the reach of existing approaches.
+
+## Method
+
+HippoRAG mimics the human hippocampal memory mechanism through the following steps:
+
+1.  **Knowledge Graph Construction**:
+    *   An LLM (e.g., GPT-3.5 Turbo) is used to extract triples (subject-predicate-object) from raw text corpora to build an initial knowledge graph.
+    *   Entity linking and coreference resolution ensure consistency of entities within the graph.
+    *   Synonymy edges are added to connect semantically similar nodes, enhancing graph connectivity.
+2.  **Query Expansion and Graph Activation**:
+    *   For a given query, the LLM first generates relevant entities and concepts to serve as initial query nodes.
+    *   These query nodes are activated within the knowledge graph, acting as starting points for Personalized PageRank.
+3.  **Personalized PageRank (PPR) Retrieval**:
+    *   The Personalized PageRank algorithm is run on the constructed knowledge graph, using the query nodes as personalized starting points.
+    *   PPR effectively propagates activation through the graph, identifying multi-hop connected nodes and paths most relevant to the query.
+    *   The most relevant passages are retrieved based on their PPR scores.
+4.  **LLM Synthesis and Answer Generation**:
+    *   The retrieved knowledge passages are fed into the LLM.
+    *   The LLM utilizes this contextual information to generate the final answer, achieving deep knowledge integration.
+
+## Comparison with Previous Work
+
+- **vs. Traditional RAG methods (e.g., BM25, Contriever, ColBERTv2)**:
+    *   Traditional RAG primarily relies on text similarity matching for single-step retrieval, struggling with multi-hop and complex reasoning questions.
+    *   HippoRAG integrates multi-hop knowledge through KGs and PPR, significantly boosting performance on complex QA, with improvements up to 20%.
+- **vs. Iterative Retrieval methods (e.g., IRCoT)**:
+    *   Iterative methods like IRCoT build answers incrementally through multiple retrieval steps, which can handle multi-hop problems but are computationally expensive and slow.
+    *   HippoRAG's single-step retrieval achieves comparable or superior performance to IRCoT, while being 10-30 times cheaper and 6-13 times faster.
+- **vs. LLM-only Knowledge Graph Construction**:
+    *   HippoRAG not only uses LLMs for KG construction but crucially integrates the KG with the PPR algorithm for dynamic, context-aware knowledge retrieval, rather than static graph queries.
+- **vs. PageRank or Graph Neural Networks (GNNs) alone**:
+    *   HippoRAG's Personalized PageRank is tailored by LLM-generated query nodes for personalized propagation, making it more contextually relevant than global or pre-defined node importance.
+
+## Experiments
+
+**Table. Single-step retrieval performance, with HippoRAG performing best on MuSiQue and 2WikiMultiHopQA.**
+
+| | MuSiQue | 2Wiki | HotpotQA | Average | | | | |
+|---|---|---|---|---|---|---|---|---|
+| | R@2 | R@5 | R@2 | R@5 | R@2 | R@5 | R@2 | R@5 |
+| BM25 [69] | 32.3 | 41.2 | 51.8 | 61.9 | 55.4 | 72.2 | 46.5 | 58.4 |
+| Contriever [35] | 34.8 | 46.6 | 46.6 | 57.5 | 57.2 | 75.5 | 46.2 | 59.9 |
+| GTR [53] | 37.4 | 49.1 | 60.2 | 67.9 | 59.4 | 73.3 | 52.3 | 63.4 |
+| ColBERTv2 [70] | 37.9 | 49.2 | 59.2 | 68.2 | 64.7 | 79.3 | 53.9 | 65.6 |
+| RAPTOR [71] | 35.7 | 45.3 | 46.3 | 53.8 | 58.1 | 71.2 | 46.7 | 56.8 |
+| RAPTOR (ColBERTv2) | 36.9 | 46.5 | 57.3 | 64.7 | 63.1 | 75.6 | 52.4 | 62.3 |
+| Proposition [10] | 37.6 | 49.3 | 56.4 | 63.1 | 58.7 | 71.1 | 50.9 | 61.2 |
+| Proposition (ColBERTv2) | 37.8 | 50.1 | 55.9 | 64.9 | 63.9 | 78.1 | 52.5 | 64.4 |
+| HippoRAG (Contriever) | 41.0 | 52.1 | 71.5 | 89.5 | 59.0 | 76.2 | 57.2 | 72.6 |
+| HippoRAG (ColBERTv2) | 40.9 | 51.9 | 70.7 | 89.1 | 60.5 | 77.7 | 57.4 | 72.9 |
+
+- **Significant Single-Step Retrieval Performance Gains**: HippoRAG substantially outperforms all baseline methods on the MuSiQue and 2WikiMultiHopQA datasets, with R@5 metrics improving by up to 20% (e.g., HippoRAG (ColBERTv2) achieves 89.1 R@5 on 2Wiki, significantly higher than ColBERTv2's 68.2).
+- **Complementary Gains with Multi-Step Retrieval**: Integrating HippoRAG with standard multi-step retrieval methods like IRCoT leads to substantial complementary improvements across all three datasets, further boosting performance.
+- **QA Performance Correlates with Retrieval Improvements**: HippoRAG's enhancements in retrieval performance directly translate into improved Question Answering (QA) performance, particularly in EM and F1 scores.
+- **Efficiency and Cost Advantages**: HippoRAG's single-step retrieval achieves comparable or superior performance to iterative retrieval methods while being 10-30 times cheaper and 6-13 times faster.

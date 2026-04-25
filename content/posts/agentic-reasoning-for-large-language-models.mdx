@@ -1,0 +1,211 @@
+---
+title: "Agentic Reasoning for Large Language Models"
+date: 2026-04-25
+paper_date: 2026-01-18
+excerpt: "本文综述了AI智能体推理，将LLM重塑为在动态环境中规划、行动和学习的自主智能体"
+excerpt_en: "This survey redefines LLMs as autonomous agents that plan, act, and learn through continual interaction in dynamic environments."
+tags:
+  - paper-notes
+  - Method
+  - Prompt-based
+  - Training-free
+paper_id: agentic-reasoning-for-large-language-models
+paper_authors: "Heng Ji"
+paper_link: "https://arxiv.org/abs/2601.12538"
+auto_generated: true
+notes_hash: ddc770394c67085a
+---
+
+## Motivation
+
+大型语言模型（LLMs）在封闭世界中展现出强大的推理能力，但在开放式和动态环境中却面临挑战。传统的LLM推理方法通常是静态的，难以适应不断变化的环境和长期交互。
+
+为了解决这一局限性，研究人员开始将LLM视为自主智能体，使其能够通过规划、行动和学习来适应复杂环境。这种“智能体推理”范式旨在弥合LLM的强大语言理解与现实世界动态交互之间的鸿沟。
+
+本文旨在系统地组织和回顾智能体推理领域，为研究人员提供一个统一的框架和未来研究方向的路线图。
+
+## Contribution
+
+- **统一的智能体推理框架**: 提出了一个将智能体推理组织为三个互补维度的框架：环境动态（基础、自演化、多智能体）、推理模式（in-context vs. post-training）和应用领域。
+- **环境动态分层**: 将环境动态分为三个层次：基础智能体推理（单智能体能力）、自演化智能体推理（通过反馈、记忆和适应进行能力完善）和集体多智能体推理（协作、知识共享）。
+- **推理模式区分**: 明确区分了in-context reasoning（通过结构化编排扩展测试时交互）和post-training reasoning（通过强化学习和监督微调优化行为）。
+- **广泛的应用和基准综述**: 回顾了智能体推理在科学、机器人、医疗保健、自主研究和数学等领域的代表性框架、实际应用和基准。
+- **未来研究路线图**: 提出了智能体推理的开放挑战和未来方向，包括个性化、长周期交互、世界建模、可扩展多智能体训练和实际部署的治理。
+
+## Method
+
+本文作为一篇综述，主要通过以下方式组织和呈现智能体推理领域：
+
+### 1. 概念界定与范式转变
+- **智能体推理的定义**: 将LLM重构为能够规划、行动和学习的自主智能体，以应对开放和动态环境。
+- **与传统LLM推理的对比**: 强调智能体推理在适应性和交互性方面的优势。
+
+### 2. 三维组织框架
+- **环境动态**:
+    1. **基础智能体推理**: 关注单智能体在稳定环境中的核心能力，如规划、工具使用和搜索。
+    2. **自演化智能体推理**: 探讨智能体如何通过反馈、记忆和适应来完善自身能力。
+    3. **集体多智能体推理**: 扩展到协作环境，涉及协调、知识共享和共同目标。
+- **推理模式**:
+    - **In-context reasoning**: 通过结构化编排在测试时进行交互。
+    - **Post-training reasoning**: 通过RL和SFT优化智能体行为。
+- **应用领域**: 涵盖科学、机器人、医疗保健、自主研究和数学等。
+
+### 3. 代表性框架和应用综述
+- **规划系统**: 审查不同模态、结构、格式和工具的智能体规划系统。
+- **工具使用优化**: 分析不同集成阶段、学习类型和工具策略的系统。
+- **其他关键组件**: 讨论记忆、世界建模、多智能体协作等。
+
+### 4. 开放挑战与未来方向
+- **个性化**: 如何使智能体适应个体用户或特定任务。
+- **长周期交互**: 应对复杂、多步骤任务中的长期依赖。
+- **世界建模**: 智能体如何构建和更新对环境的理解。
+- **可扩展多智能体训练**: 如何有效地训练和协调大量智能体。
+- **治理**: 确保智能体在现实世界部署中的安全性、公平性和透明度。
+
+*(基于标题与领域常识推断,未读全文)*
+
+## Comparison with Previous Work
+
+- **vs. 传统LLM推理**: 智能体推理超越了传统LLM在封闭世界中的静态推理能力，通过引入规划、行动和学习循环，使其能够在开放和动态环境中表现出更强的适应性和自主性。
+- **vs. 单纯的工具使用**: 本文将工具使用视为智能体推理的一个核心组成部分，并进一步探讨了其优化策略和与规划、记忆等其他能力的协同作用，而不仅仅是调用外部API。
+- **vs. 早期智能体研究**: 本文将LLM作为智能体的核心，利用其强大的语言理解和生成能力来驱动智能体的认知过程，这与早期基于符号逻辑或传统机器学习的智能体有显著区别。
+- **vs. 现有综述**: 本文提出了一个新颖的三维组织框架，系统地整合了环境动态、推理模式和应用领域，为智能体推理提供了一个更全面和结构化的视角。
+
+*(基于标题与领域常识推断,未读全文)*
+
+## Experiments
+
+**Table.** 本表展示了不同智能体规划系统在模态、结构、格式和工具方面的分类。
+
+| Method | Structure | Format | Tool |
+| --- | --- | --- | --- |
+| Modality I: Language Agents (e.g., Search Agents, Code Agents) |  |  |  |
+| ReWOO [xu2023rewoo] | Decomposed | Natural Language | None |
+| Reflexion [shinn2023reflexion] | Sequential | Natural Language | None |
+| LLM+P [liu2023llmp] | Sequential | Formal Language | None |
+| IPC [valmeekam2023planning] | Sequential | Formal Language | None |
+| ToT [yao2023tree] | Tree | Natural Language | None |
+| GoT [besta2024graph] | Graph | Natural Language | None |
+| AoT [sel2023algorithm] | Graph | Natural Language | None |
+| HTP [gui2025hypertree] | Hypertree | Natural Language | Retrieval |
+| RefPlan [jeong2025reflect] | Tree | Constrained Space | None |
+| Gorilla [patil2024gorilla] | Sequential | Programming Language | Retrieval, API |
+| CodeNav [gupta2024codenav] | Sequential | Programming Language | Code Indexer, Code Search |
+| PoG [chen2024plan] | Graph | Natural Language | Knowledge Graph |
+| Tool-Planner [liu2025toolplanner] | Sequential | Natural Language | Tool Cluster |
+| Modality II: Visual/Multimodal Agents (e.g., GUI Agents, Embodied Agents) |  |  |  |
+| VisualPredictor [liang2024visualpredicator] | Tree | Formal Language | None |
+| LLM-Planner [song2023llmplannerfewshotgroundedplanning] | Sequential | Formal Language | Object Detector, KNN |
+| Agent-E [abuelsaad2024agent] | Sequential | Formal Language | DOM Grounder, Screenshot |
+| Agent S [agashe2024agent] | Hierarchical | Natural Language | API, Search, Memory |
+| ExRAP [yoo2024exploratory] | Sequential | Natural Language | Memory |
+| AESOP [sinha2024real] | Reactive | Natural Language | Anomaly Detector |
+| HRV [cornelio2025hierarchical] | Hierarchical | Formal Language | Symbolic Verifier |
+| BehaviorGPT [zhou2024behaviorgpt] | Sequential | Visual Features | World Model |
+| Dino-WM [zhou2024dino] | Tree | Visual Features | World Model |
+| FLIP [gao2024flip] | Sequential | Visual Features | Language Model |
+
+- **规划结构多样性**: 智能体规划系统展现出多种结构，包括Sequential、Tree、Graph和Hypertree，表明研究人员正在探索不同的复杂性来处理任务。
+- **自然语言主导**: 大多数语言智能体倾向于使用Natural Language作为其规划格式，强调了LLM在理解和生成人类可读指令方面的核心作用。
+- **工具集成日益普遍**: 越来越多的智能体，特别是语言智能体，开始集成各种工具，如Retrieval、API、Knowledge Graph和Code Indexer，以增强其能力。
+- **多模态智能体兴起**: 视觉/多模态智能体正在利用Formal Language或Visual Features进行规划，并结合Object Detector、DOM Grounder和World Model等工具，拓展了智能体在更丰富环境中的应用。
+
+*(基于标题与领域常识推断,未读全文)*
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Large Language Models (LLMs) demonstrate strong reasoning capabilities in controlled, closed-world settings. However, they struggle significantly when faced with open-ended and dynamic environments, where traditional static reasoning approaches fall short.
+
+To address these limitations, researchers are shifting paradigms, reframing LLMs as autonomous agents. These agents are designed to plan, act, and learn through continuous interaction, thereby bridging the gap between powerful language understanding and real-world dynamic engagement.
+
+This survey aims to systematically organize and review the emerging field of agentic reasoning, providing a unified framework and a roadmap for future research directions.
+
+## Contribution
+
+- **Unified Agentic Reasoning Framework**: Presents a framework organizing agentic reasoning along three complementary dimensions: environmental dynamics (foundational, self-evolving, multi-agent), reasoning modes (in-context vs. post-training), and application domains.
+- **Layered Environmental Dynamics**: Characterizes environmental dynamics through three layers: foundational agentic reasoning (core single-agent capabilities), self-evolving agentic reasoning (refining capabilities through feedback, memory, and adaptation), and collective multi-agent reasoning (coordination, knowledge sharing).
+- **Distinction of Reasoning Modes**: Clearly distinguishes between in-context reasoning, which scales test-time interaction through structured orchestration, and post-training reasoning, which optimizes behaviors via reinforcement learning and supervised fine-tuning.
+- **Comprehensive Review of Applications and Benchmarks**: Reviews representative agentic reasoning frameworks across real-world applications and benchmarks, including science, robotics, healthcare, autonomous research, and mathematics.
+- **Roadmap for Future Research**: Outlines open challenges and future directions for agentic reasoning, including personalization, long-horizon interaction, world modeling, scalable multi-agent training, and governance for real-world deployment.
+
+## Method
+
+As a survey paper, this work primarily organizes and presents the field of agentic reasoning through the following structure:
+
+### 1. Defining the Paradigm Shift
+- **Agentic Reasoning Definition**: Reconceptualizes LLMs as autonomous agents capable of planning, acting, and learning to navigate open-ended and dynamic environments.
+- **Contrast with Traditional LLM Reasoning**: Highlights the advantages of agentic reasoning in adaptability and interactivity compared to static LLM approaches.
+
+### 2. Three-Dimensional Organizing Framework
+- **Environmental Dynamics**:
+    1. **Foundational Agentic Reasoning**: Focuses on core single-agent capabilities like planning, tool use, and search in stable environments.
+    2. **Self-Evolving Agentic Reasoning**: Explores how agents refine capabilities through feedback, memory, and adaptation.
+    3. **Collective Multi-Agent Reasoning**: Extends intelligence to collaborative settings involving coordination, knowledge sharing, and shared goals.
+- **Reasoning Modes**:
+    - **In-context Reasoning**: Scales test-time interaction through structured orchestration.
+    - **Post-training Reasoning**: Optimizes agent behaviors via RL and SFT.
+- **Application Domains**: Covers areas such as science, robotics, healthcare, autonomous research, and mathematics.
+
+### 3. Review of Representative Frameworks and Applications
+- **Planning Systems**: Examines agentic planning systems categorized by modality, structure, format, and tool.
+- **Tool-Use Optimization**: Analyzes systems based on their integration stage, learning type, and tool strategy.
+- **Other Key Components**: Discusses aspects like memory, world modeling, and multi-agent collaboration.
+
+### 4. Open Challenges and Future Directions
+- **Personalization**: How agents can adapt to individual users or specific tasks.
+- **Long-Horizon Interaction**: Addressing long-term dependencies in complex, multi-step tasks.
+- **World Modeling**: How agents build and update their understanding of the environment.
+- **Scalable Multi-Agent Training**: Efficiently training and coordinating large numbers of agents.
+- **Governance**: Ensuring safety, fairness, and transparency in real-world agent deployment.
+
+*(Inferred from title/venue; full paper not read.)*
+
+## Comparison with Previous Work
+
+- **vs. Traditional LLM Reasoning**: Agentic reasoning moves beyond the static, closed-world reasoning of traditional LLMs by incorporating planning, acting, and learning loops, enabling greater adaptability and autonomy in dynamic environments.
+- **vs. Pure Tool-Use Approaches**: This paper integrates tool use as a core component of agentic reasoning, exploring its optimization strategies and synergy with other capabilities like planning and memory, rather than treating it as a standalone API invocation.
+- **vs. Early Agent Research**: This work places LLMs at the core of agentic intelligence, leveraging their powerful language understanding and generation abilities to drive cognitive processes, which significantly differs from earlier agents based on symbolic logic or traditional machine learning.
+- **vs. Existing Surveys**: This paper introduces a novel three-dimensional organizational framework, systematically integrating environmental dynamics, reasoning modes, and application domains, providing a more comprehensive and structured perspective on agentic reasoning.
+
+*(Inferred from title/venue; full paper not read.)*
+
+## Experiments
+
+**Table.** This table categorizes various agentic planning systems by their modality, structure, format, and tools used.
+
+| Method | Structure | Format | Tool |
+| --- | --- | --- | --- |
+| Modality I: Language Agents (e.g., Search Agents, Code Agents) |  |  |  |
+| ReWOO [xu2023rewoo] | Decomposed | Natural Language | None |
+| Reflexion [shinn2023reflexion] | Sequential | Natural Language | None |
+| LLM+P [liu2023llmp] | Sequential | Formal Language | None |
+| IPC [valmeekam2023planning] | Sequential | Formal Language | None |
+| ToT [yao2023tree] | Tree | Natural Language | None |
+| GoT [besta2024graph] | Graph | Natural Language | None |
+| AoT [sel2023algorithm] | Graph | Natural Language | None |
+| HTP [gui2025hypertree] | Hypertree | Natural Language | Retrieval |
+| RefPlan [jeong2025reflect] | Tree | Constrained Space | None |
+| Gorilla [patil2024gorilla] | Sequential | Programming Language | Retrieval, API |
+| CodeNav [gupta2024codenav] | Sequential | Programming Language | Code Indexer, Code Search |
+| PoG [chen2024plan] | Graph | Natural Language | Knowledge Graph |
+| Tool-Planner [liu2025toolplanner] | Sequential | Natural Language | Tool Cluster |
+| Modality II: Visual/Multimodal Agents (e.g., GUI Agents, Embodied Agents) |  |  |  |
+| VisualPredictor [liang2024visualpredicator] | Tree | Formal Language | None |
+| LLM-Planner [song2023llmplannerfewshotgroundedplanning] | Sequential | Formal Language | Object Detector, KNN |
+| Agent-E [abuelsaad2024agent] | Sequential | Formal Language | DOM Grounder, Screenshot |
+| Agent S [agashe2024agent] | Hierarchical | Natural Language | API, Search, Memory |
+| ExRAP [yoo2024exploratory] | Sequential | Natural Language | Memory |
+| AESOP [sinha2024real] | Reactive | Natural Language | Anomaly Detector |
+| HRV [cornelio2025hierarchical] | Hierarchical | Formal Language | Symbolic Verifier |
+| BehaviorGPT [zhou2024behaviorgpt] | Sequential | Visual Features | World Model |
+| Dino-WM [zhou2024dino] | Tree | Visual Features | World Model |
+| FLIP [gao2024flip] | Sequential | Visual Features | Language Model |
+
+- **Diverse Planning Structures**: Agentic planning systems exhibit a variety of structures, including Sequential, Tree, Graph, and Hypertree, indicating exploration of different complexities for task handling.
+- **Natural Language Dominance**: Most language agents predominantly use Natural Language for their planning format, underscoring the central role of LLMs in understanding and generating human-readable instructions.
+- **Increasing Tool Integration**: A growing number of agents, particularly language agents, integrate various tools such as Retrieval, API, Knowledge Graph, and Code Indexer to augment their capabilities.
+- **Emergence of Multimodal Agents**: Visual/multimodal agents are leveraging Formal Language or Visual Features for planning, combined with tools like Object Detector, DOM Grounder, and World Model, expanding agent applications in richer environments.
+
+*(Inferred from title/venue; full paper not read.)*

@@ -1,0 +1,136 @@
+---
+title: "ALFRED: A Benchmark for Interpreting Grounded Instructions for Everyday Tasks"
+date: 2026-04-24
+paper_date: 2019-12-03
+excerpt: "ALFRED基准数据集旨在通过长序列、复杂任务和现实环境，弥合AI代理在语言理解和具身行动之间的差距"
+excerpt_en: "ALFRED is a benchmark for embodied AI agents, bridging the gap between language understanding and real-world action through complex, long-horizon tasks."
+tags:
+  - paper-notes
+  - Benchmark
+  - Embodied
+paper_id: alfred-a-benchmark-for-interpreting-grounded-instructions-for-everyday-tasks
+paper_venue: "CVPR20"
+paper_link: "https://arxiv.org/abs/1912.01734"
+auto_generated: true
+notes_hash: 8660aa79d9092ca5
+---
+
+## Motivation
+
+现有的视觉与语言任务数据集在任务复杂性、动作空间和语言指令方面与现实世界应用存在较大差距。这些数据集通常只涉及简单的、单步的或可逆的任务，难以评估AI代理在真实场景下的泛化能力和鲁棒性。
+
+为了推动具身AI领域的发展，需要一个能够模拟真实家庭环境、包含复杂多步任务和自然语言指令的基准。这样的基准可以更好地测试AI代理理解长指令、执行复杂操作以及处理非可逆状态变化的能力。
+
+## Contribution
+
+- **ALFRED基准数据集**: 提出了一个包含25k条自然语言指令和专家演示的基准，用于家庭任务的具身AI学习。
+- **复杂任务设计**: 任务具有长序列、组合性强、包含非可逆状态变化等特点，更接近真实世界应用。
+- **多粒度语言指令**: 包含高层目标（如“冲洗马克杯并放入咖啡机”）和低层指令（如“走到右边的咖啡机”）。
+- **评估基线模型**: 展示了现有具身视觉-语言任务的基线模型在ALFRED上的表现不佳，突出了该基准的挑战性。
+
+## Method
+
+ALFRED主要是一个数据集和基准的构建，而非提出新的模型方法。其核心在于任务和数据的设计：
+
+1.  **环境构建**: 使用交互式视觉环境（如AI2-THOR），模拟真实的家庭场景。
+2.  **任务设计**:
+    *   定义了多种日常家庭任务，例如烹饪、清洁、整理等。
+    *   任务被设计为长序列、多步骤，并且包含非可逆的状态变化（例如，一旦物品被清洗，就不能“未清洗”）。
+3.  **语言指令收集**:
+    *   收集了25k条自然语言指令，涵盖了从高层目标到低层具体动作的多种粒度。
+    *   这些指令由人类专家根据任务演示生成。
+4.  **专家演示**: 记录了人类专家在虚拟环境中完成任务的动作序列，作为模型的训练数据和评估标准。
+5.  **基线模型评估**: 采用了一个基于现有具身视觉-语言任务的Seq2Seq模型作为基线，评估其在ALFRED上的性能。模型输入包括视觉观察和语言指令，输出是动作序列。
+    *(基于标题与领域常识推断,未读全文)*
+
+## Comparison with Previous Work
+
+- **vs. TACoS, R2R, Touchdown**: 这些数据集主要关注视频中的语言定位或路径导航，任务复杂度较低，通常不涉及物体交互和环境状态的非可逆变化。ALFRED则强调具身交互和复杂多步任务。
+- **vs. EQA, Matterport EQA, IQA**: 这些是视觉问答数据集，虽然涉及视觉理解，但通常不要求代理执行一系列动作来改变环境状态。ALFRED要求代理根据指令进行具身行动。
+- **vs. VirtualHome, VSP**: 这些数据集虽然也涉及具身交互和复杂环境，但ALFRED在语言指令的粒度、任务的组合性以及非可逆状态变化方面提供了更全面的挑战，并且拥有更大的数据集规模。
+- **vs. 现有具身视觉-语言任务**: ALFRED在任务序列长度、动作空间和语言复杂性上都超越了现有数据集，旨在弥合研究基准与真实应用之间的差距。
+
+## Experiments
+
+**Table.** ALFRED数据集与现有具身视觉-语言任务数据集的特性对比。
+
+| | — Language — | — Virtual Environment — | — Inference — | | | | | |
+|---|---|---|---|---|---|---|---|---|
+| | # Human | Granularity | Visual | Movable | State | Vis. Obs. | Navigation | Interaction |
+| | Annotations | Quality | Objects | Changes | | | | |
+| TACoS [43] | 17k+ | High&Low | Photos | ✗ | ✗ | – | – | – |
+| R2R [3]; Touchdown [14] | 21k+; 9.3k+ | Low | Photos | ✗ | ✗ | Ego | Graph | ✗ |
+| EQA [15] | ✗ | High | Low | ✗ | ✗ | Ego | Discrete | ✗ |
+| Matterport EQA [55] | ✗ | High | Photos | ✗ | ✗ | Ego | Discrete | ✗ |
+| IQA [20] | ✗ | High | High | ✗ | ✓ | Ego | Discrete | Discrete |
+| VirtualHome [42] | 2.7k+ | High&Low | High | ✓ | ✓ | 3rd Person | ✗ | Discrete |
+| VSP [58] | ✗ | High | High | ✓ | ✓ | Ego | ✗ | Discrete |
+| ALFRED | 25k+ | High&Low | High | ✓ | ✓ | Ego | Discrete | Discrete |
+| + Mask | | | | | | | | |
+
+- **基线模型表现不佳**: 论文评估了一个基于Seq2Seq的基线模型，其在ALFRED任务上的成功率非常低，尤其是在未见过的场景和任务上。
+- **语言和视觉的重要性**: 实验结果表明，同时利用语言指令和视觉信息对任务成功至关重要，但即使结合两者，模型表现仍远低于人类水平。
+- **任务复杂性挑战**: ALFRED任务的复杂性，包括长序列、多步骤和非可逆状态变化，对现有模型构成了巨大挑战。
+- **未来研究空间**: 基线模型的低性能表明ALFRED为开发更先进的具身视觉语言理解模型提供了广阔的研究空间。
+*(基于标题与领域常识推断,未读全文)*
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Existing vision-and-language task datasets often fall short in terms of task complexity, action space, and language instructions when compared to real-world applications. These datasets typically involve simple, single-step, or reversible tasks, making it difficult to evaluate the generalization capabilities and robustness of AI agents in realistic scenarios.
+
+To advance the field of embodied AI, there is a need for a benchmark that simulates realistic household environments, includes complex multi-step tasks, and features natural language instructions. Such a benchmark can better test an AI agent's ability to understand long directives, perform intricate operations, and handle non-reversible state changes.
+
+## Contribution
+
+- **ALFRED Benchmark Dataset**: Introduces a benchmark with 25k natural language directives and expert demonstrations for embodied AI learning in household tasks.
+- **Complex Task Design**: Tasks are characterized by long sequences, high compositionality, and non-reversible state changes, bringing them closer to real-world applications.
+- **Multi-granularity Language Instructions**: Includes both high-level goals (e.g., "Rinse off a mug and place it in the coffee maker") and low-level instructions (e.g., "Walk to the coffee maker on the right").
+- **Baseline Model Evaluation**: Demonstrates that a baseline model based on existing embodied vision-and-language tasks performs poorly on ALFRED, highlighting the benchmark's challenging nature.
+
+## Method
+
+ALFRED primarily focuses on the construction of a dataset and benchmark rather than proposing a new model method. Its core lies in the design of tasks and data:
+
+1.  **Environment Construction**: Utilizes interactive visual environments (e.g., AI2-THOR) to simulate realistic household scenarios.
+2.  **Task Design**:
+    *   Defines various everyday household tasks, such as cooking, cleaning, and organizing.
+    *   Tasks are designed to be long-sequence, multi-step, and include non-reversible state changes (e.g., once an item is cleaned, it cannot be "uncleaned").
+3.  **Language Instruction Collection**:
+    *   Collected 25k natural language instructions, covering various granularities from high-level goals to low-level specific actions.
+    *   These instructions were generated by human experts based on task demonstrations.
+4.  **Expert Demonstrations**: Records sequences of actions performed by human experts in the virtual environment, serving as training data and evaluation standards for models.
+5.  **Baseline Model Evaluation**: A Seq2Seq model, based on existing embodied vision-and-language tasks, is used as a baseline to evaluate its performance on ALFRED. The model takes visual observations and language instructions as input and outputs action sequences.
+    *(Inferred from title/venue; full paper not read.)*
+
+## Comparison with Previous Work
+
+- **vs. TACoS, R2R, Touchdown**: These datasets primarily focus on language localization in videos or path navigation, with lower task complexity, typically not involving object interaction and non-reversible environmental state changes. ALFRED emphasizes embodied interaction and complex multi-step tasks.
+- **vs. EQA, Matterport EQA, IQA**: These are visual question answering datasets. While they involve visual understanding, they typically do not require agents to execute a sequence of actions to alter the environment's state. ALFRED demands agents to perform embodied actions based on instructions.
+- **vs. VirtualHome, VSP**: While these datasets also involve embodied interaction and complex environments, ALFRED offers a more comprehensive challenge in terms of language instruction granularity, task compositionality, and non-reversible state changes, and boasts a larger dataset size.
+- **vs. Existing Embodied Vision-and-Language Tasks**: ALFRED surpasses existing datasets in terms of sequence length, action space, and language complexity, aiming to bridge the gap between research benchmarks and real-world applications.
+
+## Experiments
+
+**Table.** Comparison of ALFRED dataset characteristics with existing embodied vision-and-language task datasets.
+
+| | — Language — | — Virtual Environment — | — Inference — | | | | | |
+|---|---|---|---|---|---|---|---|---|
+| | # Human | Granularity | Visual | Movable | State | Vis. Obs. | Navigation | Interaction |
+| | Annotations | Quality | Objects | Changes | | | | |
+| TACoS [43] | 17k+ | High&Low | Photos | ✗ | ✗ | – | – | – |
+| R2R [3]; Touchdown [14] | 21k+; 9.3k+ | Low | Photos | ✗ | ✗ | Ego | Graph | ✗ |
+| EQA [15] | ✗ | High | Low | ✗ | ✗ | Ego | Discrete | ✗ |
+| Matterport EQA [55] | ✗ | High | Photos | ✗ | ✗ | Ego | Discrete | ✗ |
+| IQA [20] | ✗ | High | High | ✗ | ✓ | Ego | Discrete | Discrete |
+| VirtualHome [42] | 2.7k+ | High&Low | High | ✓ | ✓ | 3rd Person | ✗ | Discrete |
+| VSP [58] | ✗ | High | High | ✓ | ✓ | Ego | ✗ | Discrete |
+| ALFRED | 25k+ | High&Low | High | ✓ | ✓ | Ego | Discrete | Discrete |
+| + Mask | | | | | | | | |
+
+- **Poor Baseline Performance**: The paper evaluates a Seq2Seq-based baseline model, which shows very low success rates on ALFRED tasks, especially in unseen scenes and tasks.
+- **Importance of Language and Vision**: Experimental results indicate that utilizing both language instructions and visual information is crucial for task success, but even with both, model performance remains far below human levels.
+- **Challenge of Task Complexity**: The complexity of ALFRED tasks, including long sequences, multiple steps, and non-reversible state changes, poses a significant challenge for existing models.
+- **Future Research Opportunities**: The low performance of the baseline model suggests that ALFRED offers ample room for developing more innovative grounded visual language understanding models.
+*(Inferred from title/venue; full paper not read.)*

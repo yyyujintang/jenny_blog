@@ -1,0 +1,182 @@
+---
+title: "Machine Mental Imagery: Empower Multimodal Reasoning with Latent Visual Token"
+date: 2026-04-25
+paper_date: 2025-06-20
+excerpt: "提出Mirage框架，通过隐式视觉token实现多模态推理，无需生成显式图像"
+excerpt_en: "Mirage framework enables multimodal reasoning with latent visual tokens, bypassing explicit image generation for enhanced performance."
+tags:
+  - paper-notes
+  - Method
+  - Internal
+  - Multimodal
+paper_id: machine-mental-imagery-empower-multimodal-reasoning-with-latent-visual-token
+paper_authors: "Chuang Gan"
+paper_link: "https://arxiv.org/abs/2506.17218"
+paper_code: "https://github.com/UMass-Embodied-AGI/Mirage"
+auto_generated: true
+notes_hash: 191e257844f9707e
+---
+
+## Motivation
+
+视觉语言模型（VLMs）在多模态理解方面表现出色，但其文本解码方式迫使它们将视觉推理“口头化”，这限制了它们在需要视觉想象力任务上的表现。
+
+最近的一些尝试通过训练VLM生成显式图像来解决此问题，但这种方法通常需要大量的图像生成预训练，反而会损害模型的推理能力。
+
+受人类通过心理意象（即内部构建和操作视觉线索）进行推理的启发，我们探索VLM是否可以在不生成显式图像的情况下，通过交错的多模态轨迹进行推理。
+
+## Contribution
+
+- **Machine Mental Imagery框架 (Mirage)**：提出了一种新颖的框架，通过在VLM解码过程中引入隐式视觉token来增强多模态推理，无需生成像素级图像。
+- **潜藏视觉token机制**：当模型选择“视觉思考”时，它会将隐藏状态重新铸造为下一个token，从而在不生成显式图像的情况下继续多模态轨迹。
+- **两阶段训练策略**：
+    1. **蒸馏监督**：首先通过从真实图像嵌入中蒸馏来监督潜藏token。
+    2. **文本监督与强化学习**：随后切换到纯文本监督，使潜藏轨迹与任务目标紧密对齐，并通过强化学习进一步增强多模态推理能力。
+- **无需显式图像生成**：证明了在不生成显式图像的情况下，也能实现更强大的多模态推理能力。
+
+## Method
+
+Mirage框架通过以下步骤实现其多模态推理能力：
+
+1.  **潜藏视觉token的引入**：
+    *   在VLM的解码过程中，除了普通的文本token，Mirage还引入了“潜藏视觉token”。
+    *   当模型需要进行视觉推理时，它会选择生成这些潜藏视觉token，而不是文本token。
+2.  **隐藏状态重塑**：
+    *   当模型决定“视觉思考”时，它会将其当前的隐藏状态重新映射或“重铸”为下一个潜藏视觉token。
+    *   这个过程允许模型在内部操作视觉信息，而无需将其转换为像素级的图像。
+3.  **多模态轨迹的延续**：
+    *   通过交替生成文本token和潜藏视觉token，模型能够构建一个“交错的多模态轨迹”。
+    *   这条轨迹包含了文本推理和视觉思考的序列，使得模型能够进行更复杂的、需要视觉想象力的推理。
+
+### 训练阶段
+
+1.  **蒸馏监督 (Distillation Supervision)**：
+    *   **目标**：使潜藏视觉token能够有效地编码视觉信息。
+    *   **方法**：利用预训练的图像编码器生成真实图像的嵌入（ground-truth image embeddings）。
+    *   **过程**：将模型生成的潜藏视觉token与这些真实图像嵌入进行对齐，通过蒸馏损失进行监督，确保潜藏token能够捕捉到图像的关键特征。
+2.  **文本监督 (Text-Only Supervision)**：
+    *   **目标**：使潜藏轨迹与具体的任务目标紧密对齐。
+    *   **方法**：在蒸馏阶段之后，训练转向纯文本监督。
+    *   **过程**：模型在生成潜藏视觉token时，其目标是优化最终的文本输出，确保视觉思考过程有助于生成正确的文本答案。
+3.  **强化学习 (Reinforcement Learning - RL)**：
+    *   **目标**：进一步增强多模态推理能力，尤其是在复杂任务上。
+    *   **方法**：引入RL阶段，通过奖励机制鼓励模型生成更有助于解决任务的潜藏视觉轨迹。
+    *   **过程**：RL可以帮助模型探索更有效的视觉思考策略，从而在没有显式视觉反馈的情况下提升性能。
+
+## Comparison with Previous Work
+
+-   **vs. 显式图像生成方法**：
+    *   **Mirage**：无需生成像素级图像，避免了图像生成预训练的复杂性和计算开销，也避免了其可能对推理能力造成的负面影响。
+    *   **显式图像生成**：需要大量的图像生成预训练，且可能限制模型的推理能力。
+-   **vs. 纯文本解码VLM**：
+    *   **Mirage**：通过引入潜藏视觉token，允许模型进行内部的“视觉思考”，从而更好地处理需要视觉想象力的任务。
+    *   **纯文本解码VLM**：被迫将所有视觉推理“口头化”，在需要复杂视觉想象的任务上表现受限。
+-   **vs. MVoT (Multimodal-CoT)**:
+    *   **Mirage**: 专注于通过内部潜藏视觉token进行推理，不依赖于外部工具或显式多模态思维链。
+    *   **MVoT**: 依赖于生成显式的多模态思维链，可能包括文本和图像，但图像生成仍是其瓶颈。
+
+## Experiments
+
+**Table. 视觉空间规划 (VSP) 任务上的实验结果。**
+
+| VSP | Spatial Reasoning | Spatial Planning | | | | | | | | |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Level 3 | Level 4 | Level 5 | Level 6 | Avg. | Level 3 | Level 4 | Level 5 | Level 6 | Avg. | |
+| Zero-Shot | 0.32 | 0.23 | 0.40 | 0.32 | 0.32 | 0.10 | 0.08 | 0.05 | 0.01 | 0.06 |
+| Direct SFT | 0.83 | 0.81 | 0.85 | 0.86 | 0.83 | 0.88 | 0.81 | 0.73 | 0.47 | 0.72 |
+| CoT SFT | 0.88 | 0.86 | 0.80 | 0.83 | 0.84 | 0.68 | 0.53 | 0.35 | 0.31 | 0.47 |
+| GRPO | 0.54 | 0.49 | 0.76 | 0.67 | 0.62 | 0.42 | 0.35 | 0.26 | 0.08 | 0.28 |
+| CoT SFT + GRPO | 0.89 | 0.85 | 0.84 | 0.8 | 0.85 | 0.65 | 0.58 | 0.43 | 0.38 | 0.51 |
+| Anole | 0.46 | 0.51 | 0.49 | 0.63 | 0.52 | 0.02 | 0.01 | 0.00 | 0.00 | 0.01 |
+| MVoT | 0.53 | 0.64 | 0.67 | 0.59 | 0.61 | 0.21 | 0.11 | 0.08 | 0.03 | 0.11 |
+| Ours (Direct) | 0.86 | 0.84 | 0.88 | 0.87 | 0.86 | 0.93 | 0.83 | 0.76 | 0.51 | 0.76 |
+| Ours (CoT) | 0.87 | 0.92 | 0.86 | 0.84 | 0.87 | 0.75 | 0.63 | 0.53 | 0.39 | 0.58 |
+| + w/ GRPO | 0.92 | 0.90 | 0.86 | 0.88 | 0.89 | 0.78 | 0.65 | 0.52 | 0.43 | 0.60 |
+
+*   Mirage在各种基准测试上都展现出更强的多模态推理能力，尤其是在需要视觉想象力的任务上。
+*   在视觉空间规划 (VSP) 任务中，Mirage (Direct) 在Spatial Reasoning和Spatial Planning的平均得分上均显著优于所有基线方法。
+*   结合CoT (Chain-of-Thought) 和GRPO (Gradient-based Policy Optimization) 后，Mirage的性能进一步提升，在VSP任务的Spatial Reasoning平均得分达到0.89，Spatial Planning平均得分达到0.60。
+*   实验结果表明，Mirage在不生成显式图像的情况下，成功解锁了更强大的多模态推理能力。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Vision-language models (VLMs) excel at multimodal understanding, yet their text-only decoding forces them to verbalize visual reasoning. This limitation restricts their performance on tasks that demand visual imagination.
+
+Recent attempts train VLMs to render explicit images. However, this often requires heavy image-generation pre-training, which can paradoxically hinder the models' core reasoning abilities.
+
+Inspired by how humans reason with mental imagery—the internal construction and manipulation of visual cues—we investigate whether VLMs can reason through interleaved multimodal trajectories without producing explicit images.
+
+## Contribution
+
+-   **Machine Mental Imagery Framework (Mirage)**: Introduces a novel framework that augments VLM decoding with latent visual tokens to enhance multimodal reasoning without generating pixel-level images.
+-   **Latent Visual Token Mechanism**: When the model chooses to "think visually," it recasts its hidden states as next tokens, thereby continuing a multimodal trajectory without generating explicit images.
+-   **Two-Stage Training Strategy**:
+    1.  **Distillation Supervision**: Initially supervises latent tokens by distilling from ground-truth image embeddings.
+    2.  **Text-Only Supervision and Reinforcement Learning**: Subsequently switches to text-only supervision to align the latent trajectory tightly with the task objective, further enhancing multimodal reasoning through reinforcement learning.
+-   **Elimination of Explicit Image Generation**: Demonstrates that stronger multimodal reasoning can be achieved without the need for explicit image generation.
+
+## Method
+
+The Mirage framework achieves its multimodal reasoning capabilities through the following steps:
+
+1.  **Introduction of Latent Visual Tokens**:
+    *   During the VLM's decoding process, Mirage introduces "latent visual tokens" alongside ordinary text tokens.
+    *   When the model needs to perform visual reasoning, it chooses to generate these latent visual tokens instead of text tokens.
+2.  **Hidden State Recasting**:
+    *   When the model decides to "think visually," it remaps or "recasts" its current hidden states as the next latent visual token.
+    *   This process allows the model to internally manipulate visual information without converting it into pixel-level images.
+3.  **Continuation of Multimodal Trajectory**:
+    *   By alternately generating text tokens and latent visual tokens, the model constructs an "interleaved multimodal trajectory."
+    *   This trajectory encompasses a sequence of textual reasoning and visual thinking, enabling the model to perform more complex reasoning that requires visual imagination.
+
+### Training Stages
+
+1.  **Distillation Supervision**:
+    *   **Objective**: To enable latent visual tokens to effectively encode visual information.
+    *   **Method**: Utilizes pre-trained image encoders to generate ground-truth image embeddings.
+    *   **Process**: The latent visual tokens generated by the model are aligned with these ground-truth image embeddings through a distillation loss, ensuring that the latent tokens capture key visual features.
+2.  **Text-Only Supervision**:
+    *   **Objective**: To tightly align the latent trajectory with specific task objectives.
+    *   **Method**: After the distillation stage, training shifts to purely text-based supervision.
+    *   **Process**: When generating latent visual tokens, the model's objective is to optimize the final text output, ensuring that the visual thinking process contributes to generating correct textual answers.
+3.  **Reinforcement Learning (RL)**:
+    *   **Objective**: To further enhance multimodal reasoning capabilities, especially for complex tasks.
+    *   **Method**: An RL stage is introduced, using a reward mechanism to encourage the model to generate latent visual trajectories that are more conducive to solving the task.
+    *   **Process**: RL helps the model explore more effective visual thinking strategies, thereby improving performance without explicit visual feedback.
+
+## Comparison with Previous Work
+
+-   **vs. Explicit Image Generation Methods**:
+    *   **Mirage**: Eliminates the need for pixel-level image generation, avoiding the complexity and computational overhead of image-generation pre-training, and its potential negative impact on reasoning ability.
+    *   **Explicit Image Generation**: Requires extensive image generation pre-training and can limit the model's reasoning capabilities.
+-   **vs. Text-Only Decoding VLMs**:
+    *   **Mirage**: Introduces latent visual tokens, allowing the model to perform internal "visual thinking," which better handles tasks requiring visual imagination.
+    *   **Text-Only Decoding VLMs**: Forced to verbalize all visual reasoning, leading to limited performance on tasks demanding complex visual imagination.
+-   **vs. MVoT (Multimodal-CoT)**:
+    *   **Mirage**: Focuses on internal reasoning via latent visual tokens, not relying on external tools or explicit multimodal chains of thought.
+    *   **MVoT**: Relies on generating explicit multimodal chains of thought, which may include text and images, but image generation remains a bottleneck.
+
+## Experiments
+
+**Table. Experimental Results on Visual-Spatial Planning (VSP) tasks.**
+
+| VSP | Spatial Reasoning | Spatial Planning | | | | | | | | |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Level 3 | Level 4 | Level 5 | Level 6 | Avg. | Level 3 | Level 4 | Level 5 | Level 6 | Avg. | |
+| Zero-Shot | 0.32 | 0.23 | 0.40 | 0.32 | 0.32 | 0.10 | 0.08 | 0.05 | 0.01 | 0.06 |
+| Direct SFT | 0.83 | 0.81 | 0.85 | 0.86 | 0.83 | 0.88 | 0.81 | 0.73 | 0.47 | 0.72 |
+| CoT SFT | 0.88 | 0.86 | 0.80 | 0.83 | 0.84 | 0.68 | 0.53 | 0.35 | 0.31 | 0.47 |
+| GRPO | 0.54 | 0.49 | 0.76 | 0.67 | 0.62 | 0.42 | 0.35 | 0.26 | 0.08 | 0.28 |
+| CoT SFT + GRPO | 0.89 | 0.85 | 0.84 | 0.8 | 0.85 | 0.65 | 0.58 | 0.43 | 0.38 | 0.51 |
+| Anole | 0.46 | 0.51 | 0.49 | 0.63 | 0.52 | 0.02 | 0.01 | 0.00 | 0.00 | 0.01 |
+| MVoT | 0.53 | 0.64 | 0.67 | 0.59 | 0.61 | 0.21 | 0.11 | 0.08 | 0.03 | 0.11 |
+| Ours (Direct) | 0.86 | 0.84 | 0.88 | 0.87 | 0.86 | 0.93 | 0.83 | 0.76 | 0.51 | 0.76 |
+| Ours (CoT) | 0.87 | 0.92 | 0.86 | 0.84 | 0.87 | 0.75 | 0.63 | 0.53 | 0.39 | 0.58 |
+| + w/ GRPO | 0.92 | 0.90 | 0.86 | 0.88 | 0.89 | 0.78 | 0.65 | 0.52 | 0.43 | 0.60 |
+
+*   Mirage demonstrates stronger multimodal reasoning capabilities across diverse benchmarks, particularly on tasks requiring visual imagination.
+*   On Visual-Spatial Planning (VSP) tasks, Mirage (Direct) significantly outperforms all baseline methods in average scores for both Spatial Reasoning and Spatial Planning.
+*   The performance of Mirage is further enhanced when combined with CoT (Chain-of-Thought) and GRPO (Gradient-based Policy Optimization), achieving an average score of 0.89 for Spatial Reasoning and 0.60 for Spatial Planning on VSP tasks.
+*   Experimental results confirm that Mirage successfully unlocks more powerful multimodal reasoning without explicit image generation.

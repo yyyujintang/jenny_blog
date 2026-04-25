@@ -1,0 +1,132 @@
+---
+title: "ALFWorld: Aligning Text and Embodied Environments for Interactive Learning"
+date: 2026-04-24
+paper_date: 2020-10-08
+excerpt: "ALFWorld模拟器使AI智能体能结合抽象文本规划与具身视觉执行，提升泛化能力"
+excerpt_en: "ALFWorld simulator enables AI agents to combine abstract text-based planning with embodied visual execution, fostering better generalization."
+tags:
+  - paper-notes
+  - Benchmark
+  - Embodied
+paper_id: alfworld-aligning-text-and-embodied-environments-for-interactive-learning
+paper_venue: "ICLR21"
+paper_link: "https://arxiv.org/abs/2010.03768"
+auto_generated: true
+notes_hash: 83da0ee2c028ad84
+---
+
+## Motivation
+
+具身智能体需要同时具备抽象推理和具体执行的能力，就像人类可以先在脑海中规划行动序列，再根据实际环境调整。
+
+然而，现有工作通常缺乏这种将抽象推理与具身执行相结合的基础设施。
+
+这限制了智能体在复杂环境中的泛化能力，使其难以将学到的抽象知识应用于具体的视觉场景。
+
+## Contribution
+
+- **ALFWorld模拟器**: 引入一个新模拟器，允许智能体在TextWorld中学习抽象的文本策略，并在ALFRED基准的丰富视觉环境中执行目标。
+- **BUTLER智能体**: 提出一种新的BUTLER智能体，其在TextWorld中学到的抽象知识可以直接对应到具体的、视觉接地的动作。
+- **提升泛化能力**: 实验证明，这种方法比仅在视觉环境中训练能带来更好的智能体泛化能力。
+- **模块化设计**: BUTLER的简单模块化设计将问题分解，使研究人员可以专注于改进管道的每个部分（语言理解、规划、导航和视觉场景理解）。
+
+## Method
+
+本文引入了ALFWorld，一个结合了TextWorld和ALFRED的模拟器，并提出了BUTLER智能体。
+
+1.  **抽象策略学习**:
+    *   智能体首先在TextWorld中学习抽象的文本策略。TextWorld提供了一个纯文本环境，智能体可以在其中进行高级规划和推理，而无需处理视觉细节。
+    *   学习到的策略是基于文本的，例如“去厨房”、“拿起苹果”等。
+
+2.  **具身环境执行**:
+    *   ALFWorld将TextWorld的抽象指令映射到ALFRED的具身视觉环境。
+    *   BUTLER智能体利用其在TextWorld中学到的抽象知识，在ALFRED的视觉环境中执行具体的动作，例如导航到厨房、识别苹果并拿起。
+
+3.  **BUTLER智能体架构**:
+    *   BUTLER采用模块化设计，将语言理解、规划、导航和视觉场景理解等任务分解。
+    *   这种设计允许智能体将抽象的文本指令转化为一系列可在视觉环境中执行的低级动作。
+
+## Comparison with Previous Work
+
+- **vs. 仅在具身环境中训练**: 现有具身智能体通常直接在视觉环境中训练，缺乏抽象推理能力。ALFWorld和BUTLER通过结合TextWorld的抽象规划，显著提升了智能体的泛化能力，尤其是在未见过的场景中。
+- **vs. 纯文本环境**: TextWorld等纯文本环境虽然能进行抽象推理，但无法处理真实的视觉信息和具身交互。ALFWorld弥补了这一差距，将抽象规划与具身执行无缝结合。
+- **vs. ALFRED基准**: ALFRED基准提供了丰富的视觉环境和具身任务，但缺乏一个能让智能体同时进行抽象文本规划和具身执行的统一框架。ALFWorld提供了这样的基础设施。
+
+## Experiments
+
+**Table.** BUTLER与基线模型在ALFRED任务上的成功率（%），包括TextWorld、Seq2Seq、BUTLER、BUTLER-Oracle和Human Goals。
+
+|  | TextWorld | Seq2Seq | BUTLER | BUTLER-Oracle | Human Goals |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| task-type | seen | unseen | seen | unseen | seen | unseen | seen | unseen | seen | unseen |
+| Pick & Place | 69 | 50 | 28 (28) | 17 (17) | 30 (30) | 24 (24) | 53 (53) | 31 (31) | 20 (20) | 10 (10) |
+| Examine in Light | 69 | 39 | 05 (13) | 00 0(6) | 10 (26) | 00 (15) | 22 (41) | 12 (37) | 02 0(9) | 00 0(8) |
+| Clean & Place | 67 | 74 | 32 (41) | 12 (31) | 32 (46) | 22 (39) | 44 (57) | 41 (56) | 18 (31) | 22 (39) |
+| Heat & Place | 88 | 83 | 10 (29) | 12 (33) | 17 (38) | 16 (39) | 60 (66) | 60 (72) | 08 (29) | 05 (30) |
+| Cool & Place | 76 | 91 | 02 (19) | 21 (34) | 05 (21) | 19 (33) | 41 (49) | 27 (44) | 07 (26) | 17 (34) |
+| Pick Two & Place | 54 | 65 | 12 (23) | 00 (26) | 15 (33) | 08 (30) | 32 (42) | 29 (44) | 06 (16) | 00 0(6) |
+| All Tasks | 40 | 35 | 06 (15) | 05 (14) | 19 (31) | 10 (20) | 37 (46) | 26 (37) | 08 (17) | 03 (12) |
+
+- **BUTLER表现优于基线**: 在“所有任务”的综合评估中，BUTLER在seen和unseen场景下的成功率（37%和26%）均显著高于Seq2Seq（19%和10%）。
+- **抽象知识的有效性**: BUTLER在TextWorld中学习的抽象知识，即使在具身环境中执行，也展现出良好的泛化能力，尤其是在unseen场景中。
+- **BUTLER-Oracle的上限**: BUTLER-Oracle（使用理想状态估计器和控制器）的性能（seen 46%, unseen 37%）表明，BUTLER仍有很大的改进空间，特别是在视觉感知和低级控制方面。
+- **人类目标基准**: 人类设定的目标（Human Goals）的成功率相对较低，这可能反映了任务本身的复杂性或评估方式的挑战。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Embodied agents require the ability to reason abstractly and execute concretely, much like humans can imagine action sequences and then adapt their plans to fit a specific scene.
+
+However, existing work often lacks the necessary infrastructure to combine abstract reasoning with embodied execution.
+
+This limitation restricts an agent's generalization capabilities in complex environments, making it difficult to apply learned abstract knowledge to specific visual scenes.
+
+## Contribution
+
+- **ALFWorld Simulator**: Introduction of a new simulator that enables agents to learn abstract, text-based policies in TextWorld and then execute goals from the ALFRED benchmark in a rich visual environment.
+- **BUTLER Agent**: Proposal of a new BUTLER agent whose abstract knowledge, learned in TextWorld, corresponds directly to concrete, visually grounded actions.
+- **Improved Generalization**: Empirical demonstration that this approach fosters better agent generalization than training only in the visually grounded environment.
+- **Modular Design**: BUTLER's simple, modular design factors the problem to allow researchers to focus on models for improving every piece of the pipeline (language understanding, planning, navigation, and visual scene understanding).
+
+## Method
+
+This paper introduces ALFWorld, a simulator combining TextWorld and ALFRED, and proposes the BUTLER agent.
+
+1.  **Abstract Policy Learning**:
+    *   The agent first learns abstract, text-based policies in TextWorld. TextWorld provides a purely textual environment where the agent can perform high-level planning and reasoning without dealing with visual details.
+    *   The learned policies are text-based, such as "go to kitchen" or "pick up apple."
+
+2.  **Embodied Environment Execution**:
+    *   ALFWorld maps the abstract instructions from TextWorld to ALFRED's embodied visual environment.
+    *   The BUTLER agent utilizes its abstract knowledge learned in TextWorld to execute concrete actions in ALFRED's visual environment, such as navigating to the kitchen, identifying an apple, and picking it up.
+
+3.  **BUTLER Agent Architecture**:
+    *   BUTLER employs a modular design, decomposing tasks like language understanding, planning, navigation, and visual scene understanding.
+    *   This design allows the agent to translate abstract text instructions into a sequence of low-level actions executable in a visual environment.
+
+## Comparison with Previous Work
+
+- **vs. Embodied-Only Training**: Existing embodied agents are typically trained directly in visual environments, lacking abstract reasoning capabilities. ALFWorld and BUTLER significantly improve generalization, especially in unseen scenarios, by integrating abstract planning from TextWorld.
+- **vs. Pure Textual Environments**: Pure textual environments like TextWorld enable abstract reasoning but cannot handle real visual information and embodied interaction. ALFWorld bridges this gap by seamlessly combining abstract planning with embodied execution.
+- **vs. ALFRED Benchmark**: The ALFRED benchmark offers rich visual environments and embodied tasks but lacks a unified framework for agents to perform both abstract text-based planning and embodied execution. ALFWorld provides this necessary infrastructure.
+
+## Experiments
+
+**Table.** Success rates (%) of BUTLER and baseline models on ALFRED tasks, including TextWorld, Seq2Seq, BUTLER, BUTLER-Oracle, and Human Goals.
+
+|  | TextWorld | Seq2Seq | BUTLER | BUTLER-Oracle | Human Goals |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| task-type | seen | unseen | seen | unseen | seen | unseen | seen | unseen | seen | unseen |
+| Pick & Place | 69 | 50 | 28 (28) | 17 (17) | 30 (30) | 24 (24) | 53 (53) | 31 (31) | 20 (20) | 10 (10) |
+| Examine in Light | 69 | 39 | 05 (13) | 00 0(6) | 10 (26) | 00 (15) | 22 (41) | 12 (37) | 02 0(9) | 00 0(8) |
+| Clean & Place | 67 | 74 | 32 (41) | 12 (31) | 32 (46) | 22 (39) | 44 (57) | 41 (56) | 18 (31) | 22 (39) |
+| Heat & Place | 88 | 83 | 10 (29) | 12 (33) | 17 (38) | 16 (39) | 60 (66) | 60 (72) | 08 (29) | 05 (30) |
+| Cool & Place | 76 | 91 | 02 (19) | 21 (34) | 05 (21) | 19 (33) | 41 (49) | 27 (44) | 07 (26) | 17 (34) |
+| Pick Two & Place | 54 | 65 | 12 (23) | 00 (26) | 15 (33) | 08 (30) | 32 (42) | 29 (44) | 06 (16) | 00 0(6) |
+| All Tasks | 40 | 35 | 06 (15) | 05 (14) | 19 (31) | 10 (20) | 37 (46) | 26 (37) | 08 (17) | 03 (12) |
+
+- **BUTLER Outperforms Baselines**: In the "All Tasks" aggregate evaluation, BUTLER achieves significantly higher success rates (37% seen, 26% unseen) compared to Seq2Seq (19% seen, 10% unseen).
+- **Effectiveness of Abstract Knowledge**: BUTLER's abstract knowledge learned in TextWorld demonstrates good generalization capabilities, even when executed in embodied environments, particularly in unseen scenarios.
+- **BUTLER-Oracle Upper Bound**: The performance of BUTLER-Oracle (using an ideal state estimator and controller) at 46% seen and 37% unseen suggests significant room for improvement in BUTLER, especially concerning visual perception and low-level control.
+- **Human Goals Benchmark**: The relatively lower success rates for Human Goals might reflect the inherent complexity of the tasks or challenges in the evaluation methodology.

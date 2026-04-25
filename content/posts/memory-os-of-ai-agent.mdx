@@ -1,0 +1,160 @@
+---
+title: "Memory OS of AI Agent"
+date: 2026-04-25
+paper_date: 2025-05-30
+excerpt: "提出MemoryOS，通过分层存储和动态更新机制，显著提升AI代理的长期记忆和个性化交互能力"
+excerpt_en: "MemoryOS introduces a hierarchical storage and dynamic updating mechanism to significantly enhance AI agents' long-term memory and personalized interaction."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Episodic
+  - Procedural
+  - Semantic
+paper_id: memory-os-of-ai-agent
+paper_venue: "EMNLIP25 Main"
+paper_link: "https://arxiv.org/abs/2506.06326"
+auto_generated: true
+notes_hash: 3ff00c80416cd565
+---
+
+## Motivation
+
+大型语言模型（LLMs）因其固定的上下文窗口和内存管理不足，在AI代理的交互体验中面临长期记忆能力和个性化方面的严重挑战。
+
+现有的方法难以有效整合不同时间尺度的记忆，也无法实现记忆的动态更新和高效检索。
+
+这些限制导致AI代理在长时间对话中缺乏上下文连贯性，并且无法根据用户历史进行个性化学习。
+
+## Contribution
+
+*   **分层存储架构**: 设计了短时记忆、中时记忆和长时个人记忆三层存储单元，实现了记忆的层次化整合。
+*   **动态更新机制**: 提出了对话链（dialogue-chain）FIFO原则用于短时到中时记忆的更新，以及分段页面组织策略（segmented page organization strategy）用于中时到长时记忆的更新。
+*   **MemoryOS框架**: 创新性地提出了一个完整的Memory Operating System，包含记忆存储、更新、检索和生成四个核心模块，实现全面高效的记忆管理。
+*   **显著性能提升**: 在LoCoMo基准测试上，相对于GPT-4o-mini基线，F1平均提升49.11%，BLEU-1平均提升46.18%，证明了在长对话中上下文连贯性和个性化记忆保留的有效性。
+
+## Method
+
+MemoryOS通过以下四个核心模块实现全面的记忆管理：
+
+1.  **Memory Storage (记忆存储)**:
+    *   **短时记忆 (Short-term Memory, STM)**: 存储当前对话的即时信息。
+    *   **中时记忆 (Mid-term Memory, MTM)**: 存储对话链，通过对话链的FIFO原则从STM更新。
+    *   **长时个人记忆 (Long-term Personal Memory, LPM)**: 存储高度抽象和个性化的知识，通过分段页面组织策略从MTM更新。
+
+2.  **Memory Updating (记忆更新)**:
+    *   **STM到MTM更新**: 遵循对话链（dialogue-chain）FIFO原则，确保最新和最相关的对话片段被保留。
+    *   **MTM到LPM更新**: 采用分段页面组织策略，将中时记忆中的重要信息抽象并持久化到长时记忆中。
+
+3.  **Memory Retrieval (记忆检索)**:
+    *   根据当前查询，从STM、MTM和LPM中高效检索相关信息。
+    *   检索策略考虑了记忆的时间性、重要性和相关性，以提供最准确的上下文。
+
+4.  **Memory Generation (记忆生成)**:
+    *   利用检索到的多层记忆信息，结合LLM生成连贯、个性化且上下文感知的响应。
+    *   确保生成的内容不仅准确，而且能体现AI代理的长期学习和个性化特征。
+
+## Comparison with Previous Work
+
+*   **vs. 固定上下文窗口LLMs**: 传统LLMs受限于固定上下文窗口，无法有效处理长对话和长期记忆。MemoryOS通过分层存储和动态更新机制，突破了这一限制。
+*   **vs. RAG (Retrieval-Augmented Generation)**: RAG通常依赖单一的外部知识库检索，缺乏对记忆层次和动态更新的精细管理。MemoryOS提供了更复杂的记忆管理系统，能够区分不同时间尺度的记忆。
+*   **vs. 现有记忆管理框架 (如MemGPT, A-Mem)**: 现有框架可能在某些方面有所侧重，但MemoryOS通过引入操作系统级的记忆管理理念，提供了更全面、更高效的分层存储和动态更新策略，尤其是在个性化记忆方面表现更优。
+
+## Experiments
+
+**Table.** LoCoMo数据集上GPT-4o-mini和Qwen2.5-3B模型与基线的F1和BLEU-1指标对比。
+
+| Model | Method | Single Hop | Multi Hop | Temporal | Open Domain | Avg. Rank | Avg. Rank | | | | |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| F1 | BLEU-1 | F1 | BLEU-1 | F1 | BLEU-1 | F1 | BLEU-1 | (F1) | (BLEU-1) | | |
+| GPT-4o-mini | TiM | 16.25 | 13.12 | 18.43 | 17.35 | 8.35 | 7.32 | 23.74 | 22.05 | 3.8 | 4.0 |
+| MemoryBank | 5.00 | 4.77 | 9.68 | 6.99 | 5.56 | 5.94 | 6.61 | 5.16 | 5.0 | 5.0 | |
+| MemGPT | 26.65 | 17.72 | 25.52 | 19.44 | 9.15 | 7.44 | 41.04 | 34.34 | 2.2 | 2.5 | |
+| A-Mem | 27.02 | 20.09 | 45.85 | 36.67 | 12.14 | 12.00 | 44.65 | 37.06 | – | – | |
+| A-Mem* | 22.61 | 15.25 | 33.23 | 29.11 | 8.04 | 7.81 | 34.13 | 27.73 | 3.0 | 2.5 | |
+| Ours | 35.27 | 25.22 | 41.15 | 30.76 | 20.02 | 16.52 | 48.62 | 42.99 | 1.0 | 1.0 | |
+| Improvement (%) | 32.35% | 42.33% | 23.83% | 5.67% | 118.80% | 111.52% | 18.47% | 25.19% | – | – | |
+| Qwen2.5-3B | TiM | 4.37 | 5.01 | 2.54 | 3.21 | 6.20 | 5.37 | 6.35 | 7.34 | 4.3 | 3.5 |
+| MemoryBank | 3.60 | 3.39 | 1.72 | 1.97 | 6.63 | 6.58 | 4.11 | 3.32 | 4.8 | 4.8 | |
+| MemGPT | 5.07 | 4.31 | 2.94 | 2.95 | 7.04 | 7.10 | 7.26 | 5.52 | 2.8 | 3.8 | |
+| A-Mem | 12.57 | 9.01 | 27.59 | 25.07 | 7.12 | 7.28 | 17.23 | 13.12 | – | – | |
+| A-Mem* | 10.31 | 8.76 | 16.31 | 11.07 | 6.94 | 7.31 | 12.34 | 10.62 | 2.3 | 2.0 | |
+| Ours | 23.26 | 15.39 | 21.44 | 14.95 | 10.18 | 8.18 | 26.23 | 22.39 | 1.0 | 1.0 | |
+| Improvement (%) | 125.61\% | 75.68\% | 31.45\% | 35.05\% | 46.69\% | 11.90\% | 112.56\% | 110.83\% | – | – | |
+
+*   **显著的性能提升**: 在LoCoMo基准测试上，MemoryOS在GPT-4o-mini和Qwen2.5-3B模型上均取得了最佳表现，F1和BLEU-1指标显著优于所有基线。
+*   **跨类别表现优异**: 在Single Hop、Multi Hop、Temporal和Open Domain等不同记忆任务类别中，MemoryOS均展现出强大的记忆保留和上下文连贯性。
+*   **尤其在Temporal和Open Domain任务中表现突出**: 在GPT-4o-mini上，Temporal F1提升118.80%，BLEU-1提升111.52%；Open Domain F1提升18.47%，BLEU-1提升25.19%，表明MemoryOS在处理时间依赖和开放域知识方面具有显著优势。
+*   **代码开源**: 实施代码已在GitHub上开源，方便社区复现和进一步研究。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Large Language Models (LLMs) face a critical challenge due to fixed context windows and inadequate memory management. This leads to a severe shortage of long-term memory capabilities and limited personalization in AI agent interactive experiences.
+
+Existing methods struggle to effectively integrate memories across different timescales and lack mechanisms for dynamic memory updates and efficient retrieval.
+
+These limitations result in AI agents lacking contextual coherence in long conversations and being unable to learn personalized information based on user history.
+
+## Contribution
+
+*   **Hierarchical Storage Architecture**: Designed a three-level storage architecture comprising short-term, mid-term, and long-term personal memory units for hierarchical memory integration.
+*   **Dynamic Updating Mechanism**: Proposed a dialogue-chain-based FIFO principle for short-term to mid-term memory updates, and a segmented page organization strategy for mid-term to long-term memory updates.
+*   **MemoryOS Framework**: Innovatively proposed a complete Memory Operating System, including four key modules: Memory Storage, Updating, Retrieval, and Generation, achieving comprehensive and efficient memory management.
+*   **Significant Performance Improvement**: Achieved an average improvement of 49.11% on F1 and 46.18% on BLEU-1 over GPT-4o-mini baselines on the LoCoMo benchmark, demonstrating effectiveness in contextual coherence and personalized memory retention in long conversations.
+
+## Method
+
+MemoryOS achieves comprehensive memory management through its four core modules:
+
+1.  **Memory Storage**:
+    *   **Short-term Memory (STM)**: Stores immediate information from the current dialogue.
+    *   **Mid-term Memory (MTM)**: Stores dialogue chains, updated from STM following a dialogue-chain-based FIFO principle.
+    *   **Long-term Personal Memory (LPM)**: Stores highly abstracted and personalized knowledge, updated from MTM using a segmented page organization strategy.
+
+2.  **Memory Updating**:
+    *   **STM to MTM Updates**: Follows a dialogue-chain-based FIFO principle, ensuring the most recent and relevant dialogue segments are retained.
+    *   **MTM to LPM Updates**: Employs a segmented page organization strategy to abstract and persist important information from mid-term memory into long-term memory.
+
+3.  **Memory Retrieval**:
+    *   Efficiently retrieves relevant information from STM, MTM, and LPM based on the current query.
+    *   Retrieval strategies consider the temporality, importance, and relevance of memories to provide the most accurate context.
+
+4.  **Memory Generation**:
+    *   Utilizes the retrieved multi-level memory information, combined with the LLM, to generate coherent, personalized, and context-aware responses.
+    *   Ensures that generated content is not only accurate but also reflects the AI agent's long-term learning and personalized characteristics.
+
+## Comparison with Previous Work
+
+*   **vs. Fixed Context Window LLMs**: Traditional LLMs are limited by fixed context windows, making them ineffective for long conversations and long-term memory. MemoryOS overcomes this limitation through hierarchical storage and dynamic updating mechanisms.
+*   **vs. RAG (Retrieval-Augmented Generation)**: RAG typically relies on a single external knowledge base for retrieval, lacking sophisticated management of memory hierarchies and dynamic updates. MemoryOS provides a more complex memory management system that differentiates between memories of different timescales.
+*   **vs. Existing Memory Management Frameworks (e.g., MemGPT, A-Mem)**: While existing frameworks may focus on specific aspects, MemoryOS introduces an operating system-level memory management paradigm, offering a more comprehensive and efficient hierarchical storage and dynamic updating strategy, particularly excelling in personalized memory.
+
+## Experiments
+
+**Table.** Comparison of F1 and BLEU-1 metrics for GPT-4o-mini and Qwen2.5-3B models against baselines on the LoCoMo dataset.
+
+| Model | Method | Single Hop | Multi Hop | Temporal | Open Domain | Avg. Rank | Avg. Rank | | | | |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| F1 | BLEU-1 | F1 | BLEU-1 | F1 | BLEU-1 | F1 | BLEU-1 | (F1) | (BLEU-1) | | |
+| GPT-4o-mini | TiM | 16.25 | 13.12 | 18.43 | 17.35 | 8.35 | 7.32 | 23.74 | 22.05 | 3.8 | 4.0 |
+| MemoryBank | 5.00 | 4.77 | 9.68 | 6.99 | 5.56 | 5.94 | 6.61 | 5.16 | 5.0 | 5.0 | |
+| MemGPT | 26.65 | 17.72 | 25.52 | 19.44 | 9.15 | 7.44 | 41.04 | 34.34 | 2.2 | 2.5 | |
+| A-Mem | 27.02 | 20.09 | 45.85 | 36.67 | 12.14 | 12.00 | 44.65 | 37.06 | – | – | |
+| A-Mem* | 22.61 | 15.25 | 33.23 | 29.11 | 8.04 | 7.81 | 34.13 | 27.73 | 3.0 | 2.5 | |
+| Ours | 35.27 | 25.22 | 41.15 | 30.76 | 20.02 | 16.52 | 48.62 | 42.99 | 1.0 | 1.0 | |
+| Improvement (%) | 32.35% | 42.33% | 23.83% | 5.67% | 118.80% | 111.52% | 18.47% | 25.19% | – | – | |
+| Qwen2.5-3B | TiM | 4.37 | 5.01 | 2.54 | 3.21 | 6.20 | 5.37 | 6.35 | 7.34 | 4.3 | 3.5 |
+| MemoryBank | 3.60 | 3.39 | 1.72 | 1.97 | 6.63 | 6.58 | 4.11 | 3.32 | 4.8 | 4.8 | |
+| MemGPT | 5.07 | 4.31 | 2.94 | 2.95 | 7.04 | 7.10 | 7.26 | 5.52 | 2.8 | 3.8 | |
+| A-Mem | 12.57 | 9.01 | 27.59 | 25.07 | 7.12 | 7.28 | 17.23 | 13.12 | – | – | |
+| A-Mem* | 10.31 | 8.76 | 16.31 | 11.07 | 6.94 | 7.31 | 12.34 | 10.62 | 2.3 | 2.0 | |
+| Ours | 23.26 | 15.39 | 21.44 | 14.95 | 10.18 | 8.18 | 26.23 | 22.39 | 1.0 | 1.0 | |
+| Improvement (%) | 125.61\% | 75.68\% | 31.45\% | 35.05\% | 46.69\% | 11.90\% | 112.56\% | 110.83\% | – | – | |
+
+*   **Significant Performance Gains**: MemoryOS achieved the best performance on the LoCoMo benchmark for both GPT-4o-mini and Qwen2.5-3B models, with F1 and BLEU-1 metrics significantly outperforming all baselines.
+*   **Strong Cross-Category Performance**: MemoryOS demonstrated robust memory retention and contextual coherence across various memory task categories, including Single Hop, Multi Hop, Temporal, and Open Domain.
+*   **Exceptional Performance in Temporal and Open Domain Tasks**: For GPT-4o-mini, Temporal F1 improved by 118.80% and BLEU-1 by 111.52%; Open Domain F1 improved by 18.47% and BLEU-1 by 25.19%, indicating MemoryOS's significant advantage in handling time-dependent and open-domain knowledge.
+*   **Open-Sourced Code**: The implementation code is open-sourced on GitHub, facilitating community reproduction and further research.

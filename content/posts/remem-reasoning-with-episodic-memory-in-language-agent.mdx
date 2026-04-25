@@ -1,0 +1,144 @@
+---
+title: "REMem: Reasoning with Episodic Memory in Language Agent"
+date: 2026-04-25
+paper_date: 2026-02-13
+excerpt: "REMem通过结合情景记忆（episodic memory）和结构化知识图谱，提升语言智能体在复杂推理任务中的表现"
+excerpt_en: "REMem enhances language agent performance in complex reasoning tasks by integrating episodic memory with structured knowledge graphs."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Episodic
+paper_id: remem-reasoning-with-episodic-memory-in-language-agent
+paper_authors: "Yu Su, Huan Sun"
+paper_link: "https://arxiv.org/abs/2602.13530"
+auto_generated: true
+notes_hash: 6ba268ca2afbeb2f
+---
+
+## Motivation
+
+大型语言模型（LLM）在处理复杂、多跳或需要长期记忆的任务时，往往面临挑战。传统的RAG方法虽然能提供外部知识，但对于需要理解上下文、时间顺序和实体间复杂关系的情景记忆（episodic memory）任务效果不佳。
+
+现有方法在构建和利用结构化记忆方面存在局限性，例如难以有效整合非结构化文本信息与结构化知识，或者在处理时间敏感信息时表现不足。这限制了LLM在需要深入理解历史交互和事件序列的应用中的能力。
+
+## Contribution
+
+- **情景记忆图谱（Episodic Memory Graph）**: 引入一种新的记忆结构，将非结构化文本信息转化为包含实体、事件和时间关系的结构化图谱，以捕捉更丰富的情景上下文。
+- **多模态检索与推理机制**: 提出结合语义检索（semantic retrieval）和词法检索（lexical retrieval）的工具集，并利用图遍历（graph traversal）工具进行多跳推理，从而更有效地从情景记忆中提取相关信息。
+- **拒绝回答能力（Refusal Capability）**: 增强模型识别无法回答问题并拒绝生成答案的能力，提高在信息不足情况下的可靠性。
+- **在复杂任务上的SOTA性能**: 在情景回忆（episodic recollection）和情景推理（episodic reasoning）任务上，显著超越现有基线模型，证明了REMEm在处理复杂记忆相关任务上的优越性。
+
+## Method
+
+REMEm的核心在于其创新的情景记忆管理和检索机制：
+
+1.  **构建情景记忆图谱**:
+    *   **信息提取**: 从原始文本（如对话历史、文档）中识别关键实体、事件及其时间戳。
+    *   **图谱构建**: 将提取出的信息组织成一个知识图谱，其中节点代表实体或事件，边表示它们之间的关系（例如，时间顺序、参与者、属性）。特别关注“要点（gists）”和“事实（facts）”的表示。
+2.  **记忆检索工具集**:
+    *   **语义检索（semantic_retrieve）**: 使用嵌入模型进行相似性搜索，召回与查询语义相关的记忆片段。
+    *   **词法检索（lexical_retrieve）**: 基于关键词匹配进行检索，补充语义检索可能遗漏的精确匹配信息。
+    *   **图谱探索工具（find_gist_contexts, find_entity_contexts）**: 允许LLM通过遍历图谱来查找与特定要点或实体相关的上下文信息，支持多跳推理。
+3.  **LLM驱动的推理与回答**:
+    *   LLM作为控制器，根据用户查询选择并调用上述检索和图谱探索工具。
+    *   工具返回的结果被整合并作为LLM生成最终答案的上下文。
+    *   模型还具备评估是否能回答问题的能力，对于无法回答的问题会拒绝生成答案。
+
+*(基于标题与领域常识推断,未读全文)*
+
+## Comparison with Previous Work
+
+- **vs. 传统RAG方法**: 传统的RAG主要依赖向量相似性检索，难以捕捉实体间的复杂关系和时间顺序。REMEm通过构建情景记忆图谱和图遍历工具，能进行更深层次的结构化推理。
+- **vs. 基于大型嵌入模型的方法（如Qwen3-Embed, NV-Embed）**: 这些方法虽然在语义匹配上表现良好，但缺乏对记忆结构和事件序列的显式建模，在需要多跳推理和情景理解的任务中受限。
+- **vs. 其他结构化记忆方法（如Mem0, Graphiti, HippoRAG 2）**: REMEm在图谱构建的粒度、工具集的丰富性以及对情景上下文的捕捉能力上有所增强。例如，Graphiti侧重于事实性知识，而REMEm更强调情景和时间信息。HippoRAG 2虽然也利用图结构，但REMEm通过更精细的要点/事实区分和工具调用策略，实现了更优的性能。
+
+## Experiments
+
+**Table. REMem在情景回忆任务上的性能表现（%）。**
+
+| | LoCoMo (1,986) | REALTALK (728) | | | | |
+| --- | --- | --- | --- | --- | --- | --- |
+| Methods | F1 | BLEU-1 | LLM-J | F1 | BLEU-1 | LLM-J |
+| \rowcolorgray!15Oracle Message | 48.0 | 38.3 | 81.0 | - | - | - |
+| \rowcolorgray!15Full-Context | 37.8 | 28.6 | 76.7 | 25.3 | 18.6 | 65.1 |
+| \rowcolorgray!8 Large Embedding Models | | | | | | |
+| Qwen3-Embed-8B | 35.3_-1.6^+1.7 | 28.9_-1.5^+1.8 | 64.2_-2.0^+2.4 | 20.2_-1.6^+1.8 | 14.9_-1.4^+1.6 | 52.5_-3.6^+3.4 |
+| NV-Embed-v2 (7B) | 39.6_-1.4^+1.7 | 31.0_-1.4^+1.7 | 73.0_-1.8^+2.0 | 23.8_-1.8^+1.9 | 17.7_-1.5^+1.5 | 59.5_-3.6^+3.3 |
+| \rowcolorgray!8 Structure-Augmented Memory | | | | | | |
+| Mem0 | 25.1_-1.5^+1.7 | 18.0_-1.1^+1.4 | 49.7_-2.2^+2.3 | 9.8_-1.3^+1.5 | 7.2_-1.0^+1.1 | 14.3_-2.3^+2.7 |
+| Graphiti | 33.7_-1.8^+1.8 | 28.9_-1.7^+1.9 | 52.5_-2.3^+2.3 | 15.1_-1.5^+1.8 | 11.5_-1.2^+1.4 | 35.3_-3.3^+3.7 |
+| HippoRAG 2 | 39.0_-1.6^+1.6 | 30.8_-1.5^+1.5 | 74.0_-2.1^+1.7 | 21.9_-1.6^+1.6 | 16.2_-1.3^+1.4 | 55.8_-3.6^+3.4 |
+| \rowcolorgray!8 Ours | | | | | | |
+| REMem-I | 42.4_-1.6^+1.6 | 32.7_-1.6^+1.5 | 76.2_-1.9^+2.0 | 25.6_-1.7^+1.8 | 18.1_-1.4^+1.6 | 63.7_-3.5^+3.6 |
+| REMem-S | 41.3_-1.5^+1.6 | 31.5_-1.4^+1.6 | 77.5_-1.6^+1.9 | 26.2_-1.6^+1.8 | 19.2_-1.3^+1.5 | 65.3_-3.1^+3.6 |
+
+- **在情景回忆任务中表现优异**: REMem-I和REMem-S在LoCoMo和REALTALK数据集上的F1、BLEU-1和LLM-J指标上均显著优于所有基线模型，尤其在LLM-J指标上接近Full-Context的性能。
+- **在情景推理任务中展现SOTA性能**: 在Complex-TR和Test of Time数据集上，REMem-I和REMem-S也取得了领先的结果，特别是在Test of Time数据集的EM指标上，REMem-I达到了93.1%，远超其他方法。
+- **拒绝回答能力增强**: REMem在LoCoMo数据集上展示了更高的拒绝回答F1分数（64.0%），表明其能更准确地识别并拒绝回答无法处理的查询。
+- **消融实验验证模块有效性**: 消融研究表明，情景记忆图谱中的“要点（Gists）”和“事实（Facts）”以及语义检索工具对REMEm的整体性能至关重要。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Large Language Models (LLMs) often struggle with complex, multi-hop reasoning tasks or those requiring long-term memory. While traditional RAG methods provide external knowledge, they are less effective for episodic memory tasks that demand an understanding of context, temporal order, and intricate relationships between entities.
+
+Existing approaches for structured memory construction and utilization have limitations, such as difficulty in effectively integrating unstructured text with structured knowledge, or insufficient performance when dealing with time-sensitive information. This restricts LLMs' capabilities in applications requiring a deep understanding of historical interactions and event sequences.
+
+## Contribution
+
+- **Episodic Memory Graph**: Introduces a novel memory structure that transforms unstructured textual information into a structured graph containing entities, events, and temporal relationships, capturing richer episodic context.
+- **Multi-modal Retrieval and Reasoning Mechanism**: Proposes a toolset combining semantic and lexical retrieval, along with graph traversal tools for multi-hop reasoning, to efficiently extract relevant information from episodic memory.
+- **Refusal Capability**: Enhances the model's ability to identify unanswerable questions and refuse to generate responses, improving reliability in situations with insufficient information.
+- **SOTA Performance on Complex Tasks**: Achieves significantly superior performance over existing baselines on episodic recollection and episodic reasoning tasks, demonstrating REMem's effectiveness in handling complex memory-related challenges.
+
+## Method
+
+REMem's core lies in its innovative episodic memory management and retrieval mechanism:
+
+1.  **Episodic Memory Graph Construction**:
+    *   **Information Extraction**: Identifies key entities, events, and their timestamps from raw text (e.g., dialogue history, documents).
+    *   **Graph Building**: Organizes the extracted information into a knowledge graph where nodes represent entities or events, and edges denote their relationships (e.g., temporal order, participants, attributes). Special attention is given to representing "gists" and "facts."
+2.  **Memory Retrieval Toolset**:
+    *   **semantic_retrieve**: Uses embedding models for similarity search to recall memory fragments semantically related to the query.
+    *   **lexical_retrieve**: Performs retrieval based on keyword matching, complementing semantic retrieval for precise matches.
+    *   **Graph Exploration Tools (find_gist_contexts, find_entity_contexts)**: Allows the LLM to traverse the graph to find contextual information related to specific gists or entities, supporting multi-hop reasoning.
+3.  **LLM-driven Reasoning and Answering**:
+    *   The LLM acts as a controller, selecting and invoking the aforementioned retrieval and graph exploration tools based on the user's query.
+    *   The results returned by the tools are integrated and provided as context for the LLM to generate the final answer.
+    *   The model also possesses the ability to assess if a question can be answered, refusing to generate a response for unanswerable queries.
+
+*(Inferred from title/venue; full paper not read.)*
+
+## Comparison with Previous Work
+
+-   **vs. Traditional RAG Methods**: Traditional RAG primarily relies on vector similarity search, struggling to capture complex relationships and temporal order between entities. REMem, through its episodic memory graph and graph traversal tools, enables deeper, structured reasoning.
+-   **vs. Large Embedding Model-based Approaches (e.g., Qwen3-Embed, NV-Embed)**: While these methods excel at semantic matching, they lack explicit modeling of memory structure and event sequences, limiting their effectiveness in tasks requiring multi-hop reasoning and episodic understanding.
+-   **vs. Other Structured Memory Methods (e.g., Mem0, Graphiti, HippoRAG 2)**: REMem offers enhanced granularity in graph construction, a richer toolset, and improved capability in capturing episodic context. For instance, Graphiti focuses on factual knowledge, whereas REMem emphasizes episodic and temporal information. While HippoRAG 2 also leverages graph structures, REMem achieves superior performance through a more refined distinction between gists/facts and a sophisticated tool-calling strategy.
+
+## Experiments
+
+**Table. Performance (%) on episodic recollection task.**
+
+| | LoCoMo (1,986) | REALTALK (728) | | | | |
+| --- | --- | --- | --- | --- | --- | --- |
+| Methods | F1 | BLEU-1 | LLM-J | F1 | BLEU-1 | LLM-J |
+| \rowcolorgray!15Oracle Message | 48.0 | 38.3 | 81.0 | - | - | - |
+| \rowcolorgray!15Full-Context | 37.8 | 28.6 | 76.7 | 25.3 | 18.6 | 65.1 |
+| \rowcolorgray!8 Large Embedding Models | | | | | | |
+| Qwen3-Embed-8B | 35.3_-1.6^+1.7 | 28.9_-1.5^+1.8 | 64.2_-2.0^+2.4 | 20.2_-1.6^+1.8 | 14.9_-1.4^+1.6 | 52.5_-3.6^+3.4 |
+| NV-Embed-v2 (7B) | 39.6_-1.4^+1.7 | 31.0_-1.4^+1.7 | 73.0_-1.8^+2.0 | 23.8_-1.8^+1.9 | 17.7_-1.5^+1.5 | 59.5_-3.6^+3.3 |
+| \rowcolorgray!8 Structure-Augmented Memory | | | | | | |
+| Mem0 | 25.1_-1.5^+1.7 | 18.0_-1.1^+1.4 | 49.7_-2.2^+2.3 | 9.8_-1.3^+1.5 | 7.2_-1.0^+1.1 | 14.3_-2.3^+2.7 |
+| Graphiti | 33.7_-1.8^+1.8 | 28.9_-1.7^+1.9 | 52.5_-2.3^+2.3 | 15.1_-1.5^+1.8 | 11.5_-1.2^+1.4 | 35.3_-3.3^+3.7 |
+| HippoRAG 2 | 39.0_-1.6^+1.6 | 30.8_-1.5^+1.5 | 74.0_-2.1^+1.7 | 21.9_-1.6^+1.6 | 16.2_-1.3^+1.4 | 55.8_-3.6^+3.4 |
+| \rowcolorgray!8 Ours | | | | | | |
+| REMem-I | 42.4_-1.6^+1.6 | 32.7_-1.6^+1.5 | 76.2_-1.9^+2.0 | 25.6_-1.7^+1.8 | 18.1_-1.4^+1.6 | 63.7_-3.5^+3.6 |
+| REMem-S | 41.3_-1.5^+1.6 | 31.5_-1.4^+1.6 | 77.5_-1.6^+1.9 | 26.2_-1.6^+1.8 | 19.2_-1.3^+1.5 | 65.3_-3.1^+3.6 |
+
+-   **Strong Performance in Episodic Recollection**: REMem-I and REMem-S significantly outperform all baseline models across F1, BLEU-1, and LLM-J metrics on both LoCoMo and REALTALK datasets, notably approaching Full-Context performance on LLM-J.
+-   **SOTA Performance in Episodic Reasoning**: On the Complex-TR and Test of Time datasets, REMem-I and REMem-S also achieve leading results, with REMem-I reaching 93.1% EM on the Test of Time dataset, far surpassing other methods.
+-   **Enhanced Refusal Capability**: REMem demonstrates a higher refusal F1 score (64.0%) on the LoCoMo dataset, indicating its improved ability to accurately identify and decline unanswerable queries.
+-   **Ablation Studies Validate Module Effectiveness**: Ablation studies confirm that "Gists" and "Facts" within the episodic memory graph, as well as the semantic retrieval tool, are crucial for REMem's overall performance.

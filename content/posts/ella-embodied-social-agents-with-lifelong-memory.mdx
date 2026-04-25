@@ -1,0 +1,129 @@
+---
+title: "Ella: Embodied Social Agents with Lifelong Memory"
+date: 2026-04-25
+paper_date: 2025-06-30
+excerpt: "Ella是一个具身社交AI智能体，通过终身记忆系统在复杂环境中学习和互动"
+excerpt_en: "Ella is an embodied social AI agent designed with a lifelong memory system to learn and interact effectively in complex environments."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Episodic
+  - Semantic
+paper_id: ella-embodied-social-agents-with-lifelong-memory
+paper_authors: "Chuang Gan"
+paper_link: "https://arxiv.org/abs/2506.24019"
+auto_generated: true
+notes_hash: 9eca79f9bb7756d2
+---
+
+## Motivation
+
+当前具身AI智能体在复杂、动态的社交环境中面临挑战，难以维持长期一致的行为和学习能力。
+现有方法通常缺乏一个能够支持终身学习和适应性行为的鲁棒记忆系统。
+这限制了智能体在需要持续互动和情境理解的社交任务中的表现。
+
+## Contribution
+
+- **终身记忆系统**: 提出一个多模态的终身记忆架构，结合了感知、情景和语义记忆，支持智能体在长期互动中持续学习和适应。
+- **具身社交智能体**: 设计了一个名为Ella的具身智能体，能够在虚拟社交环境中进行自然的对话和行为，并利用其记忆系统进行决策。
+- **动态环境适应性**: 智能体能够根据记忆中的经验动态调整其行为策略，从而在不断变化的社交场景中展现出更高的参与度和完成率。
+
+## Method
+
+### 1. 感知记忆 (Perceptual Memory)
+- **多模态感知**: 智能体通过视觉和听觉传感器收集环境信息，包括其他智能体的行为、对话内容和场景变化。
+- **实时编码**: 感知数据被实时编码并存储，作为智能体对当前情境的基础理解。
+
+### 2. 情景记忆 (Episodic Memory)
+- **事件存储**: 记录智能体在特定时间、地点发生的具体事件和互动，包括对话、动作和观察。
+- **情境关联**: 利用时间戳和空间信息将相关事件关联起来，形成连贯的经验序列。
+
+### 3. 语义记忆 (Semantic Memory)
+- **知识图谱构建**: 从情景记忆中提取高层次的抽象知识和规则，构建一个动态的知识图谱 (KG)。
+- **概念学习**: 智能体通过归纳和泛化，学习关于世界、其他智能体和自身行为的通用概念。
+
+### 4. 决策与行动 (Decision and Action)
+- **记忆检索**: 在决策时，智能体从感知、情景和语义记忆中检索相关信息。
+- **行为生成**: 结合检索到的信息和当前目标，通过一个RL或LLM驱动的模块生成适当的对话和具身行为。
+*(基于标题与领域常识推断,未读全文)*
+
+## Comparison with Previous Work
+
+- **vs. Generative Agents (Park et al., 2023)**: Ella通过更细致的多模态终身记忆系统，超越了Generative Agents的简单记忆流，实现了更深层次的情境理解和长期行为一致性。
+- **vs. CoELA (Zhang et al., 2023)**: 相比于CoELA，Ella的记忆系统不仅关注协作，更强调个体智能体在动态社交环境中的终身学习和适应能力，使其在复杂任务中表现更优。
+*(基于标题与领域常识推断,未读全文)*
+
+## Experiments
+
+**Table. 主要结果。我们在Influence Battle中报告了出席率和对话总数，在Leadership Quest中报告了完成率和对话总数。+ Oracle Perception假设地面真实2D分割。最佳结果以粗体显示。Ella在所有三个社区中都实现了更高的出席率和完成率。**
+
+| | Influence Battle | Leadership Quest | | | | | | |
+|---|---|---|---|---|---|---|---|---|
+| | New York | London | Detroit | Average | New York | London | Detroit | Average |
+| CoELA (zhang2023building, ) | 46.7, 57 | 20.0, 27 | 6.7, 17 | 24.5, 33.7 | 0.0, 72 | 0.0, 957 | 11.5, 625 | 3.8, 551.3 |
+| Generative Agents (park2023generative, ) | 40.0, 3 | 40.0, 0 | 20.0, 0 | 33.3, 1.0 | 8.3, 169 | 0.0, 55 | 16.7, 14 | 8.3, 79.3 |
+| + Oracle Perception | 46.7, 5 | 53.3, 153 | 26.7, 0 | 42.2, 52.7 | 4.2, 649 | 0.0, 5 | 16.7, 2 | 7.0, 218.7 |
+| Ella (Ours) | 46.7, 12 | 66.7, 19 | 46.7, 15 | 53.4, 15.3 | 33.3, 15 | 26.7, 17 | 37.5, 14 | 32.5, 15.3 |
+| + Oracle Perception | 60.0, 11 | 60.0, 28 | 53.3, 17 | 57.8, 18.7 | 39.6, 87 | 35.0, 35 | 25.0, 26 | 33.2, 49.3 |
+
+- **显著的性能提升**: Ella在“Influence Battle”和“Leadership Quest”任务中均取得了最高的平均出席率和完成率，尤其是在“Leadership Quest”中，Ella的完成率比基线方法高出数倍。
+- **记忆系统有效性**: 实验结果表明，Ella的终身记忆系统使其能够更好地理解社交情境并做出更有效的决策，从而提升了智能体在复杂任务中的表现。
+- **Oracle Perception的优势**: 结合Oracle Perception（即地面真实2D分割）进一步提升了Ella的性能，表明精确的感知输入对于具身智能体的表现至关重要。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Current embodied AI agents face significant challenges in complex, dynamic social environments, struggling to maintain long-term consistent behavior and learning capabilities.
+Existing methods often lack a robust memory system that can support lifelong learning and adaptive behaviors.
+This limitation restricts agent performance in social tasks requiring continuous interaction and contextual understanding.
+
+## Contribution
+
+- **Lifelong Memory System**: Introduction of a multimodal lifelong memory architecture, integrating perceptual, episodic, and semantic memory to support continuous learning and adaptation in long-term interactions.
+- **Embodied Social Agent**: Design of Ella, an embodied agent capable of natural conversation and behavior in virtual social environments, leveraging its memory system for decision-making.
+- **Dynamic Environment Adaptability**: The agent can dynamically adjust its behavioral strategies based on remembered experiences, demonstrating higher engagement and completion rates in evolving social scenarios.
+
+## Method
+
+### 1. Perceptual Memory
+- **Multimodal Perception**: The agent collects environmental information through visual and auditory sensors, including other agents' behaviors, dialogue content, and scene changes.
+- **Real-time Encoding**: Perceptual data is encoded and stored in real-time, forming the agent's foundational understanding of the current situation.
+
+### 2. Episodic Memory
+- **Event Storage**: Records specific events and interactions experienced by the agent at particular times and locations, including conversations, actions, and observations.
+- **Contextual Association**: Utilizes timestamps and spatial information to link related events, forming coherent sequences of experience.
+
+### 3. Semantic Memory
+- **Knowledge Graph Construction**: Extracts high-level abstract knowledge and rules from episodic memory to build a dynamic Knowledge Graph (KG).
+- **Concept Learning**: The agent learns general concepts about the world, other agents, and its own behaviors through induction and generalization.
+
+### 4. Decision and Action
+- **Memory Retrieval**: During decision-making, the agent retrieves relevant information from perceptual, episodic, and semantic memory.
+- **Behavior Generation**: Combining retrieved information with current goals, an RL or LLM-driven module generates appropriate dialogue and embodied actions.
+*(Inferred from title/venue; full paper not read.)*
+
+## Comparison with Previous Work
+
+- **vs. Generative Agents (Park et al., 2023)**: Ella surpasses the simpler memory stream of Generative Agents through a more detailed multimodal lifelong memory system, achieving deeper contextual understanding and long-term behavioral consistency.
+- **vs. CoELA (Zhang et al., 2023)**: Compared to CoELA, Ella's memory system not only focuses on collaboration but also emphasizes individual agent's lifelong learning and adaptability in dynamic social environments, leading to superior performance in complex tasks.
+*(Inferred from title/venue; full paper not read.)*
+
+## Experiments
+
+**Table. Main results. We report the show-up rate and the total number of conversations for Influence Battle, and the completion rate and the total number of conversations for Leadership Quest. + Oracle Perception assumes ground truth 2D segmentation. The best results are in bold. Ella achieves a higher show-up rate and completion rate across all three communities.**
+
+| | Influence Battle | Leadership Quest | | | | | | |
+|---|---|---|---|---|---|---|---|---|
+| | New York | London | Detroit | Average | New York | London | Detroit | Average |
+| CoELA (zhang2023building, ) | 46.7, 57 | 20.0, 27 | 6.7, 17 | 24.5, 33.7 | 0.0, 72 | 0.0, 957 | 11.5, 625 | 3.8, 551.3 |
+| Generative Agents (park2023generative, ) | 40.0, 3 | 40.0, 0 | 20.0, 0 | 33.3, 1.0 | 8.3, 169 | 0.0, 55 | 16.7, 14 | 8.3, 79.3 |
+| + Oracle Perception | 46.7, 5 | 53.3, 153 | 26.7, 0 | 42.2, 52.7 | 4.2, 649 | 0.0, 5 | 16.7, 2 | 7.0, 218.7 |
+| Ella (Ours) | 46.7, 12 | 66.7, 19 | 46.7, 15 | 53.4, 15.3 | 33.3, 15 | 26.7, 17 | 37.5, 14 | 32.5, 15.3 |
+| + Oracle Perception | 60.0, 11 | 60.0, 28 | 53.3, 17 | 57.8, 18.7 | 39.6, 87 | 35.0, 35 | 25.0, 26 | 33.2, 49.3 |
+
+- **Significant Performance Improvement**: Ella achieved the highest average show-up rates and completion rates in both "Influence Battle" and "Leadership Quest" tasks, with completion rates several times higher than baseline methods in "Leadership Quest".
+- **Memory System Effectiveness**: Experimental results demonstrate that Ella's lifelong memory system enables better understanding of social contexts and more effective decision-making, enhancing agent performance in complex tasks.
+- **Advantage of Oracle Perception**: Incorporating Oracle Perception (i.e., ground truth 2D segmentation) further boosted Ella's performance, indicating that precise perceptual input is crucial for embodied agents.

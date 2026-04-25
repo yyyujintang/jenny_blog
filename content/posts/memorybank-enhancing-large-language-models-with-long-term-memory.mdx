@@ -1,0 +1,156 @@
+---
+title: "MemoryBank: Enhancing Large Language Models with Long-Term Memory"
+date: 2026-04-24
+paper_date: 2023-05-17
+excerpt: "MemoryBank通过类人记忆机制，赋予LLM长期记忆、个性化适应和持续学习能力"
+excerpt_en: "MemoryBank equips LLMs with long-term memory, personalized adaptation, and continuous learning through a human-like memory mechanism"
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Episodic
+  - Semantic
+paper_id: memorybank-enhancing-large-language-models-with-long-term-memory
+paper_link: "https://arxiv.org/abs/2305.10250"
+auto_generated: true
+notes_hash: 0862644b7e90211c
+---
+
+## Motivation
+
+大型语言模型（LLMs）在AI交互方面取得了革命性进展，但其缺乏长期记忆机制是一个显著的障碍。
+
+在需要持续交互的场景中，例如个人伴侣系统或心理咨询，这种缺陷尤为明显。
+
+LLMs需要一种能够召回相关记忆、持续进化并适应用户个性的机制。
+
+## Contribution
+
+- **长期记忆机制**: 提出MemoryBank，一个专为LLMs设计的记忆机制，使其能够召回相关记忆。
+- **持续进化与适应**: 通过持续的记忆更新，使模型能够理解并适应用户个性。
+- **类人记忆更新**: 引入受艾宾浩斯遗忘曲线启发的记忆更新机制，允许AI根据时间和重要性遗忘和强化记忆。
+- **广泛适用性**: MemoryBank可用于闭源模型如ChatGPT和开源模型如ChatGLM。
+- **应用实例**: 通过构建基于LLM的聊天机器人SiliconFriend，展示了MemoryBank在长期AI伴侣场景中的应用。
+- **增强同理心**: 经过心理对话微调后，SiliconFriend在交互中表现出更高的同理心。
+
+## Method
+
+MemoryBank通过以下核心组件和机制实现：
+
+1.  **记忆存储 (Memory Storage)**:
+    *   存储用户过去的交互信息，形成记忆片段。
+    *   每个记忆片段包含对话内容、时间戳和相关元数据。
+
+2.  **记忆检索 (Memory Retrieval)**:
+    *   当用户发起新对话时，系统会根据当前对话内容，从记忆库中检索出最相关的记忆片段。
+    *   这类似于RAG（Retrieval-Augmented Generation）机制，但专注于检索用户历史交互。
+
+3.  **记忆更新 (Memory Updating)**:
+    *   受艾宾浩斯遗忘曲线启发，MemoryBank会根据记忆的时间间隔和相对重要性来调整记忆的强度。
+    *   **遗忘机制**: 不重要的或长时间未被提及的记忆会逐渐减弱或被遗忘。
+    *   **强化机制**: 重要的或频繁被提及的记忆会得到强化，更容易被召回。
+    *   这一机制旨在模拟人类选择性记忆和遗忘的过程。
+
+4.  **个性化合成 (Personality Synthesis)**:
+    *   通过综合过去的交互信息，MemoryBank能够理解并适应用户的个性特征。
+    *   这使得LLM能够提供更具个性化和同理心的回应。
+
+5.  **模型集成 (Model Integration)**:
+    *   MemoryBank被设计为可与现有LLMs（如ChatGPT、ChatGLM）无缝集成。
+    *   它作为LLM的外部记忆模块，扩展了其上下文窗口和长期记忆能力。
+
+## Comparison with Previous Work
+
+- **vs. 传统LLM**: 解决了传统LLM缺乏长期记忆，无法在持续交互中保持一致性和理解用户个性的问题。传统LLM的上下文窗口有限，无法记住早期对话。
+- **vs. 简单的上下文窗口扩展**: MemoryBank不仅仅是扩展上下文窗口，它引入了基于艾宾浩斯遗忘曲线的智能记忆更新机制，实现了类人的记忆选择和强化。
+- **vs. RAG (Retrieval-Augmented Generation)**: 虽然MemoryBank也涉及检索，但其核心在于管理和更新用户交互的“长期记忆”，并在此基础上合成用户个性，而RAG更侧重于从外部知识库中检索事实信息。
+- **vs. 基于RL (Reinforcement Learning) 的记忆机制**: MemoryBank的记忆更新机制更侧重于模拟认知心理学理论，而非纯粹通过奖励信号进行记忆优化。*(基于标题与领域常识推断,未读全文)*
+
+## Experiments
+
+**Table. 定量分析结果，比较了不同基础模型下SiliconFriend的性能。**
+
+| Language | Model | Retrieval Acc. | Correctness | Coherence | Ranking |
+| --- | --- | --- | --- | --- | --- |
+| English | SiliconFriend ChatGLM | 0.809 | 0.438 | 0.68 | 0.498 |
+| SiliconFriend BELLE | 0.814 | 0.479 | 0.582 | 0.517 |
+| SiliconFriend ChatGPT | 0.763 | 0.716 | 0.912 | 0.818 |
+| Chinese | SiliconFriend ChatGLM | 0.84 | 0.418 | 0.428 | 0.51 |
+| SiliconFriend BELLE | 0.856 | 0.603 | 0.562 | 0.565 |
+| SiliconFriend ChatGPT | 0.711 | 0.655 | 0.675 | 0.758 |
+
+*   **定性分析**: 通过真实用户对话进行，展示了SiliconFriend在长期AI伴侣场景中提供富有同理心的回应、召回相关记忆和理解用户个性的能力。
+*   **定量分析**: 利用ChatGPT作为用户生成模拟对话，涵盖广泛主题，评估了SiliconFriend的长期伴侣能力。
+*   **性能表现**: 结果表明，配备MemoryBank的SiliconFriend在长期伴侣能力上表现出色，尤其是在召回相关记忆和理解用户个性方面。
+*   **模型对比**: 在定量指标上，基于ChatGPT的SiliconFriend在Correctness和Coherence方面表现最佳，而基于ChatGLM和BELLE的模型在Retrieval Acc.上略有优势。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Revolutionary advancements in Large Language Models (LLMs) have reshaped AI interactions, yet a significant hurdle remains: the lack of a long-term memory mechanism.
+
+This deficiency is particularly evident in scenarios demanding sustained interaction, such as personal companion systems or psychological counseling.
+
+LLMs require a mechanism capable of recalling relevant memories, continuously evolving, and adapting to user personalities.
+
+## Contribution
+
+-   **Long-Term Memory Mechanism**: Proposed MemoryBank, a novel memory mechanism tailored for LLMs to summon relevant memories.
+-   **Continuous Evolution and Adaptation**: Enables models to continually evolve through memory updates, comprehending and adapting to user personality.
+-   **Human-like Memory Updating**: Incorporates a memory updating mechanism inspired by the Ebbinghaus Forgetting Curve, allowing AI to forget and reinforce memories based on time and significance.
+-   **Versatile Accommodation**: MemoryBank is designed to work with both closed-source models like ChatGPT and open-source models like ChatGLM.
+-   **Application Example**: Demonstrated MemoryBank's application through SiliconFriend, an LLM-based chatbot in a long-term AI Companion scenario.
+-   **Enhanced Empathy**: SiliconFriend, when further tuned with psychological dialogues, displays heightened empathy in its interactions.
+
+## Method
+
+MemoryBank achieves its goals through the following core components and mechanisms:
+
+1.  **Memory Storage**:
+    *   Stores past user interaction information, forming memory pieces.
+    *   Each memory piece includes dialogue content, timestamps, and relevant metadata.
+
+2.  **Memory Retrieval**:
+    *   When a user initiates a new conversation, the system retrieves the most relevant memory pieces from the memory bank based on the current dialogue content.
+    *   This functions similarly to RAG (Retrieval-Augmented Generation) but focuses on retrieving user interaction history.
+
+3.  **Memory Updating**:
+    *   Inspired by the Ebbinghaus Forgetting Curve, MemoryBank adjusts the strength of memories based on elapsed time and relative significance.
+    *   **Forgetting Mechanism**: Less important or long-untouched memories gradually weaken or are forgotten.
+    *   **Reinforcement Mechanism**: Important or frequently referenced memories are reinforced, making them easier to recall.
+    *   This mechanism aims to mimic human selective memory and forgetting processes.
+
+4.  **Personality Synthesis**:
+    *   By synthesizing information from past interactions, MemoryBank can comprehend and adapt to a user's personality traits.
+    *   This allows the LLM to provide more personalized and empathetic responses.
+
+5.  **Model Integration**:
+    *   MemoryBank is designed for seamless integration with existing LLMs (e.g., ChatGPT, ChatGLM).
+    *   It acts as an external memory module, extending the LLM's context window and long-term memory capabilities.
+
+## Comparison with Previous Work
+
+-   **vs. Traditional LLMs**: Addresses the limitation of traditional LLMs lacking long-term memory, which prevents consistency and personality understanding in sustained interactions. Traditional LLMs have limited context windows and cannot recall early dialogue.
+-   **vs. Simple Context Window Expansion**: MemoryBank goes beyond merely expanding the context window by introducing an intelligent memory updating mechanism based on the Ebbinghaus Forgetting Curve, enabling human-like memory selection and reinforcement.
+-   **vs. RAG (Retrieval-Augmented Generation)**: While MemoryBank involves retrieval, its core focus is on managing and updating "long-term memory" of user interactions and synthesizing user personality from it, whereas RAG primarily retrieves factual information from external knowledge bases.
+-   **vs. RL (Reinforcement Learning)-based Memory Mechanisms**: MemoryBank's memory updating mechanism emphasizes simulating cognitive psychological theories rather than solely optimizing memory through reward signals. *(Inferred from title/venue; full paper not read.)*
+
+## Experiments
+
+**Table. Quantitative analysis results comparing SiliconFriend's performance across different base models.**
+
+| Language | Model | Retrieval Acc. | Correctness | Coherence | Ranking |
+| --- | --- | --- | --- | --- | --- |
+| English | SiliconFriend ChatGLM | 0.809 | 0.438 | 0.68 | 0.498 |
+| SiliconFriend BELLE | 0.814 | 0.479 | 0.582 | 0.517 |
+| SiliconFriend ChatGPT | 0.763 | 0.716 | 0.912 | 0.818 |
+| Chinese | SiliconFriend ChatGLM | 0.84 | 0.418 | 0.428 | 0.51 |
+| SiliconFriend BELLE | 0.856 | 0.603 | 0.562 | 0.565 |
+| SiliconFriend ChatGPT | 0.711 | 0.655 | 0.675 | 0.758 |
+
+*   **Qualitative Analysis**: Conducted with real-world user dialogues, demonstrating SiliconFriend's ability to provide emphatic responses, recall relevant memories, and understand user personality in long-term AI companion scenarios.
+*   **Quantitative Analysis**: Utilized ChatGPT to act as users, generating simulated long-term dialogue contexts covering a wide array of topics to evaluate SiliconFriend's companionship capabilities.
+*   **Performance**: Results reveal that SiliconFriend, equipped with MemoryBank, exhibits a strong capability for long-term companionship, particularly in recalling relevant memories and understanding user personality.
+*   **Model Comparison**: In quantitative metrics, SiliconFriend based on ChatGPT performed best in Correctness and Coherence, while models based on ChatGLM and BELLE showed a slight advantage in Retrieval Acc.

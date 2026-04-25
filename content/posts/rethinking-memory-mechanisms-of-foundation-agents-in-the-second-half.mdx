@@ -1,0 +1,141 @@
+---
+title: "Rethinking Memory Mechanisms of Foundation Agents in the Second Half"
+date: 2026-04-25
+paper_date: 2026-01-14
+excerpt: "本文综述了基础AI智能体记忆机制，从记忆基质、认知机制和记忆主体三个维度提供统一视角"
+excerpt_en: "This survey provides a unified view of foundation AI agent memory mechanisms across three dimensions: memory substrate, cognitive mechanism, and memory subject"
+tags:
+  - paper-notes
+  - Survey
+paper_id: rethinking-memory-mechanisms-of-foundation-agents-in-the-second-half
+paper_authors: "Jiawei Han, Philip Yu"
+paper_link: "https://arxiv.org/abs/2602.06052"
+auto_generated: true
+notes_hash: d1bbd4b51633ca10
+---
+
+## Motivation
+
+AI研究正从模型创新转向问题定义和真实世界评估。在“下半场”，核心挑战是智能体在长周期、动态、用户依赖环境中实现真正的实用性。
+智能体面临上下文爆炸，需要持续积累、管理和选择性重用大量信息。记忆机制因此成为弥补实用性差距的关键解决方案。
+
+## Contribution
+
+- **统一的记忆机制视图**: 提出了基础智能体记忆的统一视图，涵盖记忆基质（内部和外部）、认知机制（情景、语义、感觉、工作和程序记忆）以及记忆主体（以智能体为中心和以用户为中心）三个维度。
+- **记忆实例化与操作分析**: 分析了在不同智能体拓扑结构下记忆如何被实例化和操作，并重点介绍了记忆操作的学习策略。
+- **评估基准与指标综述**: 综述了用于评估记忆效用的基准和指标。
+- **开放挑战与未来方向**: 概述了AI智能体记忆领域的各种开放挑战和未来研究方向。
+
+## Method
+
+本文通过对AI智能体记忆机制进行全面的综述，构建了一个统一的分析框架：
+
+1.  **记忆基质 (Memory Substrate)**:
+    *   **内部记忆 (Internal Memory)**: 指智能体内部固有的记忆能力，例如LLM的上下文窗口、KV cache等。
+    *   **外部记忆 (External Memory)**: 指智能体可以访问的外部存储系统，如向量数据库、知识图谱 (KG) 等。
+
+2.  **认知机制 (Cognitive Mechanism)**:
+    *   **感觉记忆 (Sensory Memory)**: 短暂保留感官输入，用于平滑感知。
+    *   **工作记忆 (Working Memory)**: 临时持有和处理当前信息，例如思维链 (CoT)。
+    *   **情景记忆 (Episodic Memory)**: 记录特定经验的上下文，例如过去的交互日志。
+    *   **语义记忆 (Semantic Memory)**: 存储关于世界的概念和事实知识，例如知识库。
+    *   **程序记忆 (Procedural Memory)**: 存储技能和行动模式，例如可重用的工作流程或工具技能。
+
+3.  **记忆主体 (Memory Subject)**:
+    *   **以智能体为中心 (Agent-centric)**: 关注智能体自身的记忆需求，如规划、工具使用、状态跟踪等。
+    *   **以用户为中心 (User-centric)**: 关注用户偏好、历史交互、个性化信息等。
+
+本文还分析了记忆在不同智能体架构中的实现方式，并探讨了记忆操作（如写入、检索、更新、遗忘）的学习策略。最后，对现有评估方法进行了总结，并提出了未来的研究方向。
+
+## Comparison with Previous Work
+
+本文是一篇综述性论文，主要通过提供一个统一的框架来组织和理解现有工作，因此其比较更多体现在对现有研究的分类和综合上，而非与特定模型或算法的直接性能对比。
+
+- **vs. 现有零散研究**: 现有关于AI智能体记忆的研究通常集中在特定方面（如RAG、长期上下文管理、特定类型的记忆系统）。本文的贡献在于将这些零散的研究整合到一个全面的三维框架中，提供了一个更宏观、更系统的视角。
+- **vs. 传统记忆模型**: 传统AI或认知科学中的记忆模型可能侧重于人类认知或特定任务。本文则将这些概念映射到基础智能体设计中，并结合了LLM的特性和挑战。
+- **vs. 简单RAG方法**: 许多早期工作将记忆简单地视为RAG机制。本文则超越了这一范畴，将记忆细分为多种认知类型，并强调了记忆管理、学习策略和用户中心记忆的重要性。
+
+## Experiments
+
+本文作为一篇综述，不包含新的实验结果。它通过总结和分类现有研究的评估方法和基准来分析记忆效用。
+
+**Table.** 基础智能体中五种认知记忆系统及其功能角色、LLM智能体中的核心研究重点和实现示例。
+
+| Cognitive Type | Functional Role | Core research focuses in LLM agents (representative works) | Implementations |
+| --- | --- | --- | --- |
+| \rowcolor Tablegroup Short-Term Memory |  |  |  |
+| \rowcolor Tablecolor Sensory Memory | What is perceived. Brief retention of recent visual, auditory, or other sensory inputs before further processing. | Perceptual buffering and lightweight caching for multimodal streams, such as short-lived embedding queues and perceptual state buffers (He et al., 2025b; Fang et al., 2025a; Zhou et al., 2025b; Di et al., 2025). Temporal gating and selection mechanisms that stabilize noisy or high-bandwidth observations for downstream reasoning and control (Mon-Williams et al., 2025; Bjorck et al., 2025; Black et al., 2025; Ravi et al., 2024; Liu et al., 2025d). | Keep the last 2–5 seconds of audio and video frames (or recent sensor embeddings) to smooth perception and handle brief occlusions. |
+| \rowcolor Tablecolor2 Working Memory | What is currently handled. Temporary holding and manipulation of current information. | Pre-write representation shaping that reduces what must enter the active context, including compression, folding, and abstraction-aware representations (Labate et al., 2025; Kang et al., 2025; Wu et al., 2025c; Sun et al., 2025b; Ye et al., 2025b). Online state maintenance under fixed budgets, including update, eviction, and runtime control of context and KV states during execution (Zhang et al., 2025l; Yuan et al., 2025a; Kim et al., 2025b; Liu et al., 2025i; Kwon et al., 2023; Ni et al., 2025). | An in-progress reasoning state (chain of thought): “goal: refine the survey; earlier sections set the framing; the next revision should preserve framing consistency.” |
+| \rowcolor Tablegroup Long-Term Memory |  |  |  |
+| \rowcolor Tablecolor Episodic Memory | What happened. Contextual record of specific experiences. | Episode recording and structuring, including what to write, how to organize events and trajectories, and multi-scale episode formation (Rajesh et al., 2025; Yeo et al., 2025a; b; Anokhin et al., 2024). Retrieval and reflection at decision time, including adaptive triggering, episode selection, and retention policies that shape long-term accessibility (Yeo et al., 2025b; Latimer et al., 2025; Li et al., 2025f; Sarin et al., 2025; Alqithami, 2025). | A past interaction log: “last time you preferred a 2-page summary; the previous plan failed due to missing API keys,” stored with its time and situational context. |
+| \rowcolor Tablecolor2 Semantic Memory | What is known. Conceptual and factual knowledge about the world. | Knowledge induction and organization into reusable representations, including memory graphs, schemas, and compact neural representations (Zhao et al., 2025a; Jia et al., 2025a; Li et al., 2025d; Rasmussen et al., 2025; Behrouz et al., 2024; Wang et al., 2024l; Pouransari et al., 2025). Knowledge access and reliability control during reasoning, including selective activation, validation, and continual revision under distribution shift (Jimenez Gutierrez et al., 2024; Wang et al., 2025m; Rezazadeh et al., 2025b; Yan et al., 2025b; Wang et al., 2024f; Alqithami, 2025). | A knowledge base: entities or facts (e.g., project info, preferences, definitions) retrieved by query and checked for reliability. |
+| \rowcolor Tablecolor Procedural Memory | How to act. Skills and action patterns. | Skill induction and packaging, learning reusable procedures from experience, tools, or interaction traces (Hong et al., 2023; Fang et al., 2025b; Han et al., 2025; Zhang et al., 2025c; Xia et al., 2025). Skill execution, composition, and adaptation, invoking and refining procedures under changing contexts over long horizons (Ouyang et al., 2025; Li et al., 2025h; Tablan et al., 2025; Terranova et al., 2025; Wang and Chen, 2025). | A reusable workflow or tool skill: “search arrow read arrow extract arrow cite,” or “debug with sanitizer,” invoked as a routine. |
+
+- **记忆评估指标多样性**: 综述了多种记忆评估指标，包括基于准确性的指标（如Accuracy, F1, Recall@K）、基于相似性的指标（如ROUGE, BLEU, BERTScore）以及LLM作为评判者的指标（如Response Correctness, Faithfulness）。
+- **用户中心记忆基准**: 详细列举了多个用户中心记忆基准，涵盖了事实提取、多会话推理、时间推理、更新与刷新、压缩与总结、遗忘与保留、用户事实与偏好等多种记忆能力。
+- **智能体中心任务基准**: 总结了智能体中心任务基准，涉及文本、Web、操作系统、应用、代码、机器人、游戏、视频、论文等多种环境和交互模式，强调了规划、工具使用、多跳推理、状态跟踪等核心能力。
+- **广泛的应用场景**: 展示了记忆机制在教育、科研、游戏、机器人、医疗、对话系统、工作流自动化、软件工程、在线流媒体、信息搜索、金融和法律等多个领域的广泛应用。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+AI research is undergoing a paradigm shift, moving from prioritizing model innovations towards emphasizing problem definition and rigorous real-world evaluation. As the field enters the "second half," the central challenge becomes achieving real utility for agents in long-horizon, dynamic, and user-dependent environments.
+Agents in these settings face context explosion and must continuously accumulate, manage, and selectively reuse large volumes of information across extended interactions. Memory, therefore, emerges as the critical solution to bridge this utility gap.
+
+## Contribution
+
+- **Unified View of Memory Mechanisms**: Presents a unified view of foundation agent memory along three dimensions: memory substrate (internal and external), cognitive mechanism (episodic, semantic, sensory, working, and procedural), and memory subject (agent-centric and user-centric).
+- **Analysis of Memory Instantiation and Operations**: Analyzes how memory is instantiated and operated under different agent topologies, highlighting learning policies over memory operations.
+- **Review of Evaluation Benchmarks and Metrics**: Provides a comprehensive review of evaluation benchmarks and metrics for assessing memory utility.
+- **Open Challenges and Future Directions**: Outlines various open challenges and future research directions in the field of AI agent memory.
+
+## Method
+
+This paper constructs a unified analytical framework by providing a comprehensive survey of AI agent memory mechanisms:
+
+1.  **Memory Substrate**:
+    *   **Internal Memory**: Refers to the agent's inherent memory capabilities, such as the LLM's context window and KV cache.
+    *   **External Memory**: Refers to external storage systems accessible by the agent, such as vector databases and knowledge graphs (KGs).
+
+2.  **Cognitive Mechanism**:
+    *   **Sensory Memory**: Brief retention of sensory inputs to smooth perception.
+    *   **Working Memory**: Temporary holding and manipulation of current information, e.g., Chain-of-Thought (CoT).
+    *   **Episodic Memory**: Contextual record of specific experiences, e.g., past interaction logs.
+    *   **Semantic Memory**: Conceptual and factual knowledge about the world, e.g., a knowledge base.
+    *   **Procedural Memory**: Skills and action patterns, e.g., reusable workflows or tool skills.
+
+3.  **Memory Subject**:
+    *   **Agent-centric**: Focuses on the agent's own memory needs, such as planning, tool use, and state tracking.
+    *   **User-centric**: Focuses on user preferences, historical interactions, and personalized information.
+
+The paper also analyzes how memory is implemented in different agent architectures and explores learning policies for memory operations (e.g., writing, retrieval, updating, forgetting). Finally, it summarizes existing evaluation methods and proposes future research directions.
+
+## Comparison with Previous Work
+
+As a survey paper, this work primarily organizes and synthesizes existing research by providing a unified framework, rather than directly comparing performance against specific models or algorithms.
+
+-   **vs. Disparate Existing Research**: Current research on AI agent memory is often fragmented, focusing on specific aspects (e.g., RAG, long-context management, particular types of memory systems). This paper's contribution lies in integrating these disparate studies into a comprehensive three-dimensional framework, offering a more holistic and systematic perspective.
+-   **vs. Traditional Memory Models**: Traditional AI or cognitive science memory models might focus on human cognition or specific tasks. This paper maps these concepts to foundation agent design, incorporating the characteristics and challenges of LLMs.
+-   **vs. Simple RAG Approaches**: Many earlier works treated memory simply as a RAG mechanism. This paper goes beyond that scope, categorizing memory into various cognitive types and emphasizing the importance of memory management, learning policies, and user-centric memory.
+
+## Experiments
+
+As a survey, this paper does not present new experimental results. Instead, it analyzes memory utility by summarizing and categorizing evaluation methods and benchmarks from existing research.
+
+**Table.** Mapping five cognitive memory systems to their functional roles and corresponding memory design directions in foundation agents, with illustrative agent-level examples.
+
+| Cognitive Type | Functional Role | Core research focuses in LLM agents (representative works) | Implementations |
+| --- | --- | --- | --- |
+| \rowcolor Tablegroup Short-Term Memory |  |  |  |
+| \rowcolor Tablecolor Sensory Memory | What is perceived. Brief retention of recent visual, auditory, or other sensory inputs before further processing. | Perceptual buffering and lightweight caching for multimodal streams, such as short-lived embedding queues and perceptual state buffers (He et al., 2025b; Fang et al., 2025a; Zhou et al., 2025b; Di et al., 2025). Temporal gating and selection mechanisms that stabilize noisy or high-bandwidth observations for downstream reasoning and control (Mon-Williams et al., 2025; Bjorck et al., 2025; Black et al., 2025; Ravi et al., 2024; Liu et al., 2025d). | Keep the last 2–5 seconds of audio and video frames (or recent sensor embeddings) to smooth perception and handle brief occlusions. |
+| \rowcolor Tablecolor2 Working Memory | What is currently handled. Temporary holding and manipulation of current information. | Pre-write representation shaping that reduces what must enter the active context, including compression, folding, and abstraction-aware representations (Labate et al., 2025; Kang et al., 2025; Wu et al., 2025c; Sun et al., 2025b; Ye et al., 2025b). Online state maintenance under fixed budgets, including update, eviction, and runtime control of context and KV states during execution (Zhang et al., 2025l; Yuan et al., 2025a; Kim et al., 2025b; Liu et al., 2025i; Kwon et al., 2023; Ni et al., 2025). | An in-progress reasoning state (chain of thought): “goal: refine the survey; earlier sections set the framing; the next revision should preserve framing consistency.” |
+| \rowcolor Tablegroup Long-Term Memory |  |  |  |
+| \rowcolor Tablecolor Episodic Memory | What happened. Contextual record of specific experiences. | Episode recording and structuring, including what to write, how to organize events and trajectories, and multi-scale episode formation (Rajesh et al., 2025; Yeo et al., 2025a; b; Anokhin et al., 2024). Retrieval and reflection at decision time, including adaptive triggering, episode selection, and retention policies that shape long-term accessibility (Yeo et al., 2025b; Latimer et al., 2025; Li et al., 2025f; Sarin et al., 2025; Alqithami, 2025). | A past interaction log: “last time you preferred a 2-page summary; the previous plan failed due to missing API keys,” stored with its time and situational context. |
+| \rowcolor Tablecolor2 Semantic Memory | What is known. Conceptual and factual knowledge about the world. | Knowledge induction and organization into reusable representations, including memory graphs, schemas, and compact neural representations (Zhao et al., 2025a; Jia et al., 2025a; Li et al., 2025d; Rasmussen et al., 2025; Behrouz et al., 2024; Wang et al., 2024l; Pouransari et al., 2025). Knowledge access and reliability control during reasoning, including selective activation, validation, and continual revision under distribution shift (Jimenez Gutierrez et al., 2024; Wang et al., 2025m; Rezazadeh et al., 2025b; Yan et al., 2025b; Wang et al., 2024f; Alqithami, 2025). | A knowledge base: entities or facts (e.g., project info, preferences, definitions) retrieved by query and checked for reliability. |
+| \rowcolor Tablecolor Procedural Memory | How to act. Skills and action patterns. | Skill induction and packaging, learning reusable procedures from experience, tools, or interaction traces (Hong et al., 2023; Fang et al., 2025b; Han et al., 2025; Zhang et al., 2025c; Xia et al., 2025). Skill execution, composition, and adaptation, invoking and refining procedures under changing contexts over long horizons (Ouyang et al., 2025; Li et al., 2025h; Tablan et al., 2025; Terranova et al., 2025; Wang and Chen, 2025). | A reusable workflow or tool skill: “search arrow read arrow extract arrow cite,” or “debug with sanitizer,” invoked as a routine. |
+
+-   **Diversity of Memory Evaluation Metrics**: The survey covers various memory evaluation metrics, including accuracy-based metrics (e.g., Accuracy, F1, Recall@K), similarity-based metrics (e.g., ROUGE, BLEU, BERTScore), and LLM-as-a-judge metrics (e.g., Response Correctness, Faithfulness).
+-   **User-Centric Memory Benchmarks**: It details multiple user-centric memory benchmarks, covering diverse memory abilities such as fact extraction, multi-session reasoning, temporal reasoning, update & refresh, compression & summarization, forgetting & retention, user facts & preferences.
+-   **Agent-Centric Task Benchmarks**: The paper summarizes agent-centric task benchmarks across various environments (text, web, OS, app, code, robotics, game, video, paper) and interaction modes, emphasizing core abilities like planning, tool use, multi-hop reasoning, and state tracking.
+-   **Broad Application Scenarios**: It showcases the wide applicability of memory mechanisms across numerous domains, including education, scientific research, gaming, robotics, healthcare, dialogue systems, workflow automation, software engineering, online streaming, information search, finance, and legal.

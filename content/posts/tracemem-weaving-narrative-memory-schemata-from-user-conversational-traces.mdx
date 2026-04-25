@@ -1,0 +1,159 @@
+---
+title: "TraceMem: Weaving Narrative Memory Schemata from User Conversational Traces"
+date: 2026-04-25
+paper_date: 2026-02-10
+excerpt: "TraceMem通过构建叙事记忆图式，显著提升了LLM在长期对话中的多跳和时间推理能力"
+excerpt_en: "TraceMem significantly enhances LLM multi-hop and temporal reasoning in long-term dialogues by constructing narrative memory schemata."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Episodic
+  - Semantic
+paper_id: tracemem-weaving-narrative-memory-schemata-from-user-conversational-traces
+paper_authors: "HKU"
+paper_link: "https://arxiv.org/abs/2602.09712"
+auto_generated: true
+notes_hash: 3e8b151e9549991e
+---
+
+## Motivation
+
+大型语言模型（LLM）在处理长期对话时面临瓶颈，因为其有限的上下文窗口难以有效管理长时间的对话历史。
+
+现有记忆系统通常将交互视为孤立的片段，未能捕捉对话流中潜在的叙事连贯性。这导致LLM在需要深层叙事理解的任务中表现不佳。
+
+## Contribution
+
+- **认知启发式框架**: 提出了TraceMem，一个受认知启发的框架，通过三阶段流程从用户对话痕迹中编织结构化的叙事记忆图式。
+- **三阶段记忆处理管道**:
+    - **短期记忆处理**: 采用演绎式主题分割来划分事件边界并提取语义表示。
+    - **突触记忆巩固**: 将事件总结为情景记忆，并将其与语义一起提炼成用户特定的痕迹。
+    - **系统记忆巩固**: 利用两阶段分层聚类将这些痕迹组织成连贯的、随时间演变的叙事线索，并归纳到统一主题下。
+- **结构化用户记忆卡**: 将叙事线索封装成结构化的用户记忆卡，形成叙事记忆图式。
+- **Agentic搜索机制**: 提供了一种Agentic搜索机制，以增强记忆利用时的推理过程。
+- **SOTA性能**: 在LoCoMo基准测试中实现了最先进的性能，特别是在多跳和时间推理方面超越了基线。
+
+## Method
+
+TraceMem通过一个三阶段管道来构建叙事记忆图式：
+
+1.  **短期记忆处理 (Short-term Memory Processing)**:
+    *   采用演绎式主题分割方法来划分对话中的事件边界。
+    *   从每个事件中提取语义表示，作为后续记忆巩固的基础。
+
+2.  **突触记忆巩固 (Synaptic Memory Consolidation)**:
+    *   将短期记忆处理后的事件总结为情景记忆（episodic memories）。
+    *   将这些情景记忆与提取出的语义一起提炼成用户特定的痕迹（user-specific traces）。
+
+3.  **系统记忆巩固 (Systems Memory Consolidation)**:
+    *   利用两阶段分层聚类（two-stage hierarchical clustering）方法。
+    *   将用户特定的痕迹组织成连贯的、随时间演变的叙事线索（narrative threads），并归纳到统一的主题下。
+    *   这些叙事线索最终被封装成结构化的用户记忆卡（user memory cards），形成完整的叙事记忆图式。
+
+### 记忆利用 (Memory Utilization)
+
+*   提供了一个**Agentic搜索机制**，用于在推理过程中检索和利用构建好的叙事记忆图式。
+
+## Comparison with Previous Work
+
+- **vs. 现有记忆系统**: 现有系统通常将交互视为孤立的片段，未能捕捉对话的叙事连贯性。TraceMem通过构建结构化的叙事记忆图式来解决这一问题。
+- **vs. 传统LLM上下文窗口**: 传统LLM的上下文窗口有限，难以管理长期对话历史。TraceMem通过外部记忆系统有效扩展了LLM的长期记忆能力。
+- **vs. LoCoMo基准测试中的基线**: TraceMem在LoCoMo基准测试中，尤其是在多跳和时间推理方面，显著超越了现有基线方法，证明了其在深层叙事理解方面的优势。
+- **vs. A-Mem, LightMem, Nemori**: TraceMem在Persona Model和Agentic Search方面具有独特优势，并且在Episode Segmentation上与LightMem和Nemori保持一致，但整体性能更优。
+
+## Experiments
+
+**Table.** 不同Backbone下主要比较结果。
+
+| Backbone | Method | SingleHop | MultiHop | Temporal | OpenDomain | Overall Acc. |
+| --- | --- | --- | --- | --- | --- | --- |
+| GPT-4o-mini | FullText | 0.8395 | 0.6986 | 0.5171 | 0.5833 | 0.7305 |
+| NaiveRAG | 0.5660 | 0.3369 | 0.3084 | 0.4375 | 0.4623 |  |
+| A-Mem | 0.4792 | 0.3298 | 0.3832 | 0.1771 | 0.4130 |  |
+| LightMem | 0.7414 | 0.6069 | 0.7422 | 0.4819 | 0.7007 |  |
+| Nemori | 0.8252 | 0.6312 | 0.6854 | 0.5000 | 0.7403 |  |
+| TraceMem | 0.9310 | 0.9220 | 0.8660 | 0.7083 | 0.9019 |  |
+| GPT-4.1-mini | FullText | 0.9203 | 0.8723 | 0.8162 | 0.6667 | 0.8740 |
+| NaiveRAG | 0.6207 | 0.3901 | 0.3769 | 0.4792 | 0.5188 |  |
+| A-Mem | 0.6147 | 0.5603 | 0.6355 | 0.3958 | 0.5955 |  |
+| LightMem | 0.8121 | 0.7057 | 0.7882 | 0.4792 | 0.7669 |  |
+| Nemori | 0.8704 | 0.7482 | 0.7632 | 0.5417 | 0.8052 |  |
+|  | TraceMem | 0.9512 | 0.8936 | 0.9097 | 0.8021 | 0.9227 |
+
+*   TraceMem在LoCoMo基准测试中取得了最先进的性能，尤其是在GPT-4o-mini和GPT-4.1-mini两种Backbone下。
+*   在MultiHop和Temporal推理任务中，TraceMem显著超越了所有基线方法，例如在GPT-4o-mini下，其MultiHop准确率达到0.9220，远高于Nemori的0.6312。
+*   通过构建连贯的叙事，TraceMem在深层叙事理解方面表现出色，这对于需要复杂推理的长期对话至关重要。
+*   分析表明，TraceMem的脑启发式架构和叙事记忆构建机制是其卓越性能的关键。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Large Language Models (LLMs) face a significant bottleneck in sustaining long-term interactions due to their limited context windows, which struggle to manage extended dialogue histories.
+
+Existing memory systems often treat interactions as disjointed snippets, failing to capture the underlying narrative coherence of the dialogue stream. This deficiency hinders LLMs' performance in tasks requiring deep narrative comprehension.
+
+## Contribution
+
+-   **Cognitively-Inspired Framework**: Proposed TraceMem, a cognitively-inspired framework that weaves structured, narrative memory schemata from user conversational traces through a three-stage pipeline.
+-   **Three-Stage Memory Processing Pipeline**:
+    -   **Short-term Memory Processing**: Employs a deductive topic segmentation approach to demarcate episode boundaries and extract semantic representation.
+    -   **Synaptic Memory Consolidation**: Summarizes episodes into episodic memories before distilling them alongside semantics into user-specific traces.
+    -   **Systems Memory Consolidation**: Utilizes two-stage hierarchical clustering to organize these traces into coherent, time-evolving narrative threads under unifying themes.
+-   **Structured User Memory Cards**: Encapsulates narrative threads into structured user memory cards, forming narrative memory schemata.
+-   **Agentic Search Mechanism**: Provides an agentic search mechanism to enhance the reasoning process during memory utilization.
+-   **State-of-the-Art Performance**: Achieves state-of-the-art performance on the LoCoMo benchmark, particularly excelling in multi-hop and temporal reasoning compared to baselines.
+
+## Method
+
+TraceMem constructs narrative memory schemata through a three-stage pipeline:
+
+1.  **Short-term Memory Processing**:
+    *   Employs a deductive topic segmentation approach to demarcate episode boundaries within the dialogue.
+    *   Extracts semantic representations from each episode, forming the basis for subsequent memory consolidation.
+
+2.  **Synaptic Memory Consolidation**:
+    *   Summarizes the processed episodes into episodic memories.
+    *   Distills these episodic memories, along with their semantic representations, into user-specific traces.
+
+3.  **Systems Memory Consolidation**:
+    *   Utilizes a two-stage hierarchical clustering method.
+    *   Organizes the user-specific traces into coherent, time-evolving narrative threads under unifying themes.
+    *   These narrative threads are then encapsulated into structured user memory cards, forming the complete narrative memory schemata.
+
+### Memory Utilization
+
+*   An **agentic search mechanism** is provided to retrieve and utilize the constructed narrative memory schemata during the reasoning process.
+
+## Comparison with Previous Work
+
+-   **vs. Existing Memory Systems**: Current systems often treat interactions as isolated snippets, failing to capture dialogue narrative coherence. TraceMem addresses this by building structured narrative memory schemata.
+-   **vs. Traditional LLM Context Windows**: Traditional LLMs have limited context windows, making it difficult to manage long-term dialogue history. TraceMem effectively extends LLM long-term memory capabilities through an external memory system.
+-   **vs. Baselines on LoCoMo Benchmark**: TraceMem significantly outperforms existing baseline methods on the LoCoMo benchmark, especially in multi-hop and temporal reasoning, demonstrating its superiority in deep narrative comprehension.
+-   **vs. A-Mem, LightMem, Nemori**: TraceMem offers unique advantages in Persona Model and Agentic Search, and while consistent with LightMem and Nemori in Episode Segmentation, it achieves superior overall performance.
+
+## Experiments
+
+**Table.** Main comparison results on different backbones.
+
+| Backbone | Method | SingleHop | MultiHop | Temporal | OpenDomain | Overall Acc. |
+| --- | --- | --- | --- | --- | --- | --- |
+| GPT-4o-mini | FullText | 0.8395 | 0.6986 | 0.5171 | 0.5833 | 0.7305 |
+| NaiveRAG | 0.5660 | 0.3369 | 0.3084 | 0.4375 | 0.4623 |  |
+| A-Mem | 0.4792 | 0.3298 | 0.3832 | 0.1771 | 0.4130 |  |
+| LightMem | 0.7414 | 0.6069 | 0.7422 | 0.4819 | 0.7007 |  |
+| Nemori | 0.8252 | 0.6312 | 0.6854 | 0.5000 | 0.7403 |  |
+| TraceMem | 0.9310 | 0.9220 | 0.8660 | 0.7083 | 0.9019 |  |
+| GPT-4.1-mini | FullText | 0.9203 | 0.8723 | 0.8162 | 0.6667 | 0.8740 |
+| NaiveRAG | 0.6207 | 0.3901 | 0.3769 | 0.4792 | 0.5188 |  |
+| A-Mem | 0.6147 | 0.5603 | 0.6355 | 0.3958 | 0.5955 |  |
+| LightMem | 0.8121 | 0.7057 | 0.7882 | 0.4792 | 0.7669 |  |
+| Nemori | 0.8704 | 0.7482 | 0.7632 | 0.5417 | 0.8052 |  |
+|  | TraceMem | 0.9512 | 0.8936 | 0.9097 | 0.8021 | 0.9227 |
+
+*   TraceMem achieves state-of-the-art performance on the LoCoMo benchmark, across both GPT-4o-mini and GPT-4.1-mini backbones.
+*   It significantly outperforms all baseline methods in MultiHop and Temporal reasoning tasks; for instance, achieving 0.9220 MultiHop accuracy with GPT-4o-mini, substantially higher than Nemori's 0.6312.
+*   By constructing coherent narratives, TraceMem excels in deep narrative comprehension, which is crucial for complex reasoning in long-term dialogues.
+*   Analysis indicates that TraceMem's brain-inspired architecture and narrative memory construction mechanism are key to its superior performance.

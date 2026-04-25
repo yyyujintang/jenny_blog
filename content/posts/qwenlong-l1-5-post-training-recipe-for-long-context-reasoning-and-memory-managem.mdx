@@ -1,0 +1,132 @@
+---
+title: "QwenLong-L1.5: Post-Training Recipe for Long-Context Reasoning and Memory Management"
+date: 2026-04-25
+paper_date: 2025-12-25
+excerpt: "QwenLong-L1.5通过系统性后训练创新，在长上下文推理和超长上下文记忆管理方面取得显著进展"
+excerpt_en: "QwenLong-L1.5 achieves superior long-context reasoning and ultra-long context memory management through systematic post-training innovations."
+tags:
+  - paper-notes
+  - Method
+  - Internal
+  - SFT
+paper_id: qwenlong-l1-5-post-training-recipe-for-long-context-reasoning-and-memory-managem
+paper_link: "https://arxiv.org/abs/2512.12967v1"
+auto_generated: true
+notes_hash: 1e51b323b16791b5
+---
+
+## Motivation
+
+现有大型语言模型在处理超长上下文时面临挑战，即使扩展了上下文窗口，也难以无限容纳任意长度的序列。这限制了它们在需要跨越海量信息进行复杂推理任务中的表现。
+
+长上下文强化学习（RL）训练也存在固有的不稳定性，使得模型难以有效学习和泛化。
+
+为了解决这些问题，需要一种新的方法来系统地生成高质量的长上下文训练数据，并开发稳定的RL训练范式，同时集成有效的记忆管理机制。
+
+## Contribution
+
+- **长上下文数据合成管线**: 开发了一个系统性合成框架，生成需要多跳推理的复杂任务，超越了简单的检索，实现了真正的长距离推理能力。
+- **稳定化强化学习训练**: 引入了任务平衡采样与任务特定优势估计，以减轻奖励偏差，并提出了自适应熵控策略优化（AEPO）来动态调节探索-利用权衡，克服了长上下文RL的训练不稳定性。
+- **记忆增强架构**: 针对超长上下文（超过4M tokens）开发了一个记忆管理框架，通过多阶段融合RL训练，无缝整合单次推理与迭代记忆处理。
+- **卓越性能**: 在长上下文推理基准上，QwenLong-L1.5性能与GPT-5和Gemini-2.5-Pro相当，并显著超越其基线模型。
+
+## Method
+
+### 1. 长上下文数据合成管线
+- **文档解构**: 将原始文档解构为原子事实及其潜在关系。
+- **程序化问题生成**: 基于解构出的事实和关系，程序化地构建可验证的推理问题，这些问题需要跨全局分布的证据进行多跳溯源。
+- **大规模高质量数据**: 通过此方法，能够大规模生成高质量的训练数据，远超简单的信息检索任务，培养真正的长距离推理能力。
+
+### 2. 稳定化强化学习训练
+- **任务平衡采样**: 引入任务平衡采样策略，确保不同类型的任务在训练中得到公平的关注。
+- **任务特定优势估计**: 结合任务特定优势估计，有效缓解了长上下文RL训练中常见的奖励偏差问题。
+- **自适应熵控策略优化 (AEPO)**: 提出AEPO算法，动态调整探索与利用之间的平衡，从而克服了长上下文RL训练的关键不稳定性。
+
+### 3. 记忆增强架构用于超长上下文
+- **记忆管理框架**: 开发了一个全面的记忆管理框架，以处理即使是扩展上下文窗口也无法容纳的超长序列（例如超过4M tokens）。
+- **多阶段融合RL训练**: 该框架通过多阶段融合RL训练，将单次推理能力与基于记忆的迭代处理无缝集成。
+- **代理基线增强**: 这种记忆代理框架在处理1M~4M tokens的超长任务时，显著提升了代理基线的性能。
+
+## Comparison with Previous Work
+
+- **vs. 简单检索任务**: 传统方法常侧重于简单的信息检索，而QwenLong-L1.5通过其数据合成管线，生成需要多跳推理和全局证据整合的复杂任务，从而培养更深层次的推理能力。
+- **vs. 不稳定RL训练**: 现有长上下文RL训练常面临不稳定性问题，QwenLong-L1.5通过任务平衡采样、任务特定优势估计和AEPO，显著提升了RL训练的稳定性和效率。
+- **vs. 仅依赖扩展上下文窗口**: 许多模型仅通过扩展上下文窗口来处理长序列，但QwenLong-L1.5认识到其局限性，并引入了记忆管理框架，能够处理远超上下文窗口限制的超长序列。
+- **vs. Qwen3-30B-A3B-Thinking (基线模型)**: QwenLong-L1.5在长上下文推理基准上平均超越其基线模型9.90分，并在超长任务上通过记忆代理框架实现了9.48分的显著提升。
+
+## Experiments
+
+**Table.** QwenLong-L1与QwenLong-L1.5的RL训练数据特性对比。
+
+|  | QwenLong-L1 | QwenLong-L1.5 |
+| --- | --- | --- |
+| Data Source | Open-source | Open-source, Synthetic |
+| # Training Samples | 1.6K | 14.1K |
+| Domain | Professional documents General knowledge | Code repositories Academic literature Professional documents General knowledge and literature Dialogue data |
+| Question Type | Multi-fact reasoning Numerical calculation | Multi-fact reasoning Numerical calculation Hypothetical scenarios Long in-context learning Temporal reasoning Causal analysis Viewpoint analysis Dialogue NIAH … |
+| Max Input Length | 59,563 tokens | 119,932 tokens |
+| Avg. Input Length | 11,441 tokens | 34,231 tokens |
+
+- **长上下文推理基准**: QwenLong-L1.5在长上下文推理基准上取得了与GPT-5和Gemini-2.5-Pro相当的性能，并平均超越其基线模型9.90分。
+- **超长任务性能**: 在处理1M~4M tokens的超长任务时，QwenLong-L1.5的记忆代理框架相较于代理基线取得了9.48分的显著增益。
+- **泛化能力**: 所获得的长上下文推理能力也转化为在科学推理、记忆工具使用和扩展对话等通用领域的增强表现。
+- **训练数据改进**: QwenLong-L1.5的RL训练数据量从1.6K增加到14.1K，且涵盖了更广泛的领域和更复杂的问答类型，最大输入长度和平均输入长度也显著增加，这表明了数据合成管线的有效性。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Current large language models face significant challenges when processing extremely long contexts, as even extended context windows cannot accommodate arbitrarily long sequences. This limitation restricts their performance in complex reasoning tasks that require navigating vast amounts of information.
+
+Reinforcement Learning (RL) training for long contexts also suffers from inherent instability, making it difficult for models to learn and generalize effectively.
+
+To address these issues, there is a need for novel approaches that systematically generate high-quality long-context training data, develop stable RL training paradigms, and integrate effective memory management mechanisms.
+
+## Contribution
+
+- **Long-Context Data Synthesis Pipeline**: Developed a systematic synthesis framework that generates challenging reasoning tasks requiring multi-hop grounding over globally distributed evidence, moving beyond simple retrieval to enable genuine long-range reasoning capabilities.
+- **Stabilized Reinforcement Learning for Long-Context Training**: Introduced task-balanced sampling with task-specific advantage estimation to mitigate reward bias, and proposed Adaptive Entropy-Controlled Policy Optimization (AEPO) that dynamically regulates exploration-exploitation trade-offs, overcoming critical instability in long-context RL.
+- **Memory-Augmented Architecture for Ultra-Long Contexts**: Developed a memory management framework with multi-stage fusion RL training that seamlessly integrates single-pass reasoning with iterative memory-based processing for tasks exceeding 4M tokens.
+- **Superior Performance**: Achieved performance comparable to GPT-5 and Gemini-2.5-Pro on long-context reasoning benchmarks, significantly surpassing its baseline model.
+
+## Method
+
+### 1. Long-Context Data Synthesis Pipeline
+- **Document Deconstruction**: Documents are deconstructed into atomic facts and their underlying relationships.
+- **Programmatic Question Composition**: Verifiable reasoning questions are programmatically composed based on the deconstructed facts and relationships, requiring multi-hop grounding over globally distributed evidence.
+- **High-Quality Data at Scale**: This approach creates high-quality training data at scale, substantially moving beyond simple retrieval tasks to enable genuine long-range reasoning capabilities.
+
+### 2. Stabilized Reinforcement Learning for Long-Context Training
+- **Task-Balanced Sampling**: Introduced task-balanced sampling to ensure fair representation of different task types during training.
+- **Task-Specific Advantage Estimation**: Combined with task-specific advantage estimation, this effectively mitigates reward bias in long-context RL training.
+- **Adaptive Entropy-Controlled Policy Optimization (AEPO)**: Proposed AEPO, which dynamically regulates the exploration-exploitation trade-offs, thereby overcoming critical instability in long-context RL training.
+
+### 3. Memory-Augmented Architecture for Ultra-Long Contexts
+- **Memory Management Framework**: Developed a comprehensive memory management framework to handle ultra-long sequences (e.g., exceeding 4M tokens) that even extended context windows cannot accommodate.
+- **Multi-Stage Fusion RL Training**: This framework seamlessly integrates single-pass reasoning with iterative memory-based processing through multi-stage fusion RL training.
+- **Agent Baseline Enhancement**: This memory-agent framework yields significant gains over the agent baseline for ultra-long tasks (1M~4M tokens).
+
+## Comparison with Previous Work
+
+- **vs. Simple Retrieval Tasks**: While prior work often focuses on simple information retrieval, QwenLong-L1.5's data synthesis pipeline generates complex tasks requiring multi-hop reasoning and global evidence integration, fostering deeper reasoning capabilities.
+- **vs. Unstable RL Training**: Existing long-context RL training often faces instability; QwenLong-L1.5 significantly improves stability and efficiency through task-balanced sampling, task-specific advantage estimation, and AEPO.
+- **vs. Sole Reliance on Extended Context Windows**: Many models solely rely on extending context windows for long sequences, but QwenLong-L1.5 recognizes their limitations and introduces a memory management framework to handle ultra-long sequences far beyond context window limits.
+- **vs. Qwen3-30B-A3B-Thinking (Baseline Model)**: QwenLong-L1.5 surpasses its baseline model by 9.90 points on average on long-context reasoning benchmarks and achieves a 9.48-point gain on ultra-long tasks with its memory-agent framework.
+
+## Experiments
+
+**Table.** Comparison of RL training data characteristics between QwenLong-L1 and QwenLong-L1.5.
+
+|  | QwenLong-L1 | QwenLong-L1.5 |
+| --- | --- | --- |
+| Data Source | Open-source | Open-source, Synthetic |
+| # Training Samples | 1.6K | 14.1K |
+| Domain | Professional documents General knowledge | Code repositories Academic literature Professional documents General knowledge and literature Dialogue data |
+| Question Type | Multi-fact reasoning Numerical calculation | Multi-fact reasoning Numerical calculation Hypothetical scenarios Long in-context learning Temporal reasoning Causal analysis Viewpoint analysis Dialogue NIAH … |
+| Max Input Length | 59,563 tokens | 119,932 tokens |
+| Avg. Input Length | 11,441 tokens | 34,231 tokens |
+
+- **Long-Context Reasoning Benchmarks**: QwenLong-L1.5 achieves performance comparable to GPT-5 and Gemini-2.5-Pro on long-context reasoning benchmarks, surpassing its baseline by 9.90 points on average.
+- **Ultra-Long Task Performance**: On ultra-long tasks (1M~4M tokens), QwenLong-L1.5's memory-agent framework yields a 9.48-point gain over the agent baseline.
+- **Generalization Capabilities**: The acquired long-context reasoning ability translates to enhanced performance in general domains like scientific reasoning, memory tool using, and extended dialogue.
+- **Improved Training Data**: The RL training data for QwenLong-L1.5 increased from 1.6K to 14.1K samples, covering a broader range of domains and more complex question types, with significantly increased maximum and average input lengths, demonstrating the effectiveness of the data synthesis pipeline.

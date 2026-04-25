@@ -1,0 +1,167 @@
+---
+title: "KnowMe-Bench: Benchmarking Person Understanding for Lifelong Digital Companions"
+date: 2026-04-25
+paper_date: 2026-01-08
+excerpt: "KnowMe-Bench是一个基于自传叙事的基准，用于评估AI代理对人物的长期理解能力"
+excerpt_en: "KnowMe-Bench is a benchmark built from autobiographical narratives to evaluate AI agents' long-term person understanding capabilities"
+tags:
+  - paper-notes
+  - Benchmark
+  - QA
+paper_id: knowme-bench-benchmarking-person-understanding-for-lifelong-digital-companions
+paper_link: "https://arxiv.org/abs/2601.04745"
+auto_generated: true
+notes_hash: 5bae619c95d3001f
+---
+
+## Motivation
+
+现有AI代理的长期记忆基准主要依赖多轮对话或合成用户历史，这使得检索性能不能完全反映对人物的理解能力。
+
+这些基准往往侧重于事实性召回，而忽略了对人物动机、决策原则和主观状态的深层推理。
+
+为了构建真正能理解人类的数字伙伴，我们需要一个能评估AI在复杂叙事中进行高层次推理的基准。
+
+## Contribution
+
+- **新颖的基准数据集**: KnowMe-Bench基于长篇自传叙事构建，包含丰富的行动、上下文和内心想法，为推断稳定动机和决策原则提供了密集证据。
+- **多层次评估体系**: 评估问题涵盖事实召回 (factual recall)、主观状态归因 (subjective state attribution) 和原则级推理 (principle-level reasoning)，全面衡量AI对人物的理解。
+- **时间锚定与闪回感知**: 数据集将叙事重建为闪回感知 (flashback-aware)、时间锚定 (time-anchored) 的事件流，更好地处理复杂的时间结构。
+- **公开可用的资源**: KnowMe-Bench数据集及其代码已公开，促进了社区在长期人物理解领域的研究。
+
+## Method
+
+### 数据集构建
+1.  **叙事选择**: 从多样化的长篇自传叙事中选取原始文本。
+2.  **事件流重建**: 将叙事内容解析并重建为闪回感知、时间锚定的事件流，确保事件的逻辑和时间顺序。
+3.  **证据链接**: 为每个事件流中的元素（行动、上下文、内心想法）建立与原始叙事的链接，作为推理的证据。
+
+### 问题生成与标注
+1.  **问题类型**: 设计了三类问题：
+    *   **事实召回 (Factual Recall)**: 考察对叙事中具体事实的记忆。
+    *   **主观状态归因 (Subjective State Attribution)**: 评估理解人物情感、意图和信念的能力。
+    *   **原则级推理 (Principle-level Reasoning)**: 挑战AI从叙事中推断人物稳定动机和决策原则的能力。
+2.  **证据链接**: 每个问题都与叙事中的特定证据片段关联，用于评估模型回答的准确性和支持度。
+
+### 评估指标
+1.  **准确性**: 衡量模型回答的正确性。
+2.  **证据支持度**: 评估模型回答是否能被提供的证据有效支持。
+*(基于标题与领域常识推断,未读全文)*
+
+## Comparison with Previous Work
+
+- **vs. LongMemEval (Wu et al., 2025)**: 现有基准多使用多轮对话或合成用户历史，KnowMe-Bench则专注于长篇自传叙事，提供更丰富、更真实的上下文。
+- **vs. LoCoMo (Maharana et al., 2024b)**: 虽然LoCoMo也关注长对话，但KnowMe-Bench通过自传叙事深入人物的内心世界和稳定原则，超越了单纯的对话一致性。
+- **vs. MemBench (Tan et al., 2025)**: MemBench侧重于交互式代理场景中的事实和反思记忆，KnowMe-Bench则更强调对人物动机和决策原则的高层次推理。
+- **vs. CloneMem (Hu et al., 2026)**: CloneMem使用日记、社交帖子等个人痕迹来追踪个人状态演变，KnowMe-Bench则通过结构化的自传叙事，更系统地评估对人物深层理解。
+
+## Experiments
+
+**Table.** 不同系统在KnowMe-Bench上对人物理解的各级别表现。
+
+| System | Level I: Fact & Entity | Level II: Narrative Logic | Level III: Insight |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| T1 Extract | T2 Abstain | T3 Temporal | T4 Order | T5 Trigger | T6 Mind–Body | T7 Principle |  |
+| Backbone: Qwen3-32B |  |  |  |  |  |  |  |
+| Base | 59.9 | 66.0 | 44.4 | 40.5 | 36.1 | 14.3 | 16.3 |
+| + Naive RAG | 68.7 (+8.8) | 70.8 (+4.8) | 48.3 (+3.9) | 42.3 (+1.8) | 38.8 (+2.7) | 17.1 (+2.8) | 18.0 (+1.7) |
+| + Mem0 | 70.4 (+10.5) | 75.2 (+9.2) | 41.3 (-3.1) | 42.4 (+1.9) | 35.9 (-0.2) | 16.9 (+2.6) | 17.5 (+1.2) |
+| + MemOS | 64.4 (+4.5) | 72.4 (+6.4) | 52.7 (+8.3) | 47.1 (+6.6) | 41.1 (+5.0) | 18.2 (+3.9) | 19.3 (+3.0) |
+| + A-Mem | 55.8 (-4.1) | 73.4 (+7.4) | 16.0 (-28.4) | 16.5 (-24.0) | 27.9 (-8.2) | 55.7 (+41.4) | 41.3 (+25.0) |
+| Backbone: GPT-5-mini |  |  |  |  |  |  |  |
+| Base | 65.4 | 71.5 | 54.1 | 47.3 | 42.3 | 18.6 | 19.6 |
+| + Naive RAG | 72.2 (+6.8) | 75.5 (+4.0) | 57.3 (+3.2) | 48.8 (+1.5) | 44.3 (+2.0) | 21.3 (+2.7) | 20.9 (+1.3) |
+| + Mem0 | 73.2 (+7.8) | 78.7 (+7.2) | 51.6 (-2.5) | 48.7 (+1.4) | 42.6 (+0.3) | 20.7 (+2.1) | 20.8 (+1.2) |
+| + MemOS | 69.6 (+4.2) | 76.6 (+5.1) | 60.8 (+6.7) | 52.9 (+5.6) | 47.5 (+5.2) | 21.5 (+2.9) | 22.6 (+3.0) |
+| Backbone: DeepSeek-R1 |  |  |  |  |  |  |  |
+| Base | 51.2 | 42.2 | 52.7 | 37.0 | 39.1 | 41.6 | 35.3 |
+| + Naive RAG | 57.7 (+6.5) | 47.9 (+5.7) | 57.0 (+4.3) | 38.0 (+1.0) | 40.3 (+1.2) | 43.4 (+1.8) | 36.3 (+1.0) |
+| + Mem0 | 59.1 (+7.9) | 51.1 (+8.9) | 50.5 (-2.2) | 37.0 (+0.0) | 37.9 (-1.2) | 43.1 (+1.5) | 36.8 (+1.5) |
+| + MemOS | 53.4 (+2.2) | 51.5 (+9.3) | 61.1 (+8.4) | 43.4 (+6.4) | 43.3 (+4.2) | 43.2 (+1.6) | 37.5 (+2.2) |
+| Backbone: Gemini-3 Pro |  |  |  |  |  |  |  |
+| Base | 50.5 | 52.2 | 45.3 | 36.0 | 36.8 | 35.4 | 31.2 |
+| + Naive RAG | 59.0 (+8.5) | 57.7 (+5.5) | 49.6 (+4.3) | 38.7 (+2.7) | 38.8 (+2.0) | 37.0 (+1.6) | 32.3 (+1.1) |
+| + Mem0 | 60.8 (+10.3) | 62.3 (+10.1) | 43.7 (-1.6) | 37.2 (+1.2) | 38.5 (+1.7) | 39.0 (+3.6) | 32.4 (+1.2) |
+| + MemOS | 56.3 (+5.8) | 60.5 (+8.3) | 53.4 (+8.1) | 44.1 (+8.1) | 42.7 (+5.9) | 37.9 (+2.5) | 35.6 (+4.4) |
+
+- **RAG系统提升事实准确性**: 检索增强系统 (RAG) 显著提高了事实召回 (Level I) 的准确性，这表明它们在从长文本中提取信息方面表现良好。
+- **高层次推理仍具挑战**: 尽管RAG有所帮助，但在时间逻辑解释 (Temporal Logic) 和更高层次的推理 (Level III: Insight) 上，错误依然普遍存在。
+- **MemOS表现突出**: MemOS在多个模型骨干上，尤其是在Level II和Level III任务上，展现了比Naive RAG和Mem0更好的性能提升，表明其记忆机制更有效。
+- **A-Mem在特定任务上表现异常**: A-Mem在T6 (Mind-Body) 和T7 (Principle) 上有显著提升，但在T3 (Temporal) 和T4 (Order) 上表现急剧下降，说明其记忆机制可能高度特化，不适用于所有时间推理任务。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Existing long-horizon memory benchmarks for AI agents primarily rely on multi-turn dialogues or synthetic user histories. This approach makes retrieval performance an imperfect proxy for genuine person understanding.
+
+These benchmarks often prioritize factual recall, neglecting deeper inference capabilities related to motivations, decision principles, and subjective states of individuals.
+
+To build digital companions that truly understand humans, there's a critical need for a benchmark capable of evaluating AI's higher-level reasoning within complex narratives.
+
+## Contribution
+
+- **Novel Benchmark Dataset**: KnowMe-Bench is constructed from long-form autobiographical narratives, providing rich evidence of actions, context, and inner thoughts for inferring stable motivations and decision principles.
+- **Multi-level Evaluation Framework**: The benchmark includes questions spanning factual recall, subjective state attribution, and principle-level reasoning, offering a comprehensive assessment of AI's person understanding.
+- **Flashback-Aware & Time-Anchored Stream**: The dataset reconstructs each narrative into a flashback-aware, time-anchored event stream, better handling complex temporal structures.
+- **Publicly Releasable Resource**: The KnowMe-Bench dataset and its code are publicly available, fostering research in the field of long-term person understanding.
+
+## Method
+
+### Dataset Construction
+1.  **Narrative Selection**: Raw texts are chosen from diverse long-form autobiographical narratives.
+2.  **Event Stream Reconstruction**: Narratives are parsed and reconstructed into a flashback-aware, time-anchored stream of events, ensuring logical and chronological order.
+3.  **Evidence Linking**: Each element within the event stream (actions, context, inner thoughts) is linked back to specific segments in the original narrative, serving as evidence for reasoning.
+
+### Question Generation and Annotation
+1.  **Question Types**: Three categories of questions are designed:
+    *   **Factual Recall**: Tests memory of specific facts within the narrative.
+    *   **Subjective State Attribution**: Evaluates the ability to understand a person's emotions, intentions, and beliefs.
+    *   **Principle-level Reasoning**: Challenges the AI to infer stable motivations and decision principles from the narrative.
+2.  **Evidence Linking**: Each question is linked to specific evidence snippets within the narrative, used to evaluate the accuracy and support of model answers.
+
+### Evaluation Metrics
+1.  **Accuracy**: Measures the correctness of the model's answers.
+2.  **Evidence Support**: Assesses whether the model's answers are effectively supported by the provided evidence.
+*(Inferred from title/venue; full paper not read.)*
+
+## Comparison with Previous Work
+
+- **vs. LongMemEval (Wu et al., 2025)**: While existing benchmarks often use multi-turn dialogues or synthetic user histories, KnowMe-Bench focuses on long-form autobiographical narratives, offering richer and more authentic context.
+- **vs. LoCoMo (Maharana et al., 2024b)**: Although LoCoMo also addresses long conversations, KnowMe-Bench delves into the inner world and stable principles of individuals through autobiographical narratives, going beyond mere conversational consistency.
+- **vs. MemBench (Tan et al., 2025)**: MemBench focuses on factual and reflective memory behaviors in interactive agent scenarios, whereas KnowMe-Bench places a stronger emphasis on higher-level reasoning about motivations and decision principles.
+- **vs. CloneMem (Hu et al., 2026)**: CloneMem uses personal traces like diaries and social posts to track evolving personal states. KnowMe-Bench, through structured autobiographical narratives, provides a more systematic evaluation of deep person understanding.
+
+## Experiments
+
+**Table.** Performance of different systems across various levels of person understanding on KnowMe-Bench.
+
+| System | Level I: Fact & Entity | Level II: Narrative Logic | Level III: Insight |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| T1 Extract | T2 Abstain | T3 Temporal | T4 Order | T5 Trigger | T6 Mind–Body | T7 Principle |  |
+| Backbone: Qwen3-32B |  |  |  |  |  |  |  |
+| Base | 59.9 | 66.0 | 44.4 | 40.5 | 36.1 | 14.3 | 16.3 |
+| + Naive RAG | 68.7 (+8.8) | 70.8 (+4.8) | 48.3 (+3.9) | 42.3 (+1.8) | 38.8 (+2.7) | 17.1 (+2.8) | 18.0 (+1.7) |
+| + Mem0 | 70.4 (+10.5) | 75.2 (+9.2) | 41.3 (-3.1) | 42.4 (+1.9) | 35.9 (-0.2) | 16.9 (+2.6) | 17.5 (+1.2) |
+| + MemOS | 64.4 (+4.5) | 72.4 (+6.4) | 52.7 (+8.3) | 47.1 (+6.6) | 41.1 (+5.0) | 18.2 (+3.9) | 19.3 (+3.0) |
+| + A-Mem | 55.8 (-4.1) | 73.4 (+7.4) | 16.0 (-28.4) | 16.5 (-24.0) | 27.9 (-8.2) | 55.7 (+41.4) | 41.3 (+25.0) |
+| Backbone: GPT-5-mini |  |  |  |  |  |  |  |
+| Base | 65.4 | 71.5 | 54.1 | 47.3 | 42.3 | 18.6 | 19.6 |
+| + Naive RAG | 72.2 (+6.8) | 75.5 (+4.0) | 57.3 (+3.2) | 48.8 (+1.5) | 44.3 (+2.0) | 21.3 (+2.7) | 20.9 (+1.3) |
+| + Mem0 | 73.2 (+7.8) | 78.7 (+7.2) | 51.6 (-2.5) | 48.7 (+1.4) | 42.6 (+0.3) | 20.7 (+2.1) | 20.8 (+1.2) |
+| + MemOS | 69.6 (+4.2) | 76.6 (+5.1) | 60.8 (+6.7) | 52.9 (+5.6) | 47.5 (+5.2) | 21.5 (+2.9) | 22.6 (+3.0) |
+| Backbone: DeepSeek-R1 |  |  |  |  |  |  |  |
+| Base | 51.2 | 42.2 | 52.7 | 37.0 | 39.1 | 41.6 | 35.3 |
+| + Naive RAG | 57.7 (+6.5) | 47.9 (+5.7) | 57.0 (+4.3) | 38.0 (+1.0) | 40.3 (+1.2) | 43.4 (+1.8) | 36.3 (+1.0) |
+| + Mem0 | 59.1 (+7.9) | 51.1 (+8.9) | 50.5 (-2.2) | 37.0 (+0.0) | 37.9 (-1.2) | 43.1 (+1.5) | 36.8 (+1.5) |
+| + MemOS | 53.4 (+2.2) | 51.5 (+9.3) | 61.1 (+8.4) | 43.4 (+6.4) | 43.3 (+4.2) | 43.2 (+1.6) | 37.5 (+2.2) |
+| Backbone: Gemini-3 Pro |  |  |  |  |  |  |  |
+| Base | 50.5 | 52.2 | 45.3 | 36.0 | 36.8 | 35.4 | 31.2 |
+| + Naive RAG | 59.0 (+8.5) | 57.7 (+5.5) | 49.6 (+4.3) | 38.7 (+2.7) | 38.8 (+2.0) | 37.0 (+1.6) | 32.3 (+1.1) |
+| + Mem0 | 60.8 (+10.3) | 62.3 (+10.1) | 43.7 (-1.6) | 37.2 (+1.2) | 38.5 (+1.7) | 39.0 (+3.6) | 32.4 (+1.2) |
+| + MemOS | 56.3 (+5.8) | 60.5 (+8.3) | 53.4 (+8.1) | 44.1 (+8.1) | 42.7 (+5.9) | 37.9 (+2.5) | 35.6 (+4.4) |
+
+- **RAG systems improve factual accuracy**: Retrieval-augmented generation (RAG) systems significantly boost accuracy on factual recall (Level I), indicating their effectiveness in extracting information from long texts.
+- **Higher-level reasoning remains challenging**: Despite RAG's benefits, errors persist on temporally grounded explanations (Temporal Logic) and higher-level inferences (Level III: Insight), highlighting the need for more advanced memory mechanisms.
+- **MemOS shows strong performance**: MemOS demonstrates better performance gains across multiple backbone models, especially on Level II and Level III tasks, compared to Naive RAG and Mem0, suggesting a more effective memory mechanism.
+- **A-Mem exhibits specialized performance**: A-Mem shows substantial improvements on T6 (Mind-Body) and T7 (Principle) but sharp declines on T3 (Temporal) and T4 (Order), indicating its memory mechanism might be highly specialized and not universally applicable for all temporal reasoning tasks.

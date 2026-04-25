@@ -1,0 +1,163 @@
+---
+title: "MemSkill: Learning and Evolving Memory Skills for Self-Evolving Agents"
+date: 2026-04-25
+paper_date: 2026-02-02
+excerpt: "MemSkill提出可学习、可演化的记忆技能，让LLM智能体能更灵活高效地管理记忆，实现闭环自演进"
+excerpt_en: "MemSkill introduces learnable and evolvable memory skills for LLM agents, enabling flexible and efficient memory management through a closed-loop self-evolution process."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - RL-based
+  - Procedural
+paper_id: memskill-learning-and-evolving-memory-skills-for-self-evolving-agents
+paper_link: "https://arxiv.org/abs/2602.02474"
+auto_generated: true
+notes_hash: f3a406c880136869
+---
+
+## Motivation
+
+当前LLM智能体的记忆系统大多依赖于少量静态、人工设计的操作来提取记忆。这些固定的程序硬编码了人类关于存储什么以及如何修改记忆的先验知识。
+这使得它们在面对多样化的交互模式时显得僵化，并且在处理长历史记录时效率低下。
+因此，需要一种更灵活、更具适应性的记忆管理机制，使智能体能够根据实际需求学习和演化其记忆操作。
+
+## Contribution
+
+- **可学习和可演化的记忆技能**: 将传统的记忆操作重新定义为可学习和可演化的“记忆技能”，这些技能是结构化且可重用的例程，用于从交互轨迹中提取、整合和修剪信息。
+- **三模块闭环架构**: 提出了一个包含Controller、Executor和Designer的闭环框架，实现了技能选择策略和技能集本身的持续改进。
+- **Designer模块**: 引入了一个独特的Designer模块，它能周期性地审查记忆提取中的“疑难案例”，并通过提出改进和新技能来演化技能集。
+- **广泛的实验验证**: 在LoCoMo、LongMemEval、HotpotQA和ALFWorld等多个基准测试上，MemSkill显著提升了任务性能，并展现出良好的泛化能力。
+
+## Method
+
+MemSkill的核心思想是将记忆操作视为可学习和可演化的技能。它包含三个主要组件：
+
+1.  **Controller**:
+    *   学习如何从现有技能集中选择一小组相关的记忆技能。
+    *   根据当前任务和上下文，动态决定哪些技能最适合用于记忆提取。
+2.  **Executor**:
+    *   一个基于LLM的模块。
+    *   根据Controller选择的技能，生成技能引导的记忆。
+    *   负责实际执行记忆的提取、整合和修剪过程。
+3.  **Designer**:
+    *   周期性地审查Controller和Executor在记忆提取过程中遇到的“疑难案例”（即选择的技能导致不正确或不完整的记忆）。
+    *   通过分析这些案例，Designer提出对现有技能的改进（refinements）或创建全新的技能。
+    *   这个模块是MemSkill实现技能集自演进的关键。
+
+MemSkill通过这三个模块形成一个闭环过程：Controller选择技能，Executor执行记忆操作，Designer根据执行结果反馈来演化技能集和改进Controller的技能选择策略，从而实现持续的自我改进。
+
+## Comparison with Previous Work
+
+- **vs. 静态、人工设计的记忆系统**: 传统的LLM智能体记忆系统通常依赖于一组固定的、由人类专家预设的记忆操作（如简单的RAG、摘要、遗忘策略）。MemSkill通过将这些操作转化为可学习和可演化的技能，克服了其僵化性和低效性。
+- **vs. 仅学习技能选择的智能体**: 一些现有的智能体系统可能学习如何选择工具或技能，但它们的技能集本身是固定的。MemSkill的独特之处在于其Designer模块能够主动演化和扩展技能集，实现更深层次的适应性。
+- **vs. 缺乏闭环反馈机制的系统**: 许多记忆管理方法缺乏一个明确的机制来根据性能反馈持续改进记忆策略或结构。MemSkill的Controller-Executor-Designer闭环设计确保了记忆管理策略和技能集的持续优化。
+- **vs. 仅关注记忆内容而非操作**: 现有研究可能更多关注如何存储和检索记忆内容（如不同类型的episodic memory、semantic memory），而MemSkill则将焦点放在了管理这些记忆的“操作”本身，并使其变得智能和可演化。
+
+## Experiments
+
+**Table.** MemSkill在LoCoMo、LongMemEval和ALFWorld上的主要对比结果。
+
+| Model | Methods | Conversational Benchmarks | Embodied Interactive Tasks |  |  |  |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | LoCoMo | ▲LongMemEval | Avg. | ALF-Seen | ALF-Unseen | Avg. |  |  |  |  |  |
+|  | F1 | L-J | F1 | L-J | L-J | SR | #Steps | SR | #Steps | SR |  |
+| LLaMA3.3 70B-Instruct | No-Memory | - | - | - | - | - | 17.14 | 43.74 | 20.15 | 42.99 | 18.65 |
+|  | CoN | 17.97 | 24.80 | 30.28 | 56.93 | 40.87 | 40.71 | 33.44 | 30.60 | 37.66 | 35.66 |
+|  | ReadAgent | 26.34 | 35.17 | 23.52 | 41.58 | 38.38 | 32.86 | 37.09 | 38.06 | 34.78 | 35.46 |
+|  | MemoryBank | 33.54 | 40.92 | 30.26 | 35.15 | 38.04 | 25.00 | 39.96 | 32.84 | 36.54 | 28.92 |
+|  | A-MEM | 35.60 | 46.34 | 25.86 | 38.12 | 42.23 | 24.29 | 40.51 | 28.36 | 38.83 | 26.33 |
+|  | Mem0 | 10.18 | 33.01 | 29.94 | 45.54 | 39.28 | 32.86 | 36.47 | 32.09 | 37.32 | 32.48 |
+|  | LangMem | 25.97 | 29.14 | 15.79 | 21.00 | 25.07 | 37.86 | 34.39 | 35.07 | 35.70 | 36.47 |
+|  | MemoryOS | 38.68 | 44.59 | 14.19 | 36.50 | 40.55 | 15.71 | 43.74 | 14.18 | 44.54 | 14.95 |
+|  | MemSkill | 38.78 | 50.96 | 31.65 | 59.41 | 55.19 | 47.86 | 30.88 | 47.01 | 30.43 | 47.44 |
+| ▲Qwen3-Next 80B-A3B-Instruct | No-Memory | - | - | - | - | - | 18.57 | 42.48 | 26.12 | 39.35 | 22.35 |
+|  | CoN | 27.97 | 35.35 | 28.34 | 46.04 | 40.70 | 57.86 | 25.81 | 53.73 | 28.40 | 55.80 |
+|  | ReadAgent | 25.41 | 33.57 | 23.52 | 41.58 | 37.58 | 53.57 | 27.88 | 54.48 | 27.41 | 54.03 |
+|  | MemoryBank | 25.39 | 39.76 | 7.36 | 24.75 | 32.26 | 37.86 | 35.15 | 38.06 | 34.99 | 37.96 |
+|  | A-MEM | 34.83 | 48.41 | 12.46 | 34.65 | 41.53 | 25.00 | 40.28 | 29.10 | 39.04 | 27.10 |
+|  | Mem0 | 11.11 | 30.10 | 26.88 | 43.07 | 36.59 | 38.57 | 33.64 | 41.04 | 33.16 | 39.81 |
+|  | LangMem | 24.04 | 27.07 | 16.37 | 20.00 | 23.54 | 37.14 | 34.42 | 31.34 | 37.17 | 34.24 |
+|  | MemoryOS | 38.55 | 44.59 | 13.26 | 36.00 | 40.30 | 19.29 | 42.43 | 18.66 | 42.95 | 18.98 |
+|  | MemSkill | 39.28 | 52.07 | 23.75 | 59.90 | 55.99 | 60.00 | 24.54 | 64.18 | 23.57 | 62.09 |
+| Bold indicates the best score within each base model block. |  |  |  |  |  |  |  |  |  |  |  |
+| ▲ indicates no training using this base model or dataset (transfer evaluation only). |  |  |  |  |  |  |  |  |  |  |  |
+
+- **显著优于基线**: MemSkill在LoCoMo、LongMemEval和ALFWorld等多个对话和具身交互任务基准上，性能均显著优于所有强基线方法。
+- **强大的泛化能力**: MemSkill在不同设置和基座模型（LLaMA3.3 70B-Instruct和Qwen3-Next 80B-A3B-Instruct）上都表现出良好的泛化能力和鲁棒性。
+- **技能演化的有效性**: 消融实验（如Table 6）表明，Controller和Designer模块对MemSkill的性能至关重要，证明了学习技能选择和技能集演化的有效性。
+- **对自适应记忆管理的洞察**: 进一步分析揭示了技能是如何演化的，为LLM智能体更具适应性、自演进的记忆管理提供了深入见解。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Most current Large Language Model (LLM) agent memory systems rely on a small set of static, hand-designed operations for extracting memory. These fixed procedures hard-code human priors about what to store and how to revise memory.
+This rigidity makes them inflexible under diverse interaction patterns and inefficient when dealing with long histories.
+Therefore, there is a clear need for a more adaptive and flexible memory management mechanism that allows agents to learn and evolve their memory operations based on actual requirements.
+
+## Contribution
+
+- **Learnable and Evolvable Memory Skills**: Redefines traditional memory operations as learnable and evolvable "memory skills," which are structured and reusable routines for extracting, consolidating, and pruning information from interaction traces.
+- **Three-Module Closed-Loop Architecture**: Proposes a closed-loop framework comprising a Controller, Executor, and Designer, enabling continuous improvement of both the skill selection policy and the skill set itself.
+- **Designer Module**: Introduces a unique Designer module that periodically reviews "hard cases" in memory extraction and evolves the skill set by proposing refinements and new skills.
+- **Extensive Experimental Validation**: MemSkill significantly improves task performance and demonstrates strong generalization across multiple benchmarks, including LoCoMo, LongMemEval, HotpotQA, and ALFWorld.
+
+## Method
+
+MemSkill's core idea is to treat memory operations as learnable and evolvable skills. It comprises three main components:
+
+1.  **Controller**:
+    *   Learns to select a small set of relevant memory skills from the existing skill set.
+    *   Dynamically decides which skills are most appropriate for memory extraction based on the current task and context.
+2.  **Executor**:
+    *   An LLM-based module.
+    *   Produces skill-guided memories based on the skills selected by the Controller.
+    *   Responsible for the actual execution of memory extraction, consolidation, and pruning processes.
+3.  **Designer**:
+    *   Periodically reviews "hard cases" encountered by the Controller and Executor during memory extraction (i.e., instances where selected skills yield incorrect or incomplete memories).
+    *   By analyzing these cases, the Designer proposes refinements to existing skills or creates entirely new skills.
+    *   This module is crucial for MemSkill to achieve self-evolution of its skill set.
+
+Together, MemSkill forms a closed-loop procedure through these three modules: the Controller selects skills, the Executor performs memory operations, and the Designer provides feedback based on execution results to evolve the skill set and improve the Controller's skill selection policy, thereby achieving continuous self-improvement.
+
+## Comparison with Previous Work
+
+- **vs. Static, Hand-Designed Memory Systems**: Traditional LLM agent memory systems typically rely on a fixed set of pre-defined memory operations (e.g., simple RAG, summarization, forgetting policies). MemSkill overcomes their rigidity and inefficiency by transforming these operations into learnable and evolvable skills.
+- **vs. Agents Learning Only Skill Selection**: Some existing agent systems may learn how to select tools or skills, but their skill sets themselves are static. MemSkill's uniqueness lies in its Designer module, which actively evolves and expands the skill set, enabling deeper adaptability.
+- **vs. Systems Lacking Closed-Loop Feedback Mechanisms**: Many memory management approaches lack a clear mechanism for continuously improving memory strategies or structures based on performance feedback. MemSkill's Controller-Executor-Designer closed-loop design ensures continuous optimization of both memory management strategies and the skill set.
+- **vs. Focusing Solely on Memory Content over Operations**: Existing research often focuses more on how to store and retrieve memory content (e.g., different types of episodic memory, semantic memory). MemSkill, however, shifts the focus to the "operations" that manage these memories, making them intelligent and evolvable.
+
+## Experiments
+
+**Table.** Main comparison results on LoCoMo, LongMemEval, and ALFWorld.
+
+| Model | Methods | Conversational Benchmarks | Embodied Interactive Tasks |  |  |  |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | LoCoMo | ▲LongMemEval | Avg. | ALF-Seen | ALF-Unseen | Avg. |  |  |  |  |  |
+|  | F1 | L-J | F1 | L-J | L-J | SR | #Steps | SR | #Steps | SR |  |
+| LLaMA3.3 70B-Instruct | No-Memory | - | - | - | - | - | 17.14 | 43.74 | 20.15 | 42.99 | 18.65 |
+|  | CoN | 17.97 | 24.80 | 30.28 | 56.93 | 40.87 | 40.71 | 33.44 | 30.60 | 37.66 | 35.66 |
+|  | ReadAgent | 26.34 | 35.17 | 23.52 | 41.58 | 38.38 | 32.86 | 37.09 | 38.06 | 34.78 | 35.46 |
+|  | MemoryBank | 33.54 | 40.92 | 30.26 | 35.15 | 38.04 | 25.00 | 39.96 | 32.84 | 36.54 | 28.92 |
+|  | A-MEM | 35.60 | 46.34 | 25.86 | 38.12 | 42.23 | 24.29 | 40.51 | 28.36 | 38.83 | 26.33 |
+|  | Mem0 | 10.18 | 33.01 | 29.94 | 45.54 | 39.28 | 32.86 | 36.47 | 32.09 | 37.32 | 32.48 |
+|  | LangMem | 25.97 | 29.14 | 15.79 | 21.00 | 25.07 | 37.86 | 34.39 | 35.07 | 35.70 | 36.47 |
+|  | MemoryOS | 38.68 | 44.59 | 14.19 | 36.50 | 40.55 | 15.71 | 43.74 | 14.18 | 44.54 | 14.95 |
+|  | MemSkill | 38.78 | 50.96 | 31.65 | 59.41 | 55.19 | 47.86 | 30.88 | 47.01 | 30.43 | 47.44 |
+| ▲Qwen3-Next 80B-A3B-Instruct | No-Memory | - | - | - | - | - | 18.57 | 42.48 | 26.12 | 39.35 | 22.35 |
+|  | CoN | 27.97 | 35.35 | 28.34 | 46.04 | 40.70 | 57.86 | 25.81 | 53.73 | 28.40 | 55.80 |
+|  | ReadAgent | 25.41 | 33.57 | 23.52 | 41.58 | 37.58 | 53.57 | 27.88 | 54.48 | 27.41 | 54.03 |
+|  | MemoryBank | 25.39 | 39.76 | 7.36 | 24.75 | 32.26 | 37.86 | 35.15 | 38.06 | 34.99 | 37.96 |
+|  | A-MEM | 34.83 | 48.41 | 12.46 | 34.65 | 41.53 | 25.00 | 40.28 | 29.10 | 39.04 | 27.10 |
+|  | Mem0 | 11.11 | 30.10 | 26.88 | 43.07 | 36.59 | 38.57 | 33.64 | 41.04 | 33.16 | 39.81 |
+|  | LangMem | 24.04 | 27.07 | 16.37 | 20.00 | 23.54 | 37.14 | 34.42 | 31.34 | 37.17 | 34.24 |
+|  | MemoryOS | 38.55 | 44.59 | 13.26 | 36.00 | 40.30 | 19.29 | 42.43 | 18.66 | 42.95 | 18.98 |
+|  | MemSkill | 39.28 | 52.07 | 23.75 | 59.90 | 55.99 | 60.00 | 24.54 | 64.18 | 23.57 | 62.09 |
+| Bold indicates the best score within each base model block. |  |  |  |  |  |  |  |  |  |  |  |
+| ▲ indicates no training using this base model or dataset (transfer evaluation only). |  |  |  |  |  |  |  |  |  |  |  |
+
+- **Significant Performance Improvement**: MemSkill consistently outperforms all strong baseline methods across various conversational and embodied interactive task benchmarks, including LoCoMo, LongMemEval, and ALFWorld.
+- **Strong Generalization Capability**: MemSkill demonstrates robust generalization across different settings and base models (LLaMA3.3 70B-Instruct and Qwen3-Next 80B-A3B-Instruct).
+- **Effectiveness of Skill Evolution**: Ablation studies (e.g., Table 6) confirm that both the Controller and Designer modules are crucial for MemSkill's performance, validating the effectiveness of learning skill selection and skill set evolution.
+- **Insights into Adaptive Memory Management**: Further analyses shed light on how skills evolve, offering insights toward more adaptive, self-evolving memory management for LLM agents.

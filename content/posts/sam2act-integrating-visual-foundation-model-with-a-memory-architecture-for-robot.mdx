@@ -1,0 +1,141 @@
+---
+title: "SAM2Act: Integrating Visual Foundation Model with A Memory Architecture for Robotic Manipulation"
+date: 2026-04-24
+paper_date: 2025-01-30
+excerpt: "引入SAM2Act及SAM2Act+，结合视觉基础模型与记忆架构，显著提升机器人操作的多任务、泛化能力及空间记忆"
+excerpt_en: "Introducing SAM2Act and SAM2Act+, integrating visual foundation models with memory architectures, significantly enhances robotic manipulation's multitask, generalization, and spatial memory capabilities."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Episodic
+  - Multimodal
+paper_id: sam2act-integrating-visual-foundation-model-with-a-memory-architecture-for-robot
+paper_link: "https://arxiv.org/abs/2501.18564"
+paper_code: "https://github.com/sam2act/sam2act"
+auto_generated: true
+notes_hash: 0311c4dc45556953
+---
+
+## Motivation
+
+在多样化、动态的环境中运行的机器人操作系统，需要具备多任务交互、泛化到未见场景以及空间记忆这三项关键能力。
+
+尽管机器人操作领域已取得显著进展，但现有方法在泛化到复杂环境变化和处理依赖记忆的任务方面仍有不足。
+
+为了弥合这一差距，我们提出了SAM2Act，一个结合视觉基础模型与记忆架构的机器人策略。
+
+## Contribution
+
+- **SAM2Act策略**: 提出一个基于多视图机器人Transformer的策略SAM2Act，它利用多分辨率上采样和来自大规模视觉基础模型的视觉表示，在RLBench基准测试的18项任务中实现了86.8%的SOTA平均成功率。
+- **鲁棒泛化能力**: SAM2Act在The Colosseum基准测试中展示了强大的泛化能力，在多样化的环境扰动下性能差距仅为4.3%。
+- **SAM2Act+记忆架构**: 提出受SAM2启发的记忆增强架构SAM2Act+，它包含一个记忆库、一个编码器和一个注意力机制，以增强空间记忆能力。
+- **MemoryBench基准**: 引入了一个新的基准测试MemoryBench，专门用于评估机器人操作中的空间记忆和动作召回能力。
+- **记忆任务SOTA**: SAM2Act+在MemoryBench的记忆相关任务中实现了94.3%的平均成功率，显著优于现有方法。
+
+## Method
+
+### SAM2Act: 视觉基础模型集成策略
+
+1.  **多视图机器人Transformer**: SAM2Act是一个基于Transformer的策略，能够处理多视图输入。
+2.  **多分辨率上采样**: 利用多分辨率上采样技术，从视觉基础模型中提取丰富的视觉表示。
+3.  **大规模视觉基础模型**: 集成来自大型视觉基础模型的视觉特征，以增强对环境的理解和泛化能力。
+
+### SAM2Act+: 记忆增强架构
+
+1.  **记忆库 (Memory Bank)**: 存储过去的关键状态和动作信息，作为机器人的长期记忆。
+2.  **编码器 (Encoder)**: 处理当前感知输入和记忆库中的信息，生成上下文相关的表示。
+3.  **注意力机制 (Attention Mechanism)**: 允许模型选择性地关注记忆库中最相关的历史信息，以指导当前决策。
+
+## Comparison with Previous Work
+
+- **vs. 现有机器人操作方法**: 现有方法通常在复杂环境泛化和记忆依赖任务上表现不足，而SAM2Act通过集成视觉基础模型和多分辨率上采样，显著提升了泛化能力。
+- **vs. RVT-2**: SAM2Act在RLBench多任务性能上超越了RVT-2，实现了更高的平均成功率，证明了其在复杂操作任务上的优越性。
+- **vs. 缺乏显式记忆机制的方法**: SAM2Act+通过引入显式记忆架构（记忆库、编码器、注意力机制），在MemoryBench的记忆相关任务上显著优于没有记忆机制的基线方法，弥补了它们在空间记忆和动作召回方面的不足。
+- **vs. SAM-E**: SAM2Act在RLBench上的表现优于SAM-E，尤其在某些特定任务上展现出更强的鲁棒性。
+
+## Experiments
+
+**Table.** RLBench上的多任务性能评估。
+
+| Method | Avg. Success | Avg. Rank | Close Jar | Drag Stick | Insert Peg | Meat off Grill | Open Drawer | Place Cups | Place Wine | Push Buttons |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| PerAct [4] | 49.4 4.3 | 4.6 | 55.2 4.7 | 89.6 4.1 | 5.6 4.1 | 70.4 2.0 | 88.0 5.7 | 2.4 3.2 | 44.8 7.8 | 92.8 3.0 |
+| RVT [5] | 62.9 3.7 | 3.6 | 52.0 2.5 | 99.2 1.6 | 11.2 3.0 | 88.0 2.5 | 71.2 6.9 | 4.0 2.5 | 91.0 5.2 | 100.0 0.0 |
+| RVT-2 [16] | 81.4 3.1 | 1.9 | 100.0 0.0 | 99.0 1.7 | 40.0 0.0 | 99.0 1.7 | 74.0 11.8 | 38.0 4.5 | 95.0 3.3 | 100.0 0.0 |
+| SAM-E [26] | 70.6 0.7 | 2.6 | 82.4 3.6 | 100.0 0.0 | 18.4 4.6 | 95.2 3.3 | 95.2 5.2 | 0.0 0.0 | 94.4 4.6 | 100.0 0.0 |
+| SAM2Act (Ours) | 86.8 0.5 | 1.8 | 99.0 2.0 | 99.0 2.0 | 84.0 5.7 | 98.0 2.3 | 83.0 6.0 | 47.0 6.0 | 93.0 3.8 | 100.0 0.0 |
+| Method | Put in Cupboard | Put in Drawer | Put in Safe | Screw Bulb | Slide Block | Sort Shape | Stack Blocks | Stack Cups | Sweep to Dustpan | Turn Tap |
+| PerAct [4] | 28.0 4.4 | 51.2 4.7 | 84.0 3.6 | 17.6 2.0 | 74.0 13.0 | 16.8 4.7 | 26.4 3.2 | 2.4 2.0 | 52.0 0.0 | 88.0 4.4 |
+| RVT [5] | 49.6 3.2 | 88.0 5.7 | 91.2 3.0 | 48.0 5.7 | 81.6 5.4 | 36.0 2.5 | 28.8 3.9 | 26.4 8.2 | 72.0 0.0 | 93.6 4.1 |
+| RVT-2 [16] | 66.0 4.5 | 96.0 0.0 | 96.0 2.8 | 88.0 4.9 | 92.0 2.8 | 35.0 7.1 | 80.0 2.8 | 69.0 5.9 | 100.0 0.0 | 99.0 1.7 |
+| SAM-E [26] | 64.0 2.8 | 92.0 5.7 | 95.2 3.3 | 78.4 3.6 | 95.2 1.8 | 34.4 6.1 | 26.4 4.6 | 0.0 0.0 | 100.0 0.0 | 100.0 0.0 |
+| SAM2Act (Ours) | 75.0 3.8 | 99.0 2.0 | 98.0 2.3 | 89.0 2.0 | 86.0 4.0 | 64.0 4.6 | 76.0 8.6 | 78.0 4.0 | 99.0 2.0 | 96.0 5.7 |
+
+- **RLBench基准测试**: SAM2Act在18项RLBench任务中取得了86.8%的平均成功率，显著优于RVT-2等现有SOTA方法，证明了其在多任务操作上的卓越性能。
+- **The Colosseum泛化测试**: SAM2Act在The Colosseum基准测试中表现出强大的鲁棒泛化能力，在多样化的环境扰动下性能下降仅为4.3%，远低于其他基线方法。
+- **MemoryBench记忆任务**: SAM2Act+在MemoryBench的记忆相关任务中实现了94.3%的平均成功率，比没有显式记忆机制的方法平均提高了37.6%，突显了其在空间记忆和动作召回方面的显著优势。
+- **真实世界验证**: 真实世界实验进一步验证了SAM2Act和SAM2Act+在处理复杂操作任务和记忆依赖场景中的有效性和鲁棒性。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Robotic manipulation systems operating in diverse, dynamic environments must exhibit three critical abilities: multitask interaction, generalization to unseen scenarios, and spatial memory.
+
+While significant progress has been made in robotic manipulation, existing approaches often fall short in generalization to complex environmental variations and addressing memory-dependent tasks.
+
+To bridge this gap, we introduce SAM2Act, a robotic policy that leverages visual foundation models and a memory architecture.
+
+## Contribution
+
+- **SAM2Act Policy**: We introduce SAM2Act, a multi-view robotic transformer-based policy that leverages multi-resolution upsampling with visual representations from large-scale foundation models, achieving a state-of-the-art average success rate of 86.8% across 18 tasks in the RLBench benchmark.
+- **Robust Generalization**: SAM2Act demonstrates robust generalization on The Colosseum benchmark, with only a 4.3% performance gap under diverse environmental perturbations.
+- **SAM2Act+ Memory Architecture**: We propose SAM2Act+, a memory-based architecture inspired by SAM2, which incorporates a memory bank, an encoder, and an attention mechanism to enhance spatial memory.
+- **MemoryBench Benchmark**: We introduce MemoryBench, a novel benchmark designed to assess spatial memory and action recall in robotic manipulation.
+- **SOTA on Memory Tasks**: SAM2Act+ achieves an average success rate of 94.3% on memory-based tasks in MemoryBench, significantly outperforming existing approaches.
+
+## Method
+
+### SAM2Act: Visual Foundation Model Integration Policy
+
+1.  **Multi-view Robotic Transformer**: SAM2Act is a Transformer-based policy capable of processing multi-view inputs.
+2.  **Multi-resolution Upsampling**: It utilizes multi-resolution upsampling techniques to extract rich visual representations from visual foundation models.
+3.  **Large-scale Visual Foundation Model**: Integrates visual features from large-scale visual foundation models to enhance environmental understanding and generalization capabilities.
+
+### SAM2Act+: Memory-Enhanced Architecture
+
+1.  **Memory Bank**: Stores critical past states and action information, serving as the robot's long-term memory.
+2.  **Encoder**: Processes current perceptual input and information from the memory bank to generate context-aware representations.
+3.  **Attention Mechanism**: Allows the model to selectively focus on the most relevant historical information in the memory bank to guide current decision-making.
+
+## Comparison with Previous Work
+
+- **vs. Existing Robotic Manipulation Approaches**: Current methods often struggle with generalization in complex environments and memory-dependent tasks, whereas SAM2Act significantly improves generalization by integrating visual foundation models and multi-resolution upsampling.
+- **vs. RVT-2**: SAM2Act surpasses RVT-2 in multi-task performance on RLBench, achieving a higher average success rate, demonstrating its superiority in complex manipulation tasks.
+- **vs. Methods Lacking Explicit Memory Mechanisms**: SAM2Act+, by introducing an explicit memory architecture (memory bank, encoder, attention mechanism), significantly outperforms baseline methods without memory mechanisms on MemoryBench's memory-related tasks, addressing their shortcomings in spatial memory and action recall.
+- **vs. SAM-E**: SAM2Act performs better than SAM-E on RLBench, showing stronger robustness particularly in certain specific tasks.
+
+## Experiments
+
+**Table.** Multi-Task Performance on RLBench.
+
+| Method | Avg. Success | Avg. Rank | Close Jar | Drag Stick | Insert Peg | Meat off Grill | Open Drawer | Place Cups | Place Wine | Push Buttons |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| PerAct [4] | 49.4 4.3 | 4.6 | 55.2 4.7 | 89.6 4.1 | 5.6 4.1 | 70.4 2.0 | 88.0 5.7 | 2.4 3.2 | 44.8 7.8 | 92.8 3.0 |
+| RVT [5] | 62.9 3.7 | 3.6 | 52.0 2.5 | 99.2 1.6 | 11.2 3.0 | 88.0 2.5 | 71.2 6.9 | 4.0 2.5 | 91.0 5.2 | 100.0 0.0 |
+| RVT-2 [16] | 81.4 3.1 | 1.9 | 100.0 0.0 | 99.0 1.7 | 40.0 0.0 | 99.0 1.7 | 74.0 11.8 | 38.0 4.5 | 95.0 3.3 | 100.0 0.0 |
+| SAM-E [26] | 70.6 0.7 | 2.6 | 82.4 3.6 | 100.0 0.0 | 18.4 4.6 | 95.2 3.3 | 95.2 5.2 | 0.0 0.0 | 94.4 4.6 | 100.0 0.0 |
+| SAM2Act (Ours) | 86.8 0.5 | 1.8 | 99.0 2.0 | 99.0 2.0 | 84.0 5.7 | 98.0 2.3 | 83.0 6.0 | 47.0 6.0 | 93.0 3.8 | 100.0 0.0 |
+| Method | Put in Cupboard | Put in Drawer | Put in Safe | Screw Bulb | Slide Block | Sort Shape | Stack Blocks | Stack Cups | Sweep to Dustpan | Turn Tap |
+| PerAct [4] | 28.0 4.4 | 51.2 4.7 | 84.0 3.6 | 17.6 2.0 | 74.0 13.0 | 16.8 4.7 | 26.4 3.2 | 2.4 2.0 | 52.0 0.0 | 88.0 4.4 |
+| RVT [5] | 49.6 3.2 | 88.0 5.7 | 91.2 3.0 | 48.0 5.7 | 81.6 5.4 | 36.0 2.5 | 28.8 3.9 | 26.4 8.2 | 72.0 0.0 | 93.6 4.1 |
+| RVT-2 [16] | 66.0 4.5 | 96.0 0.0 | 96.0 2.8 | 88.0 4.9 | 92.0 2.8 | 35.0 7.1 | 80.0 2.8 | 69.0 5.9 | 100.0 0.0 | 99.0 1.7 |
+| SAM-E [26] | 64.0 2.8 | 92.0 5.7 | 95.2 3.3 | 78.4 3.6 | 95.2 1.8 | 34.4 6.1 | 26.4 4.6 | 0.0 0.0 | 100.0 0.0 | 100.0 0.0 |
+| SAM2Act (Ours) | 75.0 3.8 | 99.0 2.0 | 98.0 2.3 | 89.0 2.0 | 86.0 4.0 | 64.0 4.6 | 76.0 8.6 | 78.0 4.0 | 99.0 2.0 | 96.0 5.7 |
+
+- **RLBench Benchmark**: SAM2Act achieved an average success rate of 86.8% across 18 RLBench tasks, significantly outperforming existing SOTA methods like RVT-2, demonstrating its superior performance in multi-task manipulation.
+- **The Colosseum Generalization Test**: SAM2Act exhibited robust generalization capabilities on The Colosseum benchmark, with only a 4.3% performance drop under diverse environmental perturbations, significantly lower than other baseline methods.
+- **MemoryBench Memory Tasks**: SAM2Act+ achieved an average success rate of 94.3% on memory-based tasks in MemoryBench, outperforming methods without explicit memory mechanisms by an average of 37.6%, highlighting its significant advantage in spatial memory and action recall.
+- **Real-world Validation**: Real-world experiments further validated the effectiveness and robustness of SAM2Act and SAM2Act+ in handling complex manipulation tasks and memory-dependent scenarios.

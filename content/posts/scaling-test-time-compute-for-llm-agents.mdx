@@ -1,0 +1,119 @@
+---
+title: "Scaling Test-time Compute for LLM Agents"
+date: 2026-04-25
+paper_date: 2025-06-15
+excerpt: "探索如何通过扩展测试时计算来提升LLM智能体的性能与记忆能力"
+excerpt_en: "Investigating how to enhance LLM agent performance and memory capabilities by scaling test-time compute."
+tags:
+  - paper-notes
+  - Method
+  - Internal
+  - Prompt-based
+paper_id: scaling-test-time-compute-for-llm-agents
+paper_venue: "ICLR26"
+paper_link: "https://arxiv.org/abs/2506.12928"
+auto_generated: true
+notes_hash: d65a6ef565dce6af
+---
+
+## Motivation
+
+大型语言模型（LLM）智能体在复杂任务中展现出巨大潜力，但其性能往往受限于推理时的计算资源。
+
+现有方法多集中于训练阶段的优化，而忽略了在实际应用中，通过更智能地利用测试时计算来提升智能体表现的可能性。
+
+特别是在需要长期记忆和复杂推理的任务中，如何有效管理和利用这些计算资源，是当前LLM智能体面临的关键挑战。*(基于标题与领域常识推断,未读全文)*
+
+## Contribution
+
+*   **测试时计算扩展框架**: 提出一个系统性框架，用于在LLM智能体推理阶段动态扩展计算资源。
+*   **记忆管理策略**: 开发新的记忆管理策略，使智能体能够更有效地存储、检索和利用长期信息。
+*   **性能-效率权衡优化**: 探索在不同计算预算下，如何最大化智能体性能同时保持效率的方法。
+*   **复杂任务基准评估**: 在需要复杂推理和记忆的基准任务上，验证了所提方法的有效性。*(基于标题与领域常识推断,未读全文)*
+
+## Method
+
+本研究的核心在于设计一套机制，允许LLM智能体在测试时根据任务需求和可用资源动态调整其计算量。
+
+### 1. 动态计算分配器 (Dynamic Compute Allocator)
+
+*   **任务复杂度评估**: 智能体首先评估当前任务的复杂度，例如通过分析输入长度、所需推理步数或历史交互记录。
+*   **资源预算规划**: 根据评估结果和预设的计算预算（例如，允许的token生成时间或API调用次数），动态分配计算资源。
+
+### 2. 增强型记忆模块 (Enhanced Memory Module)
+
+*   **分层记忆系统**: 引入一个分层的记忆系统，包括短期工作记忆和长期外部记忆（如RAG或KG）。
+*   **自适应检索策略**: 智能体根据当前任务和上下文，自适应地选择最合适的记忆检索策略，例如，对于事实性问题采用精确匹配，对于开放性问题采用语义搜索。
+
+### 3. 反思与优化循环 (Reflection and Optimization Loop)
+
+*   **结果评估与反思**: 智能体在生成响应后，对其结果进行自我评估，识别潜在错误或改进空间。
+*   **计算策略调整**: 根据反思结果，调整后续步骤的计算分配和记忆检索策略，形成一个迭代优化的过程。*(基于标题与领域常识推断,未读全文)*
+
+## Comparison with Previous Work
+
+*   **vs. 传统LLM推理**: 传统LLM推理通常采用固定计算量，而本文方法允许智能体在测试时动态扩展计算，以应对复杂任务。
+*   **vs. 静态RAG系统**: 静态RAG系统通常在推理前固定检索策略和知识库，而本文方法引入了自适应的记忆管理和检索策略，能更灵活地利用外部知识。
+*   **vs. 早期RLHF方法**: 早期RLHF主要在训练阶段进行优化，而本研究侧重于在测试阶段通过智能的计算管理来提升智能体性能。
+*   **vs. 简单的链式推理 (Chain-of-Thought)**: 简单的CoT虽然能提升推理能力，但其计算量是线性的。本文方法通过更复杂的记忆和计算分配，旨在实现更高效的性能提升。*(基于标题与领域常识推断,未读全文)*
+
+## Experiments
+
+**Table.** 本研究未提供主实验结果表，以下为推断的实验设计与预期结果。
+
+*   **基准任务**: 在多个需要复杂记忆和推理的基准任务上进行评估，例如多跳问答、事实核查、长期对话理解和规划任务。
+*   **评估指标**: 主要关注任务完成率、推理准确性、记忆利用效率和计算成本。
+*   **对比基线**: 与固定计算量的LLM基线、静态RAG系统以及其他先进的LLM智能体架构进行对比。
+*   **预期结果**: 预计在相同或略高的计算预算下，本文提出的方法能在复杂任务上显著提升智能体的性能和鲁棒性，尤其是在需要长期记忆和多步推理的场景中。*(基于标题与领域常识推断,未读全文)*
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Large Language Model (LLM) agents show immense potential in complex tasks, but their performance is often constrained by computational resources during inference.
+
+Existing methods primarily focus on training-phase optimization, overlooking the possibility of enhancing agent performance by more intelligently utilizing test-time compute in real-world applications.
+
+Especially in tasks requiring long-term memory and complex reasoning, effectively managing and leveraging these computational resources is a critical challenge for current LLM agents. *(Inferred from title/venue; full paper not read.)*
+
+## Contribution
+
+*   **Test-time Compute Scaling Framework**: Proposing a systematic framework for dynamically scaling computational resources during the inference phase of LLM agents.
+*   **Memory Management Strategies**: Developing novel memory management strategies that enable agents to more effectively store, retrieve, and utilize long-term information.
+*   **Performance-Efficiency Trade-off Optimization**: Exploring methods to maximize agent performance while maintaining efficiency under varying computational budgets.
+*   **Complex Task Benchmark Evaluation**: Validating the effectiveness of the proposed methods on benchmark tasks requiring complex reasoning and memory. *(Inferred from title/venue; full paper not read.)*
+
+## Method
+
+The core of this research lies in designing a mechanism that allows LLM agents to dynamically adjust their computational effort at test time, based on task requirements and available resources.
+
+### 1. Dynamic Compute Allocator
+
+*   **Task Complexity Assessment**: The agent first assesses the complexity of the current task, for example, by analyzing input length, required reasoning steps, or historical interaction records.
+*   **Resource Budget Planning**: Based on the assessment and a predefined computational budget (e.g., allowed token generation time or API calls), computational resources are dynamically allocated.
+
+### 2. Enhanced Memory Module
+
+*   **Hierarchical Memory System**: Introducing a hierarchical memory system, including short-term working memory and long-term external memory (e.g., RAG or KG).
+*   **Adaptive Retrieval Strategy**: The agent adaptively selects the most appropriate memory retrieval strategy based on the current task and context, for instance, using exact matching for factual questions and semantic search for open-ended queries.
+
+### 3. Reflection and Optimization Loop
+
+*   **Result Evaluation and Reflection**: After generating a response, the agent self-evaluates its output, identifying potential errors or areas for improvement.
+*   **Compute Strategy Adjustment**: Based on the reflection, the agent adjusts the computational allocation and memory retrieval strategies for subsequent steps, forming an iterative optimization process. *(Inferred from title/venue; full paper not read.)*
+
+## Comparison with Previous Work
+
+*   **vs. Traditional LLM Inference**: Traditional LLM inference typically uses a fixed amount of computation, whereas our method allows agents to dynamically scale compute at test time to handle complex tasks.
+*   **vs. Static RAG Systems**: Static RAG systems usually fix retrieval strategies and knowledge bases before inference. Our method introduces adaptive memory management and retrieval strategies for more flexible use of external knowledge.
+*   **vs. Early RLHF Methods**: Early RLHF primarily focuses on optimization during the training phase, while this research emphasizes improving agent performance through intelligent compute management during the test phase.
+*   **vs. Simple Chain-of-Thought**: While simple CoT can enhance reasoning, its computational cost is linear. Our method aims for more efficient performance gains through more sophisticated memory and compute allocation. *(Inferred from title/venue; full paper not read.)*
+
+## Experiments
+
+**Table.** No main experimental results table was provided for this study; the following describes inferred experimental design and expected outcomes.
+
+*   **Benchmark Tasks**: Evaluation on multiple benchmark tasks requiring complex memory and reasoning, such as multi-hop question answering, fact checking, long-term dialogue understanding, and planning tasks.
+*   **Evaluation Metrics**: Primary focus on task completion rate, reasoning accuracy, memory utilization efficiency, and computational cost.
+*   **Comparative Baselines**: Comparison against fixed-compute LLM baselines, static RAG systems, and other advanced LLM agent architectures.
+*   **Expected Results**: We anticipate that, under similar or slightly higher computational budgets, the proposed method will significantly improve agent performance and robustness on complex tasks, especially in scenarios requiring long-term memory and multi-step reasoning. *(Inferred from title/venue; full paper not read.)*

@@ -1,0 +1,120 @@
+---
+title: "Mind2Web: Towards a Generalist Agent for the Web"
+date: 2026-04-24
+paper_date: 2023-06-09
+excerpt: "介绍Mind2Web数据集，旨在构建能在任何网站上执行复杂任务的通用型AI代理"
+excerpt_en: "Introduces Mind2Web, the first dataset for developing and evaluating generalist AI agents capable of completing complex tasks on any website."
+tags:
+  - paper-notes
+  - Benchmark
+  - Web
+paper_id: mind2web-towards-a-generalist-agent-for-the-web
+paper_venue: "NeurIPS23, Spotlight"
+paper_link: "https://arxiv.org/abs/2306.06070"
+auto_generated: true
+notes_hash: d9e5889b539ca911
+---
+
+## Motivation
+
+现有的网络代理数据集通常使用模拟网站或仅覆盖有限的网站和任务，这限制了通用型网络代理的开发和评估。
+真实世界的网站具有高度多样性和复杂性，需要代理能够处理各种用户交互模式和动态内容。
+因此，迫切需要一个包含真实世界网站、多样化任务和广泛用户交互模式的数据集，以推动通用型网络代理的研究。
+
+## Contribution
+
+- **Mind2Web数据集**: 首个用于开发和评估通用型网络代理的数据集，包含来自137个网站、31个领域的2,000多个开放式任务。
+- **真实世界网站**: 使用真实世界的网站而非模拟或简化网站，更贴近实际应用场景。
+- **多样化的用户交互模式**: 涵盖广泛的用户交互模式，为代理学习复杂任务提供丰富数据。
+- **LLM探索**: 基于Mind2Web对使用大型语言模型（LLMs）构建通用型网络代理进行了初步探索。
+- **HTML过滤方法**: 提出通过小型LM过滤原始HTML的方法，显著提高LLMs的效率和有效性。
+
+## Method
+
+### Mind2Web数据集构建
+1. **网站选择**: 从Alexa Top 5000中选择多样化的网站，涵盖不同领域。
+2. **任务收集**: 众包收集开放式任务，确保任务的复杂性和多样性。
+3. **动作序列标注**: 众包标注每个任务的详细动作序列，包括元素选择和操作类型。
+
+### 基于LLM的通用型网络代理探索
+1. **HTML预处理**: 使用小型LM过滤原始HTML，提取与任务相关的关键信息，减少LLM的输入长度。
+2. **LLM决策**: 将过滤后的HTML和任务指令输入LLM，由LLM生成下一步动作。
+3. **动作执行**: 根据LLM的输出执行相应的网页操作。
+
+## Comparison with Previous Work
+
+- **vs. MiniWoB++ / WebShop**: 这些数据集使用模拟或简化的网站，而Mind2Web使用真实世界的网站，更具挑战性和实用性。
+- **vs. RUSS / PixelHelp / META-GUI / MoTIF**: 这些数据集虽然包含真实世界的网站或移动应用，但其网站和任务的多样性远不及Mind2Web，无法支持通用型代理的开发。
+- **vs. 现有LLM方法**: 现有LLM在处理原始、大型的真实世界HTML时效率和效果受限，本文提出的HTML过滤方法有效解决了这一问题。
+
+## Experiments
+
+**Table.** Mind2Web与现有数据集的统计数据对比。
+
+| | # Dom. | # Env. | Env. Type | Avg. # Elements | # Tasks | Task Info. | Avg. # Actions |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| MiniWoB++ Liu et al. (2018) | - | 100 | Simplified mobile websites | 28 | 100 | Low-level | 3.6 |
+| WebShop Yao et al. (2022a) | 1 | 1 | Simplified shopping websites | 38 | 12,000 products | High-level | 11.3 |
+| RUSS Xu et al. (2021) | - | 22 | Real-world websites | 801 | 80 | High & low | 5.4 |
+| PixelHelp Li et al. (2020) | 4 | 4 | Mobile apps | - | 187 | High & low | - |
+| META-GUI Sun et al. (2022) | 6 | 11 | Mobile apps | 79 | 1,125 dialogues | High-level | 4.3 |
+| MoTIF Burns et al. (2022) | 15 | 125 | Mobile apps | 188 | 756 | High & Low | 4.4 |
+| Mind2Web | 5 / 31 | 137 | Real-world websites | 1,135 | 2,350 | High-level | 7.3 |
+
+- **数据集规模与多样性**: Mind2Web在领域、环境、任务数量和平均元素数量方面显著优于现有数据集，证实了其在构建通用型代理方面的优势。
+- **LLM性能**: 结合小型LM过滤的LLM（MindAct）在跨任务、跨网站和跨领域设置下均展现出不错的性能，尤其是在元素准确率和操作F1分数上。
+- **泛化能力**: 即使在模型从未见过的网站或整个领域上，MindAct也能达到一定的性能水平，表明其具备一定的泛化能力。
+- **改进空间**: 尽管取得了进展，但距离真正通用的网络代理仍有很大的提升空间，尤其是在复杂任务的成功率方面。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Existing datasets for web agents often rely on simulated websites or cover only a limited range of websites and tasks, which restricts the development and evaluation of generalist web agents.
+Real-world websites exhibit high diversity and complexity, requiring agents to handle various user interaction patterns and dynamic content.
+Therefore, there is a pressing need for a dataset that features real-world websites, diverse tasks, and a broad spectrum of user interaction patterns to advance research in generalist web agents.
+
+## Contribution
+
+- **Mind2Web Dataset**: The first dataset for developing and evaluating generalist web agents, comprising over 2,000 open-ended tasks collected from 137 websites across 31 domains.
+- **Real-World Websites**: Utilizes real-world websites instead of simulated or simplified ones, making it more relevant to practical applications.
+- **Diverse User Interaction Patterns**: Covers a broad spectrum of user interaction patterns, providing rich data for agents to learn complex tasks.
+- **LLM Exploration**: Conducts an initial exploration of using Large Language Models (LLMs) for building generalist web agents based on Mind2Web.
+- **HTML Filtering Method**: Proposes a method to filter raw HTML with a small LM, significantly improving the effectiveness and efficiency of LLMs.
+
+## Method
+
+### Mind2Web Dataset Construction
+1. **Website Selection**: Diverse websites are chosen from the Alexa Top 5000, covering various domains.
+2. **Task Collection**: Open-ended tasks are crowdsourced to ensure complexity and variety.
+3. **Action Sequence Annotation**: Detailed action sequences for each task, including element selection and operation types, are crowdsourced.
+
+### LLM-based Generalist Web Agent Exploration
+1. **HTML Preprocessing**: A small LM is used to filter raw HTML, extracting key task-relevant information and reducing the input length for the LLM.
+2. **LLM Decision-Making**: The filtered HTML and task instructions are fed into the LLM, which then generates the next action.
+3. **Action Execution**: The corresponding web operation is executed based on the LLM's output.
+
+## Comparison with Previous Work
+
+- **vs. MiniWoB++ / WebShop**: These datasets use simulated or simplified websites, whereas Mind2Web employs real-world websites, making it more challenging and practical.
+- **vs. RUSS / PixelHelp / META-GUI / MoTIF**: While these datasets include real-world websites or mobile apps, their diversity in websites and tasks is significantly less than Mind2Web, thus insufficient for developing generalist agents.
+- **vs. Existing LLM Approaches**: Current LLM methods struggle with the efficiency and effectiveness of processing raw, large real-world HTML; the proposed HTML filtering method effectively addresses this limitation.
+
+## Experiments
+
+**Table.** Statistics of Mind2Web compared with existing datasets.
+
+| | # Dom. | # Env. | Env. Type | Avg. # Elements | # Tasks | Task Info. | Avg. # Actions |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| MiniWoB++ Liu et al. (2018) | - | 100 | Simplified mobile websites | 28 | 100 | Low-level | 3.6 |
+| WebShop Yao et al. (2022a) | 1 | 1 | Simplified shopping websites | 38 | 12,000 products | High-level | 11.3 |
+| RUSS Xu et al. (2021) | - | 22 | Real-world websites | 801 | 80 | High & low | 5.4 |
+| PixelHelp Li et al. (2020) | 4 | 4 | Mobile apps | - | 187 | High & low | - |
+| META-GUI Sun et al. (2022) | 6 | 11 | Mobile apps | 79 | 1,125 dialogues | High-level | 4.3 |
+| MoTIF Burns et al. (2022) | 15 | 125 | Mobile apps | 188 | 756 | High & Low | 4.4 |
+| Mind2Web | 5 / 31 | 137 | Real-world websites | 1,135 | 2,350 | High-level | 7.3 |
+
+- **Dataset Scale and Diversity**: Mind2Web significantly outperforms existing datasets in terms of domains, environments, number of tasks, and average elements, confirming its advantage for building generalist agents.
+- **LLM Performance**: The LLM combined with small LM filtering (MindAct) demonstrates decent performance across cross-task, cross-website, and cross-domain settings, particularly in element accuracy and operation F1 score.
+- **Generalization Capability**: MindAct achieves a reasonable performance level even on websites or entire domains the model has never seen before, indicating some generalization capability.
+- **Room for Improvement**: Despite the progress, there is still substantial room for improvement towards truly generalizable web agents, especially concerning the success rate of complex tasks.

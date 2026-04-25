@@ -1,0 +1,139 @@
+---
+title: "VisualWebArena: Evaluating Multimodal Agents on Realistic Visual Web Tasks"
+date: 2026-04-24
+paper_date: 2024-01-24
+excerpt: "VisualWebArena是一个评估多模态AI agent在真实视觉网页任务中表现的新基准"
+excerpt_en: "VisualWebArena is a new benchmark for evaluating multimodal AI agents on realistic visually grounded web tasks."
+tags:
+  - paper-notes
+  - Benchmark
+  - Web
+paper_id: visualwebarena-evaluating-multimodal-agents-on-realistic-visual-web-tasks
+paper_venue: "ACL24"
+paper_link: "https://arxiv.org/abs/2401.13649"
+paper_code: "https://github.com/web-arena-x/visualwebarena"
+auto_generated: true
+notes_hash: d2767ee0cb747909
+---
+
+## Motivation
+
+目前大多数现有基准主要关注基于文本的agent，忽略了许多需要视觉信息才能有效解决的自然任务。
+鉴于大多数计算机界面都迎合人类感知，视觉信息通常以文本模型难以有效利用的方式增强文本数据。
+为了弥合这一差距，我们引入了VisualWebArena，一个旨在评估多模态网页agent在真实“视觉接地任务”中表现的基准。
+
+## Contribution
+
+- **VisualWebArena基准**: 提出了一个全新的基准，用于评估多模态agent在需要视觉理解的复杂网页任务中的表现。
+- **多样化任务集**: 包含一系列多样且复杂的网页任务，这些任务旨在评估自主多模态agent的各种能力。
+- **全面的评估框架**: 提供了一个评估多模态自主语言agent的框架，并为构建更强大的网页自主agent提供了见解。
+- **识别现有模型局限性**: 通过广泛的定量和定性分析，揭示了文本LLM agent的局限性以及最先进多模态语言agent的能力差距。
+- **公开可用资源**: 代码、基线模型和数据均已公开，促进了该领域的研究和开发。
+
+## Method
+
+VisualWebArena基准旨在评估agent在真实视觉网页任务中的表现。
+1. **任务设计**: 任务要求agent准确处理图像-文本输入，解释自然语言指令，并在网站上执行操作以完成用户定义的目标。
+2. **环境设置**: agent在一个模拟的网页环境中运行，该环境能够呈现视觉信息并响应agent的动作。
+3. **评估指标**: 主要通过任务成功率来衡量agent的表现，同时进行定性分析以深入了解其行为和局限性。
+4. **Agent类型**: 评估了多种LLM-based自主agent，包括纯文本模型和多模态模型。
+
+## Comparison with Previous Work
+
+- **vs. 现有文本基准**: 大多数现有基准主要关注文本型agent，而VisualWebArena专注于需要视觉信息的真实网页任务，弥补了这一空白。
+- **vs. 缺乏视觉信息的任务**: 现有基准未能有效评估agent利用视觉信息增强文本数据以解决复杂任务的能力，VisualWebArena通过其视觉接地任务解决了这个问题。
+- **vs. 简单网页任务**: VisualWebArena的任务集更加多样和复杂，旨在评估更广泛的自主多模态agent能力，而非简单的导航或信息提取。
+
+## Experiments
+
+**Table.** GPT-4V (SoM) 与其他模型在VisualWebArena上的成功率。
+
+| Model Type | LLM Backbone | Visual Backbone | Inputs | Classifieds | Reddit | Shopping | Overall |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Text-only | LLaMA-2-70B | - | Acc. Tree | 0.43% | 1.43% | 1.29% | 1.10% |
+| Mixtral-8x7B | 1.71% | 2.86% | 1.29% | 1.76% |
+| Gemini-Pro | 0.85% | 0.95% | 3.43% | 2.20% |
+| GPT-3.5 | 0.43% | 0.95% | 3.65% | 2.20% |
+| GPT-4 | 5.56% | 4.76% | 9.23% | 7.25% |
+| Caption-augmented | LLaMA-2-70B | BLIP-2-T5XL | Acc. Tree + Caps | 0.00% | 0.95% | 0.86% | 0.66% |
+| Mixtral-8x7B | BLIP-2-T5XL | 1.28% | 0.48% | 2.79% | 1.87% |
+| GPT-3.5 | LLaVA-7B | 1.28% | 1.43% | 4.08% | 2.75% |
+| GPT-3.5 | BLIP-2-T5XL | 0.85% | 1.43% | 4.72% | 2.97% |
+| Gemini-Pro | BLIP-2-T5XL | 1.71% | 1.43% | 6.01% | 3.85% |
+| GPT-4 | BLIP-2-T5XL | 8.55% | 8.57% | 16.74% | 12.75% |
+| Multimodal | IDEFICS-80B-Instruct | Image + Caps + Acc. Tree | 0.43% | 0.95% | 0.86% | 0.77% |
+| CogVLM | 0.00% | 0.48% | 0.43% | 0.33% |
+| Gemini-Pro | 3.42% | 4.29% | 8.15% | 6.04% |
+| GPT-4V | 8.12% | 12.38% | 19.74% | 15.05% |
+| Multimodal (SoM) | IDEFICS-80B-Instruct | Image + Caps + SoM | 0.85% | 0.95% | 1.07% | 0.99% |
+| CogVLM | 0.00% | 0.48% | 0.43% | 0.33% |
+| Gemini-Pro | 3.42% | 3.81% | 7.73% | 5.71% |
+| GPT-4V | 9.83% | 17.14% | 19.31% | 16.37% |
+| Human Performance | - | - | Webpage | 91.07% | 87.10% | 88.39% | 88.70% |
+
+- **多模态模型表现优于文本模型**: 实验结果表明，多模态模型（尤其是GPT-4V）在VisualWebArena上的成功率显著高于纯文本LLM agent，这凸显了视觉信息在网页任务中的重要性。
+- **GPT-4V (SoM) 表现最佳**: 在所有测试模型中，GPT-4V结合SoM (Screen-of-Thought) 策略取得了最高的整体成功率 (16.37%)，尽管与人类表现 (88.70%) 仍有巨大差距。
+- **现有模型能力差距显著**: 即使是最先进的多模态agent，在处理VisualWebArena的复杂视觉网页任务时，其成功率也远低于人类水平，表明该领域仍有很大的改进空间。
+- **视觉信息的重要性**: 即使是简单的“Caption-augmented”方法，也通常比纯文本模型表现更好，进一步证明了视觉信息对于解决这些任务的关键作用。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+The majority of existing benchmarks primarily focus on text-based agents, neglecting many natural tasks that require visual information to effectively solve.
+Given that most computer interfaces cater to human perception, visual information often augments textual data in ways that text-only models struggle to harness effectively.
+To bridge this gap, we introduce VisualWebArena, a benchmark designed to assess the performance of multimodal web agents on realistic "visually grounded tasks".
+
+## Contribution
+
+- **VisualWebArena Benchmark**: Introduced a novel benchmark for evaluating multimodal agents on complex web tasks that require visual understanding.
+- **Diverse Task Set**: Comprises a set of diverse and complex web-based tasks designed to evaluate various capabilities of autonomous multimodal agents.
+- **Comprehensive Evaluation Framework**: Provides a framework for evaluating multimodal autonomous language agents and offers insights towards building stronger autonomous agents for the web.
+- **Identification of Model Limitations**: Through extensive quantitative and qualitative analysis, revealed limitations of text-only LLM agents and gaps in the capabilities of state-of-the-art multimodal language agents.
+- **Publicly Available Resources**: Code, baseline models, and data are publicly available to foster research and development in this domain.
+
+## Method
+
+The VisualWebArena benchmark is designed to evaluate agents on realistic visual web tasks.
+1. **Task Design**: Tasks require agents to accurately process image-text inputs, interpret natural language instructions, and execute actions on websites to accomplish user-defined objectives.
+2. **Environment Setup**: Agents operate within a simulated web environment that can render visual information and respond to agent actions.
+3. **Evaluation Metrics**: Performance is primarily measured by task success rate, complemented by qualitative analysis to gain insights into agent behavior and limitations.
+4. **Agent Types**: An extensive evaluation was conducted on various LLM-based autonomous agents, including both text-only and multimodal models.
+
+## Comparison with Previous Work
+
+- **vs. Existing Text-based Benchmarks**: Most existing benchmarks primarily focus on text-based agents, whereas VisualWebArena addresses the need for visually grounded realistic web tasks.
+- **vs. Lack of Visual Information**: Prior benchmarks fail to effectively evaluate agents' ability to leverage visual information to augment textual data for complex tasks, a gap VisualWebArena fills with its visually grounded tasks.
+- **vs. Simple Web Tasks**: VisualWebArena's task set is more diverse and complex, aiming to evaluate a broader range of autonomous multimodal agent capabilities beyond simple navigation or information extraction.
+
+## Experiments
+
+**Table.** Success rates of GPT-4V (SoM) and other models on VisualWebArena.
+
+| Model Type | LLM Backbone | Visual Backbone | Inputs | Classifieds | Reddit | Shopping | Overall |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Text-only | LLaMA-2-70B | - | Acc. Tree | 0.43% | 1.43% | 1.29% | 1.10% |
+| Mixtral-8x7B | 1.71% | 2.86% | 1.29% | 1.76% |
+| Gemini-Pro | 0.85% | 0.95% | 3.43% | 2.20% |
+| GPT-3.5 | 0.43% | 0.95% | 3.65% | 2.20% |
+| GPT-4 | 5.56% | 4.76% | 9.23% | 7.25% |
+| Caption-augmented | LLaMA-2-70B | BLIP-2-T5XL | Acc. Tree + Caps | 0.00% | 0.95% | 0.86% | 0.66% |
+| Mixtral-8x7B | BLIP-2-T5XL | 1.28% | 0.48% | 2.79% | 1.87% |
+| GPT-3.5 | LLaVA-7B | 1.28% | 1.43% | 4.08% | 2.75% |
+| GPT-3.5 | BLIP-2-T5XL | 0.85% | 1.43% | 4.72% | 2.97% |
+| Gemini-Pro | BLIP-2-T5XL | 1.71% | 1.43% | 6.01% | 3.85% |
+| GPT-4 | BLIP-2-T5XL | 8.55% | 8.57% | 16.74% | 12.75% |
+| Multimodal | IDEFICS-80B-Instruct | Image + Caps + Acc. Tree | 0.43% | 0.95% | 0.86% | 0.77% |
+| CogVLM | 0.00% | 0.48% | 0.43% | 0.33% |
+| Gemini-Pro | 3.42% | 4.29% | 8.15% | 6.04% |
+| GPT-4V | 8.12% | 12.38% | 19.74% | 15.05% |
+| Multimodal (SoM) | IDEFICS-80B-Instruct | Image + Caps + SoM | 0.85% | 0.95% | 1.07% | 0.99% |
+| CogVLM | 0.00% | 0.48% | 0.43% | 0.33% |
+| Gemini-Pro | 3.42% | 3.81% | 7.73% | 5.71% |
+| GPT-4V | 9.83% | 17.14% | 19.31% | 16.37% |
+| Human Performance | - | - | Webpage | 91.07% | 87.10% | 88.39% | 88.70% |
+
+- **Multimodal Models Outperform Text-only**: Experimental results show that multimodal models, particularly GPT-4V, achieve significantly higher success rates on VisualWebArena compared to text-only LLM agents, highlighting the importance of visual information in web tasks.
+- **GPT-4V (SoM) Achieves Best Performance**: Among all tested models, GPT-4V combined with the SoM (Screen-of-Thought) strategy achieved the highest overall success rate (16.37%), although a substantial gap remains compared to human performance (88.70%).
+- **Significant Capability Gap in Current Models**: Even state-of-the-art multimodal agents exhibit success rates far below human levels when tackling the complex visually grounded web tasks in VisualWebArena, indicating ample room for improvement in the field.
+- **Importance of Visual Information**: Even simple "Caption-augmented" approaches generally perform better than purely text-based models, further demonstrating the critical role of visual information for solving these tasks.

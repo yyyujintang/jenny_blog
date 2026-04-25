@@ -1,0 +1,150 @@
+---
+title: "AGENTVISTA: Evaluating Multimodal Agents in Ultra-Challenging Realistic Visual Scenarios"
+date: 2026-04-25
+paper_date: 2026-02-26
+excerpt: "AgentVista基准测试评估多模态AI代理在复杂视觉场景和长序列工具使用下的能力"
+excerpt_en: "AgentVista is a new benchmark evaluating multimodal AI agents in ultra-challenging visual scenarios requiring long-horizon tool use."
+tags:
+  - paper-notes
+  - Benchmark
+  - Embodied
+paper_id: agentvista-evaluating-multimodal-agents-in-ultra-challenging-realistic-visual-sc
+paper_authors: "Junxian He, May Fung"
+paper_link: "https://arxiv.org/abs/2602.23166"
+auto_generated: true
+notes_hash: 5ab424077c3a080e
+---
+
+## Motivation
+
+现有的多模态基准测试主要评估单轮视觉推理或特定工具技能。
+这些基准未能充分捕捉现实世界代理所需的真实性、视觉细节和长序列工具使用。
+实际应用中的多模态代理需要解决基于视觉证据的多步骤工作流程，例如通过图片诊断设备问题或根据地图规划行程。
+
+## Contribution
+
+- **AgentVista基准测试**: 引入了一个用于通用多模态代理的新基准，涵盖7个类别25个子领域。
+- **真实且细节丰富的视觉场景**: 任务设计贴近现实，包含大量视觉细节。
+- **自然混合工具使用**: 任务要求代理在多模态环境下进行长序列工具交互，包括web search, image search, page navigation, 以及基于代码的图像处理和通用编程操作。
+- **揭示现有模型差距**: 对最先进模型进行全面评估，发现它们在长序列多模态工具使用方面存在显著差距。
+
+## Method
+
+AgentVista基准测试通过以下方式构建：
+1.  **场景设计**: 涵盖25个子领域，分布在7个主要类别中，模拟真实世界的复杂任务。
+2.  **任务类型**: 要求代理执行多步骤工作流程，这些流程需要结合视觉证据和多种工具。
+3.  **工具集**: 包含web search, image search, page navigation, 以及用于图像处理和通用编程的code-based operations。
+4.  **评估指标**: 衡量代理在长序列工具交互下的准确性，以及处理视觉细微差别的能力。
+*(基于标题与领域常识推断,未读全文)*
+
+## Comparison with Previous Work
+
+- **vs. TIR-Bench, Agent-X, MMSearch-Plus, BrowseComp-VL, VisualToolBench**: AgentVista在工具使用广度（同时支持Visual Operations, Visual Search, Text Search, Code Execution）和任务复杂性（平均工具调用轮次12.67次，远高于其他基准的2.92-4.6次）方面显著超越现有基准。
+- **vs. 现有单轮视觉推理基准**: AgentVista专注于需要长序列工具交互的多步骤任务，而非简单的单轮视觉问答。
+- **vs. 特定工具技能基准**: AgentVista评估的是通用多模态代理，要求代理能够灵活组合多种工具来解决复杂问题，而非仅测试单一工具的使用能力。
+
+## Experiments
+
+**Table.** AgentVista基准测试与代表性多模态代理基准的比较。操作缩写：VO. (视觉操作), VS. (视觉搜索), TS. (文本搜索), CE. (代码执行)。工具类别基于这些基准中使用的工具和信号。“# Turns”报告了GPT-5的平均工具调用轮次，作为任务复杂度的代理。
+
+| Benchmark | VO. | VS. | TS. | CE. | Multi Image | # Turns |
+| --- | --- | --- | --- | --- | --- | --- |
+| TIR-Bench | ✓ | ✗ | ✗ | ✓ | ✓ | 2.92 |
+| Agent-X | ✓ | ✗ | ✓ | ✓ | ✓ | 3.4 |
+| MMSearch-Plus | ✗ | ✓ | ✓ | ✗ | ✓ | 4.6 |
+| BrowseComp-VL | ✗ | ✓ | ✓ | ✓ | ✗ | 4.3 |
+| VisualToolBench | ✓ | ✗ | ✓ | ✓ | ✗ | 4.46 |
+| AgentVista (Ours) | ✓ | ✓ | ✓ | ✓ | ✓ | 12.67 |
+
+**Table.** 我们提出的AgentVista上的主要结果。领域缩写：Comm. (商业), Geog. (地理), Ent. (娱乐), Tech. (科技), Soc. (社会), Acad. (学术), Cult. (文化)。输入模式缩写：Single. (单图像输入) 和 Multi. (多图像输入)。每个类别中表现最好的模型用粗体表示，第二好的模型用下划线表示。总体而言，Gemini-3-Pro在所有评估模型中取得了最高准确率。所有值均为准确率 %。
+
+| Model | By Category | By Input Mode | Summary |  |  |  |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Comm. | Geog. | Ent. | Tech. | Soc. | Acad. | Cult. | Single. | Multi. | Overall | # Turns |  |
+| Qwen3-VL-235B | 7.14 | 7.69 | 7.69 | 26.47 | 16.00 | 20.00 | 13.33 | 11.84 | 15.79 | 12.92 | 2.34 |
+| GPT-4.1 | 16.67 | 15.38 | 10.26 | 29.41 | 20.00 | 20.00 | 13.33 | 15.13 | 24.56 | 17.70 | 1.74 |
+| o3 | 21.43 | 15.38 | 7.69 | 23.53 | 40.00 | 26.67 | 13.33 | 17.76 | 26.32 | 20.10 | 13.18 |
+| o4-mini | 2.38 | 10.26 | 2.56 | 8.82 | 8.00 | 13.33 | 0.00 | 6.58 | 5.26 | 6.22 | 1.89 |
+| GPT-5 | 23.81 | 23.08 | 12.82 | 35.29 | 28.00 | 26.67 | 26.67 | 24.34 | 24.56 | 24.40 | 12.67 |
+| GPT-5.1 | 23.81 | 12.82 | 15.38 | 26.47 | 24.00 | 40.00 | 40.00 | 19.74 | 31.58 | 22.97 | 17.14 |
+| GPT-5.2 | 21.43 | 17.95 | 20.51 | 38.24 | 24.00 | 33.33 | 20.00 | 23.03 | 28.07 | 24.40 | 13.85 |
+| Grok-4 | 11.90 | 23.08 | 7.69 | 20.59 | 28.00 | 0.00 | 0.00 | 13.82 | 17.54 | 14.83 | 16.44 |
+| Claude-Sonnet-4 | 9.52 | 15.38 | 2.56 | 29.41 | 16.00 | 20.00 | 6.67 | 11.18 | 21.05 | 13.88 | 5.37 |
+| Claude-Opus-4 | 19.05 | 12.82 | 5.13 | 26.47 | 20.00 | 20.00 | 6.67 | 11.84 | 26.32 | 15.79 | 6.89 |
+| Claude-Opus-4.1 | 11.90 | 23.08 | 10.26 | 29.41 | 16.00 | 26.67 | 13.33 | 16.45 | 22.81 | 18.18 | 7.28 |
+| Claude-Sonnet-4.5 | 11.90 | 23.08 | 7.69 | 26.47 | 24.00 | 20.00 | 13.33 | 17.11 | 19.30 | 17.70 | 9.99 |
+| Gemini-3-Flash | 16.67 | 17.95 | 10.26 | 29.41 | 28.00 | 40.00 | 20.00 | 18.42 | 28.07 | 21.05 | 7.78 |
+| Gemini-3-Pro | 16.67 | 28.21 | 20.51 | 32.35 | 32.00 | 40.00 | 40.00 | 23.68 | 36.84 | 27.27 | 6.67 |
+
+- **现有模型表现不佳**: 即使是评估中表现最好的模型Gemini-3-Pro，在AgentVista上的整体准确率也仅为27.3%。
+- **任务复杂性高**: 困难实例可能需要超过25次工具调用才能解决，远超现有基准的平均水平。
+- **长序列工具使用是主要挑战**: 结果表明，现有模型在需要长序列多模态工具交互的任务中存在显著能力差距。
+- **AgentVista推动发展**: 该基准有望加速开发更强大、更可靠的通用多模态代理，以应对现实世界中的超高难度问题。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Existing multimodal benchmarks primarily evaluate single-turn visual reasoning or specific tool skills.
+These benchmarks fail to fully capture the realism, visual subtlety, and long-horizon tool use required by practical agents.
+Real-world multimodal agents need to solve multi-step workflows grounded in visual evidence, such as troubleshooting a device from a photo or planning a trip using a map.
+
+## Contribution
+
+- **AgentVista Benchmark**: Introduction of a new benchmark for generalist multimodal agents, spanning 25 sub-domains across 7 categories.
+- **Realistic and Detail-Rich Visual Scenarios**: Tasks are designed to be realistic and incorporate rich visual details.
+- **Natural Hybrid Tool Use**: Tasks require long-horizon tool interactions across modalities, including web search, image search, page navigation, and code-based operations for both image processing and general programming.
+- **Exposure of Model Gaps**: Comprehensive evaluation of state-of-the-art models reveals significant gaps in their ability to carry out long-horizon multimodal tool use.
+
+## Method
+
+The AgentVista benchmark is constructed by:
+1.  **Scenario Design**: Covering 25 sub-domains across 7 primary categories, simulating complex real-world tasks.
+2.  **Task Types**: Requiring agents to execute multi-step workflows that necessitate combining visual evidence with various tools.
+3.  **Tool Set**: Incorporating web search, image search, page navigation, and code-based operations for image processing and general programming.
+4.  **Evaluation Metrics**: Measuring agent accuracy in long-horizon tool interactions and their ability to handle visual subtleties.
+*(Inferred from title/venue; full paper not read.)*
+
+## Comparison with Previous Work
+
+- **vs. TIR-Bench, Agent-X, MMSearch-Plus, BrowseComp-VL, VisualToolBench**: AgentVista significantly surpasses existing benchmarks in terms of tool usage breadth (simultaneously supporting Visual Operations, Visual Search, Text Search, Code Execution) and task complexity (average tool-calling turns of 12.67, much higher than 2.92-4.6 for others).
+- **vs. Existing Single-Turn Visual Reasoning Benchmarks**: AgentVista focuses on multi-step tasks requiring long-horizon tool interactions, rather than simple single-turn visual question answering.
+- **vs. Specific Tool Skill Benchmarks**: AgentVista evaluates generalist multimodal agents, demanding flexible combination of multiple tools to solve complex problems, not just testing the use of a single tool.
+
+## Experiments
+
+**Table.** Comparison with representative multimodal agent benchmarks. Operation abbreviations: VO. (Visual Operations), VS. (Visual Search), TS. (Text Search), and CE. (Code Execution). Tool categories are based on the tools and signals used in these benchmarks. “# Turns” reports the average number of tool-calling turns by GPT-5, used as a proxy for task complexity.
+
+| Benchmark | VO. | VS. | TS. | CE. | Multi Image | # Turns |
+| --- | --- | --- | --- | --- | --- | --- |
+| TIR-Bench | ✓ | ✗ | ✗ | ✓ | ✓ | 2.92 |
+| Agent-X | ✓ | ✗ | ✓ | ✓ | ✓ | 3.4 |
+| MMSearch-Plus | ✗ | ✓ | ✓ | ✗ | ✓ | 4.6 |
+| BrowseComp-VL | ✗ | ✓ | ✓ | ✓ | ✗ | 4.3 |
+| VisualToolBench | ✓ | ✗ | ✓ | ✓ | ✗ | 4.46 |
+| AgentVista (Ours) | ✓ | ✓ | ✓ | ✓ | ✓ | 12.67 |
+
+**Table.** Main results on our proposed AgentVista. Domain abbreviations: Comm. (Commerce), Geog. (Geography), Ent. (Entertainment), Tech. (Technology), Soc. (Society), Acad. (Aca demics), and Cult. (Culture). Input mode abbreviations: Single. (Single-image input) and Multi. (Multi-image input). The best-performing model in each category is in-bold, and the second best is underlined. Overall, Gemini-3-Pro achieves the highest accuracy among all evaluated models. All values are accuracies in %.
+
+| Model | By Category | By Input Mode | Summary |  |  |  |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Comm. | Geog. | Ent. | Tech. | Soc. | Acad. | Cult. | Single. | Multi. | Overall | # Turns |  |
+| Qwen3-VL-235B | 7.14 | 7.69 | 7.69 | 26.47 | 16.00 | 20.00 | 13.33 | 11.84 | 15.79 | 12.92 | 2.34 |
+| GPT-4.1 | 16.67 | 15.38 | 10.26 | 29.41 | 20.00 | 20.00 | 13.33 | 15.13 | 24.56 | 17.70 | 1.74 |
+| o3 | 21.43 | 15.38 | 7.69 | 23.53 | 40.00 | 26.67 | 13.33 | 17.76 | 26.32 | 20.10 | 13.18 |
+| o4-mini | 2.38 | 10.26 | 2.56 | 8.82 | 8.00 | 13.33 | 0.00 | 6.58 | 5.26 | 6.22 | 1.89 |
+| GPT-5 | 23.81 | 23.08 | 12.82 | 35.29 | 28.00 | 26.67 | 26.67 | 24.34 | 24.56 | 24.40 | 12.67 |
+| GPT-5.1 | 23.81 | 12.82 | 15.38 | 26.47 | 24.00 | 40.00 | 40.00 | 19.74 | 31.58 | 22.97 | 17.14 |
+| GPT-5.2 | 21.43 | 17.95 | 20.51 | 38.24 | 24.00 | 33.33 | 20.00 | 23.03 | 28.07 | 24.40 | 13.85 |
+| Grok-4 | 11.90 | 23.08 | 7.69 | 20.59 | 28.00 | 0.00 | 0.00 | 13.82 | 17.54 | 14.83 | 16.44 |
+| Claude-Sonnet-4 | 9.52 | 15.38 | 2.56 | 29.41 | 16.00 | 20.00 | 6.67 | 11.18 | 21.05 | 13.88 | 5.37 |
+| Claude-Opus-4 | 19.05 | 12.82 | 5.13 | 26.47 | 20.00 | 20.00 | 6.67 | 11.84 | 26.32 | 15.79 | 6.89 |
+| Claude-Opus-4.1 | 11.90 | 23.08 | 10.26 | 29.41 | 16.00 | 26.67 | 13.33 | 16.45 | 22.81 | 18.18 | 7.28 |
+| Claude-Sonnet-4.5 | 11.90 | 23.08 | 7.69 | 26.47 | 24.00 | 20.00 | 13.33 | 17.11 | 19.30 | 17.70 | 9.99 |
+| Gemini-3-Flash | 16.67 | 17.95 | 10.26 | 29.41 | 28.00 | 40.00 | 20.00 | 18.42 | 28.07 | 21.05 | 7.78 |
+| Gemini-3-Pro | 16.67 | 28.21 | 20.51 | 32.35 | 32.00 | 40.00 | 40.00 | 23.68 | 36.84 | 27.27 | 6.67 |
+
+- **Poor Performance of Current Models**: Even the best-performing model in our evaluation, Gemini-3-Pro, achieves only 27.3% overall accuracy on AgentVista.
+- **High Task Complexity**: Hard instances can require more than 25 tool-calling turns, significantly exceeding the average of existing benchmarks.
+- **Long-Horizon Tool Use as a Key Challenge**: The results expose significant gaps in current models' ability to carry out long-horizon multimodal tool use.
+- **AgentVista to Drive Development**: This benchmark is expected to accelerate the development of more capable and reliable generalist multimodal agents for ultra-challenging real-world problem solving.

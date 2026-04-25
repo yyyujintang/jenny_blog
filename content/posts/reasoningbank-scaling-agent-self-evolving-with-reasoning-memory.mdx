@@ -1,0 +1,154 @@
+---
+title: "ReasoningBank: Scaling Agent Self-Evolving with Reasoning Memory"
+date: 2026-04-25
+paper_date: 2025-09-29
+excerpt: "ReasoningBank是一个记忆框架，通过从成功和失败经验中提炼可泛化的推理策略，使AI智能体能自我进化。"
+excerpt_en: "ReasoningBank is a memory framework enabling AI agents to self-evolve by distilling generalizable reasoning strategies from self-judged experiences."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Episodic
+  - Procedural
+paper_id: reasoningbank-scaling-agent-self-evolving-with-reasoning-memory
+paper_venue: "ICLR26"
+paper_authors: "Siru Ouyang"
+paper_link: "https://arxiv.org/abs/2509.25140"
+auto_generated: true
+notes_hash: 5ba896284cfc3121
+---
+
+## Motivation
+
+大型语言模型（LLM）智能体在现实世界中扮演着越来越重要的角色，但它们面临一个核心限制：无法从历史交互中学习。这意味着智能体经常会丢弃宝贵的经验，重复过去的错误。
+
+这种“健忘”极大地阻碍了智能体在持续任务中的表现和效率，限制了它们随着时间推移变得更加智能的能力。
+
+因此，开发一种能够有效利用历史经验，并从中提炼出可泛化知识的记忆机制至关重要。
+
+## Contribution
+
+- **推理记忆框架 (ReasoningBank)**：提出一个新颖的记忆框架，它从智能体自我判断的成功和失败经验中提炼出可泛化的推理策略。
+- **记忆检索与整合机制**：智能体在测试时能从ReasoningBank中检索相关记忆来指导交互，并将新的学习成果整合回记忆库。
+- **记忆感知测试时扩展 (MaTTS)**：引入一种机制，通过扩展智能体的交互经验来加速和多样化学习过程，分配更多计算资源以生成丰富、多样的经验，从而合成更高质量的记忆。
+- **记忆与扩展的协同作用**：证明了更好的记忆能指导更有效的扩展，形成强大的协同效应，促使智能体通过记忆驱动的经验扩展实现自我进化。
+
+## Method
+
+### ReasoningBank 记忆机制
+1.  **经验收集与自我评判**：智能体在执行任务时，会记录其交互轨迹，并根据任务结果（成功或失败）进行自我评判。
+2.  **推理策略蒸馏**：
+    *   对于成功的经验，ReasoningBank会从中提炼出导致成功的通用推理模式或策略。
+    *   对于失败的经验，ReasoningBank会分析失败的原因，并提炼出需要避免的策略或改进点。
+3.  **记忆存储**：蒸馏出的推理策略以结构化的形式存储在ReasoningBank中，方便后续检索。
+
+### 记忆感知测试时扩展 (MaTTS)
+1.  **扩展交互经验**：通过分配更多的计算资源给每个任务，智能体能够生成更丰富、更多样化的交互经验。这包括探索不同的路径、尝试不同的策略等。
+2.  **对比信号生成**：多样化的经验为ReasoningBank提供了丰富的对比信号，帮助它更好地辨别哪些策略是有效的，哪些是无效的。
+3.  **高质量记忆合成**：利用这些对比信号，ReasoningBank能够合成更高质量、更具泛化性的推理记忆。
+4.  **记忆引导的扩展**：高质量的记忆反过来又可以指导智能体在未来的扩展过程中更有效地探索，形成一个正向循环。
+
+## Comparison with Previous Work
+
+- **vs. 存储原始轨迹的记忆机制**：ReasoningBank不存储原始的、未经处理的交互轨迹，而是蒸馏出可泛化的推理策略。这使得记忆更紧凑、更具知识性，避免了重复学习和存储冗余信息。
+- **vs. 仅存储成功任务例程的记忆机制**：ReasoningBank不仅学习成功经验，还从失败经验中吸取教训。这提供了更全面的学习信号，帮助智能体避免重复错误，并理解策略的局限性。
+- **vs. 传统RAG (Retrieval-Augmented Generation)**：传统的RAG通常检索原始文本片段或事实知识，而ReasoningBank检索的是抽象的、可泛化的推理策略，直接指导智能体的决策过程，而非仅仅提供信息。
+- **vs. 缺乏自我进化能力的智能体**：现有许多智能体在完成任务后会“忘记”历史，ReasoningBank通过持续的记忆更新和学习，使智能体能够随着时间推移自我进化，表现出新兴行为。
+
+## Experiments
+
+**Table.** ReasoningBank在WebArena基准测试上的实验结果。成功率 (SR ↑) 和步骤数 (Step ↓) 报告了3种不同骨干LLM在5个子集上的表现。
+
+| Models | Shopping | Admin | Gitlab | Reddit | Multi | Overall |  |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| (187) | (182) | (180) | (106) | (29) | (684) |  |  |  |  |  |  |  |
+|  | SR | Step | SR | Step | SR | Step | SR | Step | SR | Step | SR | Step |
+| Gemini-2.5-flash |  |  |  |  |  |  |  |  |  |  |  |  |
+| No Memory | 39.0 | 8.2 | 44.5 | 9.5 | 33.9 | 13.3 | 55.7 | 6.7 | 10.3 | 10.0 | 40.5 | 9.7 |
+| Synapse | 40.6 | 7.0 | 45.1 | 9.1 | 35.6 | 13.0 | 59.4 | 6.5 | 10.3 | 10.5 | 42.1 | 9.2 |
+| AWM | 44.4 | 7.0 | 46.7 | 8.8 | 37.2 | 13.2 | 62.3 | 6.1 | 3.4 | 7.7 | 44.1 | 9.0 |
+| ReasoningBank | 49.7 | 6.1 | 51.1 | 8.2 | 40.6 | 12.3 | 67.0 | 5.6 | 13.8 | 8.8 | 48.8 | 8.3 |
+| Gemini-2.5-pro |  |  |  |  |  |  |  |  |  |  |  |  |
+| No Memory | 45.5 | 7.6 | 51.1 | 8.7 | 35.0 | 11.6 | 71.7 | 6.0 | 6.9 | 8.8 | 46.7 | 8.8 |
+| Synapse | 46.5 | 6.6 | 52.2 | 8.9 | 38.3 | 11.3 | 68.9 | 5.9 | 6.9 | 9.0 | 47.7 | 8.5 |
+| AWM | 48.1 | 6.4 | 49.3 | 9.8 | 40.0 | 11.2 | 68.9 | 6.4 | 3.4 | 9.3 | 47.6 | 8.7 |
+| ReasoningBank | 51.9 | 6.0 | 56.6 | 7.7 | 44.4 | 9.8 | 80.2 | 5.1 | 13.8 | 8.2 | 53.9 | 7.4 |
+| Claude-3.7-sonnet |  |  |  |  |  |  |  |  |  |  |  |  |
+| No Memory | 38.5 | 6.1 | 49.5 | 8.4 | 36.7 | 10.6 | 53.8 | 5.5 | 0.0 | 11.6 | 41.7 | 8.0 |
+| Synapse | 39.6 | 5.8 | 50.5 | 8.5 | 38.0 | 10.0 | 53.8 | 6.1 | 0.0 | 11.8 | 42.6 | 7.9 |
+| AWM | 39.6 | 7.2 | 47.8 | 9.3 | 34.6 | 10.9 | 52.8 | 7.0 | 0.0 | 12.4 | 40.8 | 8.9 |
+| ReasoningBank | 44.9 | 5.6 | 53.3 | 7.6 | 41.1 | 9.5 | 57.5 | 5.2 | 3.4 | 10.5 | 46.3 | 7.3 |
+
+- **显著优于现有记忆机制**：ReasoningBank在WebArena和SWE-Bench等基准测试中，始终优于存储原始轨迹或仅成功任务例程的现有记忆机制，在有效性和效率上均有提升。
+- **MaTTS进一步放大收益**：结合MaTTS后，性能增益进一步放大，表明记忆驱动的经验扩展是一个有效的缩放维度。
+- **跨领域泛化能力**：在Mind2Web基准测试中，ReasoningBank展示了更好的跨任务、跨网站和跨领域泛化能力，证明其提炼的推理策略具有通用性。
+- **减少步骤数，提高效率**：ReasoningBank不仅提高了任务成功率，还显著减少了完成任务所需的平均步骤数，尤其是在成功实例上，表明其推理记忆能更有效地指导智能体。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Large Language Model (LLM) agents are increasingly adopted in persistent real-world roles, but they face a critical limitation: their inability to learn from accumulated interaction history. This means agents frequently discard valuable insights and repeat past errors.
+
+This "forgetfulness" severely hinders agent performance and efficiency in continuous tasks, limiting their capacity to become more intelligent over time.
+
+Therefore, developing a memory mechanism that can effectively leverage historical experiences and distill generalizable knowledge from them is crucial.
+
+## Contribution
+
+- **Reasoning Memory Framework (ReasoningBank)**: Proposes a novel memory framework that distills generalizable reasoning strategies from an agent's self-judged successful and failed experiences.
+- **Memory Retrieval and Integration Mechanism**: The agent can retrieve relevant memories from ReasoningBank at test time to inform its interaction and then integrate new learnings back into the memory bank.
+- **Memory-aware Test-Time Scaling (MaTTS)**: Introduces a mechanism that accelerates and diversifies the learning process by scaling up the agent's interaction experience, allocating more compute to generate abundant, diverse experiences for synthesizing higher-quality memory.
+- **Synergy between Memory and Scaling**: Demonstrates that better memory guides more effective scaling, establishing a powerful synergy that enables agents to self-evolve through memory-driven experience scaling.
+
+## Method
+
+### ReasoningBank Memory Mechanism
+1.  **Experience Collection and Self-Judgment**: As the agent executes tasks, it records its interaction trajectories and performs self-judgment based on task outcomes (success or failure).
+2.  **Reasoning Strategy Distillation**:
+    *   For successful experiences, ReasoningBank distills generalizable reasoning patterns or strategies that led to success.
+    *   For failed experiences, ReasoningBank analyzes the causes of failure and distills strategies to avoid or areas for improvement.
+3.  **Memory Storage**: The distilled reasoning strategies are stored in a structured format within ReasoningBank for easy retrieval.
+
+### Memory-aware Test-Time Scaling (MaTTS)
+1.  **Scaling Interaction Experience**: By allocating more computational resources to each task, the agent can generate richer and more diverse interaction experiences. This includes exploring different paths, trying various strategies, etc.
+2.  **Contrastive Signal Generation**: Diverse experiences provide ReasoningBank with rich contrastive signals, helping it better discern which strategies are effective and which are not.
+3.  **High-Quality Memory Synthesis**: Utilizing these contrastive signals, ReasoningBank can synthesize higher-quality, more generalizable reasoning memories.
+4.  **Memory-Guided Scaling**: High-quality memory, in turn, can guide the agent to explore more effectively in future scaling processes, forming a positive feedback loop.
+
+## Comparison with Previous Work
+
+- **vs. Memory mechanisms storing raw trajectories**: ReasoningBank does not store raw, unprocessed interaction trajectories but rather distills generalizable reasoning strategies. This makes the memory more compact and knowledge-rich, avoiding redundant learning and storage.
+- **vs. Memory mechanisms storing only successful task routines**: ReasoningBank learns from both successful and failed experiences. This provides more comprehensive learning signals, helping agents avoid repeating errors and understand strategy limitations.
+- **vs. Traditional RAG (Retrieval-Augmented Generation)**: Traditional RAG typically retrieves raw text snippets or factual knowledge, whereas ReasoningBank retrieves abstract, generalizable reasoning strategies that directly guide the agent's decision-making process, rather than merely providing information.
+- **vs. Agents lacking self-evolution capabilities**: Many existing agents "forget" history after completing tasks. ReasoningBank, through continuous memory updates and learning, enables agents to self-evolve over time, exhibiting emergent behaviors.
+
+## Experiments
+
+**Table.** Experiment results of ReasoningBank on WebArena benchmark. Success rate (SR ↑) and the number of steps (Step ↓) are reported on 5 subsets for 3 different backbone LLMs.
+
+| Models | Shopping | Admin | Gitlab | Reddit | Multi | Overall |  |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| (187) | (182) | (180) | (106) | (29) | (684) |  |  |  |  |  |  |  |
+|  | SR | Step | SR | Step | SR | Step | SR | Step | SR | Step | SR | Step |
+| Gemini-2.5-flash |  |  |  |  |  |  |  |  |  |  |  |  |
+| No Memory | 39.0 | 8.2 | 44.5 | 9.5 | 33.9 | 13.3 | 55.7 | 6.7 | 10.3 | 10.0 | 40.5 | 9.7 |
+| Synapse | 40.6 | 7.0 | 45.1 | 9.1 | 35.6 | 13.0 | 59.4 | 6.5 | 10.3 | 10.5 | 42.1 | 9.2 |
+| AWM | 44.4 | 7.0 | 46.7 | 8.8 | 37.2 | 13.2 | 62.3 | 6.1 | 3.4 | 7.7 | 44.1 | 9.0 |
+| ReasoningBank | 49.7 | 6.1 | 51.1 | 8.2 | 40.6 | 12.3 | 67.0 | 5.6 | 13.8 | 8.8 | 48.8 | 8.3 |
+| Gemini-2.5-pro |  |  |  |  |  |  |  |  |  |  |  |  |
+| No Memory | 45.5 | 7.6 | 51.1 | 8.7 | 35.0 | 11.6 | 71.7 | 6.0 | 6.9 | 8.8 | 46.7 | 8.8 |
+| Synapse | 46.5 | 6.6 | 52.2 | 8.9 | 38.3 | 11.3 | 68.9 | 5.9 | 6.9 | 9.0 | 47.7 | 8.5 |
+| AWM | 48.1 | 6.4 | 49.3 | 9.8 | 40.0 | 11.2 | 68.9 | 6.4 | 3.4 | 9.3 | 47.6 | 8.7 |
+| ReasoningBank | 51.9 | 6.0 | 56.6 | 7.7 | 44.4 | 9.8 | 80.2 | 5.1 | 13.8 | 8.2 | 53.9 | 7.4 |
+| Claude-3.7-sonnet |  |  |  |  |  |  |  |  |  |  |  |  |
+| No Memory | 38.5 | 6.1 | 49.5 | 8.4 | 36.7 | 10.6 | 53.8 | 5.5 | 0.0 | 11.6 | 41.7 | 8.0 |
+| Synapse | 39.6 | 5.8 | 50.5 | 8.5 | 38.0 | 10.0 | 53.8 | 6.1 | 0.0 | 11.8 | 42.6 | 7.9 |
+| AWM | 39.6 | 7.2 | 47.8 | 9.3 | 34.6 | 10.9 | 52.8 | 7.0 | 0.0 | 12.4 | 40.8 | 8.9 |
+| ReasoningBank | 44.9 | 5.6 | 53.3 | 7.6 | 41.1 | 9.5 | 57.5 | 5.2 | 3.4 | 10.5 | 46.3 | 7.3 |
+
+- **Significant Outperformance**: ReasoningBank consistently outperforms existing memory mechanisms that store raw trajectories or only successful task routines across benchmarks like WebArena and SWE-Bench, improving both effectiveness and efficiency.
+- **MaTTS Amplifies Gains**: The gains are further amplified when combined with MaTTS, indicating that memory-driven experience scaling is an effective scaling dimension.
+- **Cross-Domain Generalization**: ReasoningBank demonstrates better cross-task, cross-website, and cross-domain generalization capabilities on the Mind2Web benchmark, proving the universality of its distilled reasoning strategies.
+- **Reduced Steps, Increased Efficiency**: ReasoningBank not only improves task success rates but also significantly reduces the average number of steps required to complete tasks, especially on successful instances, indicating that its reasoning memory guides the agent more effectively.

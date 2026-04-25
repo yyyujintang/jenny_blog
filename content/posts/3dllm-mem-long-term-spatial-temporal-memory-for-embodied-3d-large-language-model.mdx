@@ -1,0 +1,119 @@
+---
+title: "3DLLM-Mem: Long-Term Spatial-Temporal Memory for Embodied 3D Large Language Model"
+date: 2026-04-25
+paper_date: 2025-05-28
+excerpt: "针对具身AI在复杂3D环境中缺乏长期空间-时间记忆的问题，提出3DLLM-Mem模型和3DMem-Bench基准"
+excerpt_en: "Addressing the lack of long-term spatial-temporal memory in embodied AI for complex 3D environments, we introduce 3DLLM-Mem and 3DMem-Bench."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Episodic
+  - Multimodal
+  - Semantic
+paper_id: 3dllm-mem-long-term-spatial-temporal-memory-for-embodied-3d-large-language-model
+paper_link: "https://arxiv.org/abs/2505.22657"
+auto_generated: true
+notes_hash: 5149dc5e8c8aac3d
+---
+
+## Motivation
+
+人类在复杂的3D环境中执行任务时，能够有效利用长期记忆。
+然而，当前的LLM在动态、多房间的3D环境中进行有效规划和行动时面临挑战。
+我们认为，这部分是由于LLM缺乏适当的3D空间-时间记忆建模能力。
+
+## Contribution
+
+*   **3DMem-Bench基准**: 引入了一个全面的3D具身任务基准，包含超过26,000条轨迹和2,892个具身任务、问答和描述任务，旨在评估智能体在3D环境中利用长期记忆进行推理的能力。
+*   **3DLLM-Mem模型**: 提出了一种新颖的动态记忆管理和融合模型，用于LLM中的具身空间-时间推理和行动。
+*   **记忆效率和任务相关性**: 该模型通过工作记忆token作为查询，选择性地关注并融合情景记忆中最有用的空间和时间特征，从而使智能体能够专注于任务相关信息，同时在复杂、长视距环境中保持记忆效率。
+
+## Method
+
+1.  **工作记忆 (Working Memory)**:
+    *   表示智能体当前的观察结果。
+    *   这些工作记忆token被用作查询 (queries)。
+2.  **情景记忆 (Episodic Memory)**:
+    *   存储智能体过去的观察和交互。
+    *   包含丰富的空间和时间特征。
+3.  **动态记忆管理与融合**:
+    *   工作记忆token作为查询，用于选择性地关注 (selectively attend to) 情景记忆中的相关信息。
+    *   通过融合机制，将情景记忆中最有用的空间和时间特征与当前观察结果结合。
+    *   这种机制旨在平衡记忆效率和任务相关性，确保智能体在复杂环境中只关注必要信息。
+
+## Comparison with Previous Work
+
+*   **vs. 现有LLM**: 现有LLM在动态、多房间的3D环境中进行有效规划和行动时表现不佳，主要因为缺乏适当的3D空间-时间记忆建模。3DLLM-Mem通过引入动态记忆管理和融合机制，弥补了这一不足。
+*   **vs. 现有基准**: 现有的具身AI基准可能未能充分评估智能体在复杂3D环境中利用长期记忆进行推理的能力。3DMem-Bench通过其大规模、多任务的设计，提供了更全面的评估。
+*   **vs. 简单记忆策略 (如"Most Recent Memory"和"Retrieval-Augmented Memory")**: 3DLLM-Mem在记忆管理和融合上更为精细，能够选择性地关注任务相关信息，从而在各种任务中显著优于这些基线方法。
+
+## Experiments
+
+**Table.** 3DMem-Bench上3DLLM-Mem与其他基线模型在具身任务成功率 (SR) 和子成功率 (Sub-SR) 上的表现。
+
+| Model | Simple | Medium | Hard | Average | | | | | | | | | | | | |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| In-domain | In-the-wild | In-domain | In-the-wild | In-domain | In-the-wild | In-domain | In-the-wild | | | | | | | | | |
+| SR | Sub-SR | SR | Sub-SR | SR | Sub-SR | SR | Sub-SR | SR | Sub-SR | SR | Sub-SR | SR | Sub-SR | SR | Sub-SR |
+| 3D-LLM (Finetuned) | 10.4 | 20.3 | 9.1 | 18.5 | - | - | - | - | - | - | - | - | - | - | - | - |
+| Everything in Context | 35.5 | 63.9 | 32.4 | 45.2 | - | - | - | - | - | - | - | - | - | - | - | - |
+| Most Recent Memory | 32.8 | 62.3 | 23.4 | 38.6 | 20.1 | 34.8 | 12.4 | 25.3 | 10.4 | 20.7 | 5.4 | 12.1 | 21.1 | 39.3 | 13.7 | 25.3 |
+| Retrieval-Augmented Memory | 34.2 | 63.0 | 28.3 | 46.2 | 21.8 | 40.2 | 13.7 | 28.0 | 10.8 | 21.6 | 4.8 | 10.6 | 22.3 | 41.6 | 15.6 | 28.3 |
+| 3DLLM-Mem (Ours) | 45.5 | 73.4 | 37.0 | 65.4 | 36.8 | 67.8 | 31.6 | 57.4 | 30.5 | 46.2 | 27.8 | 42.1 | 37.6 | 62.5 | 32.1 | 55.0 |
+
+*   3DLLM-Mem在各种任务中均实现了最先进的性能。
+*   在3DMem-Bench最具挑战性的“in-the-wild”具身任务中，3DLLM-Mem的成功率比最强的基线高出16.5%。
+*   这表明3DLLM-Mem的动态记忆管理和融合模型在处理复杂、长视距的3D环境任务中具有显著优势。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Humans excel at performing complex tasks by leveraging long-term memory across temporal and spatial experiences.
+In contrast, current Large Language Models (LLMs) struggle to effectively plan and act in dynamic, multi-room 3D environments.
+We posit that part of this limitation is due to the lack of proper 3D spatial-temporal memory modeling in LLMs.
+
+## Contribution
+
+*   **3DMem-Bench Benchmark**: We introduce a comprehensive benchmark comprising over 26,000 trajectories and 2,892 embodied tasks, question-answering, and captioning, designed to evaluate an agent's ability to reason over long-term memory in 3D environments.
+*   **3DLLM-Mem Model**: We propose a novel dynamic memory management and fusion model for embodied spatial-temporal reasoning and actions in LLMs.
+*   **Memory Efficiency and Task Relevance**: Our model uses working memory tokens, representing current observations, as queries to selectively attend to and fuse the most useful spatial and temporal features from episodic memory, which stores past observations and interactions. This allows the agent to focus on task-relevant information while maintaining memory efficiency in complex, long-horizon environments.
+
+## Method
+
+1.  **Working Memory**:
+    *   Represents the agent's current observations.
+    *   These working memory tokens are used as queries.
+2.  **Episodic Memory**:
+    *   Stores past observations and interactions of the agent.
+    *   Contains rich spatial and temporal features.
+3.  **Dynamic Memory Management and Fusion**:
+    *   Working memory tokens act as queries to selectively attend to relevant information within the episodic memory.
+    *   A fusion mechanism combines the most useful spatial and temporal features from episodic memory with current observations.
+    *   This mechanism aims to balance memory efficiency and task relevance, ensuring the agent focuses only on necessary information in complex environments.
+
+## Comparison with Previous Work
+
+*   **vs. Existing LLMs**: Current LLMs struggle with effective planning and action in dynamic, multi-room 3D environments due to a lack of proper 3D spatial-temporal memory modeling. 3DLLM-Mem addresses this by introducing a dynamic memory management and fusion mechanism.
+*   **vs. Existing Benchmarks**: Prior embodied AI benchmarks may not fully assess an agent's ability to reason over long-term memory in complex 3D environments. 3DMem-Bench, with its large-scale and multi-task design, provides a more comprehensive evaluation.
+*   **vs. Simpler Memory Strategies (e.g., "Most Recent Memory" and "Retrieval-Augmented Memory")**: 3DLLM-Mem employs a more sophisticated memory management and fusion approach, enabling it to selectively focus on task-relevant information and significantly outperform these baseline methods across various tasks.
+
+## Experiments
+
+**Table.** Performance of 3DLLM-Mem and other baseline models on embodied task success rate (SR) and sub-success rate (Sub-SR) on 3DMem-Bench.
+
+| Model | Simple | Medium | Hard | Average | | | | | | | | | | | | |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| In-domain | In-the-wild | In-domain | In-the-wild | In-domain | In-the-wild | In-domain | In-the-wild | | | | | | | | | |
+| SR | Sub-SR | SR | Sub-SR | SR | Sub-SR | SR | Sub-SR | SR | Sub-SR | SR | Sub-SR | SR | Sub-SR | SR | Sub-SR |
+| 3D-LLM (Finetuned) | 10.4 | 20.3 | 9.1 | 18.5 | - | - | - | - | - | - | - | - | - | - | - | - |
+| Everything in Context | 35.5 | 63.9 | 32.4 | 45.2 | - | - | - | - | - | - | - | - | - | - | - | - |
+| Most Recent Memory | 32.8 | 62.3 | 23.4 | 38.6 | 20.1 | 34.8 | 12.4 | 25.3 | 10.4 | 20.7 | 5.4 | 12.1 | 21.1 | 39.3 | 13.7 | 25.3 |
+| Retrieval-Augmented Memory | 34.2 | 63.0 | 28.3 | 46.2 | 21.8 | 40.2 | 13.7 | 28.0 | 10.8 | 21.6 | 4.8 | 10.6 | 22.3 | 41.6 | 15.6 | 28.3 |
+| 3DLLM-Mem (Ours) | 45.5 | 73.4 | 37.0 | 65.4 | 36.8 | 67.8 | 31.6 | 57.4 | 30.5 | 46.2 | 27.8 | 42.1 | 37.6 | 62.5 | 32.1 | 55.0 |
+
+*   3DLLM-Mem achieves state-of-the-art performance across various tasks.
+*   It outperforms the strongest baselines by 16.5% in success rate on 3DMem-Bench's most challenging "in-the-wild" embodied tasks.
+*   These results demonstrate the significant advantage of 3DLLM-Mem's dynamic memory management and fusion model in handling complex, long-horizon 3D environmental tasks.

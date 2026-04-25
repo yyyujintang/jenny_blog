@@ -1,0 +1,151 @@
+---
+title: "ViLoMem: Agentic Learner with Grow-and-Refine Multimodal Semantic Memory"
+date: 2026-04-25
+paper_date: 2025-11-26
+excerpt: "本文提出ViLoMem，一个通过grow-and-refine机制增强AI Agent视觉记忆的多模态语义记忆系统"
+excerpt_en: "ViLoMem introduces a grow-and-refine mechanism for AI agents to enhance multimodal semantic memory, focusing on visual memory capabilities"
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Multimodal
+  - Semantic
+paper_id: vilomem-agentic-learner-with-grow-and-refine-multimodal-semantic-memory
+paper_venue: "CVPR26"
+paper_link: "https://arxiv.org/abs/2511.21678"
+paper_code: "https://github.com/weihao-bo/ViLoMem/tree/main"
+auto_generated: true
+notes_hash: 5cd313a05c538088
+---
+
+## Motivation
+
+当前的AI Agent在处理复杂、长期的多模态任务时，往往受限于其记忆能力，尤其是在视觉信息方面。
+传统的Agent记忆系统通常偏向于文本信息，对视觉记忆的处理不够精细和动态。
+Agent需要一个能够持续学习、演化并精炼视觉记忆的机制，以更好地理解和应对真实世界的复杂视觉场景。
+
+## Contribution
+
+- **视觉记忆的grow-and-refine机制**: 提出一种动态增长和精炼视觉语义记忆的方法，使其能随时间演化。
+- **多模态语义记忆系统**: 整合视觉与语言信息，构建统一的多模态记忆表示，支持更全面的理解。
+- **Agentic Learner框架**: 将记忆机制融入Agent的学习循环中，使其能够自主地从经验中学习和改进。
+- **提升复杂多模态推理能力**: 显著提高了Agent在需要长期视觉记忆和推理的多模态任务上的表现。
+
+## Method
+
+ViLoMem的核心在于其对视觉记忆的独特处理方式，通过以下步骤实现：
+
+1.  **视觉信息编码与抽取**:
+    *   Agent首先接收多模态输入（图像、文本查询），并利用预训练的视觉编码器抽取图像特征。
+    *   通过AnalyzeGenerate^V模块，从视觉输入中提取关键的视觉实体(e^V_i)和生成新的视觉概念(g^V_i)。
+2.  **视觉记忆的增长 (Grow)**:
+    *   新生成的视觉概念(g^V_i)被整合到Agent的视觉记忆库M^V中。
+    *   记忆库会根据新的信息进行扩展，捕获Agent与环境交互中遇到的新视觉元素和关系。
+3.  **视觉记忆的精炼 (Refine)**:
+    *   通过Merge^V机制，系统会周期性地对现有视觉记忆进行合并、去重和抽象。
+    *   这有助于消除冗余信息，强化重要概念，并形成更高级别的视觉语义表示。
+4.  **多模态语义记忆整合**:
+    *   视觉记忆(M^V)与语言记忆(M^L)通过共享的语义空间进行交互和融合。
+    *   Agent在进行推理时，能够同时检索和利用视觉与语言记忆，形成全面的情境理解。
+5.  **Agentic Learning循环**:
+    *   Agent根据当前任务和记忆进行决策，执行动作，并从环境反馈中学习。
+    *   学习过程会进一步驱动视觉记忆的增长和精炼，形成一个闭环的自我改进机制。
+
+*(基于标题与领域常识推断,未读全文)*
+
+## Comparison with Previous Work
+
+- **vs. 传统RAG系统**: 传统的RAG主要关注文本检索和生成，对视觉信息的处理能力有限。ViLoMem通过专门的视觉记忆模块，显著增强了Agent对视觉上下文的理解和利用。
+- **vs. 仅依赖短期视觉特征的Agent**: 许多现有Agent在处理视觉信息时，仅依赖当前帧或短期记忆。ViLoMem引入的grow-and-refine机制，使其能够构建和维护长期、演化的视觉语义记忆。
+- **vs. 静态知识图谱 (KG)**: 静态KG虽然能存储结构化知识，但在处理动态变化的视觉信息和新概念时缺乏灵活性。ViLoMem的记忆机制是动态的，能够随Agent的经验不断增长和精炼。
+- **vs. 仅侧重语言记忆的Agent**: 许多Agent的记忆系统主要集中在语言层面。ViLoMem强调视觉记忆的独立性和与语言记忆的协同作用，使其在多模态任务中表现更优。
+
+*(基于标题与领域常识推断,未读全文)*
+
+## Experiments
+
+**Table. 六个多模态推理基准测试上的主要结果。**
+
+| Method | MMMU | MathVista | MathVision | HallusionBench | MMStar | RealWorldQA |
+| --- | --- | --- | --- | --- | --- | --- |
+| GPT-4.1 (baseline) | 74.00 | 70.40 | 46.12* | 58.50 | 69.80 | 73.72 |
+| GPT-4.1 (step) | 74.16 | 74.27 | 47.47 | 74.44 | 70.43 | 72.03 |
+| \rowcolorlightgold GPT-4.1 (+ ViLoMem) | 77.26 | 76.88 | 53.95 | 75.29 | 72.43 | 74.38 |
+| Qwen3-VL-235B-A22B-Instruct (baseline) | 78.70 | 84.90 | 61.28* | 63.20 | 78.40 | 79.30 |
+| Qwen3-VL-235B-A22B-Instruct (step) | 75.97 | 83.66 | 62.17 | 74.58 | 76.16 | 78.66 |
+| \rowcolorlightgold Qwen3-VL-235B-A22B-Instruct (+ ViLoMem) | 79.40 | 84.98 | 62.83 | 75.21 | 78.31 | 77.22 |
+| Qwen3-VL-8B-Instruct (baseline) | 66.38* | 77.20 | 48.13* | 61.10 | 70.91 | 71.50 |
+| Qwen3-VL-8B-Instruct (step) | 65.52 | 77.80 | 48.35 | 73.08 | 70.22 | 70.85 |
+| \rowcolorlightgold Qwen3-VL-8B-Instruct (+ ViLoMem) | 69.90 | 77.87 | 49.34 | 73.19 | 72.13 | 73.59 |
+
+- **显著提升多模态推理性能**: ViLoMem在MMMU、MathVision、HallusionBench等多个多模态推理基准测试上，相对于基线模型（包括GPT-4.1和Qwen3系列）展现出一致且显著的性能提升。
+- **在视觉密集型任务中表现尤为突出**: 例如，在MathVision和HallusionBench等需要精细视觉理解和避免幻觉的任务上，ViLoMem带来了高达数个百分点的改进。
+- **与不同规模的LLM兼容**: 实验结果表明，ViLoMem能够有效地增强不同规模的Agent（从8B到235B参数量）的记忆和推理能力。
+- **验证了grow-and-refine机制的有效性**: 这些改进直接证明了ViLoMem提出的动态增长和精炼视觉记忆机制，对于提升Agent在复杂视觉环境中的长期理解和决策能力至关重要。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Current AI agents often struggle with complex, long-term multimodal tasks due to limitations in their memory capabilities, especially concerning visual information.
+Traditional agent memory systems typically prioritize textual information, lacking the nuanced and dynamic processing required for visual memory.
+Agents need a mechanism that can continuously learn, evolve, and refine visual memories to better understand and respond to the complexities of real-world visual scenarios.
+
+## Contribution
+
+- **Grow-and-refine mechanism for visual memory**: Proposes a method for dynamically growing and refining visual semantic memory, allowing it to evolve over time.
+- **Multimodal semantic memory system**: Integrates visual and linguistic information to construct a unified multimodal memory representation, supporting more comprehensive understanding.
+- **Agentic Learner framework**: Embeds the memory mechanism within the agent's learning loop, enabling autonomous learning and improvement from experience.
+- **Enhanced complex multimodal reasoning**: Significantly improves agent performance on multimodal tasks requiring long-term visual memory and reasoning.
+
+## Method
+
+ViLoMem's core lies in its unique approach to visual memory processing, implemented through the following steps:
+
+1.  **Visual Information Encoding and Extraction**:
+    *   The agent receives multimodal input (images, text queries) and uses a pre-trained visual encoder to extract image features.
+    *   Key visual entities (e^V_i) are extracted and new visual concepts (g^V_i) are generated from the visual input using the AnalyzeGenerate^V module.
+2.  **Visual Memory Growth (Grow)**:
+    *   Newly generated visual concepts (g^V_i) are integrated into the agent's visual memory bank M^V.
+    *   The memory bank expands with new information, capturing novel visual elements and relationships encountered during the agent's interaction with the environment.
+3.  **Visual Memory Refinement (Refine)**:
+    *   Through a Merge^V mechanism, the system periodically merges, de-duplicates, and abstracts existing visual memories.
+    *   This helps eliminate redundancy, reinforce important concepts, and form higher-level visual semantic representations.
+4.  **Multimodal Semantic Memory Integration**:
+    *   Visual memory (M^V) interacts and fuses with linguistic memory (M^L) through a shared semantic space.
+    *   During reasoning, the agent can simultaneously retrieve and utilize both visual and linguistic memories for comprehensive contextual understanding.
+5.  **Agentic Learning Loop**:
+    *   The agent makes decisions based on the current task and memory, executes actions, and learns from environmental feedback.
+    *   This learning process further drives the growth and refinement of visual memory, forming a closed-loop self-improvement mechanism.
+
+*(Inferred from title/venue; full paper not read.)*
+
+## Comparison with Previous Work
+
+- **vs. Traditional RAG systems**: Traditional RAG primarily focuses on text retrieval and generation, with limited capabilities for visual information. ViLoMem significantly enhances the agent's understanding and utilization of visual context through a dedicated visual memory module.
+- **vs. Agents relying solely on short-term visual features**: Many existing agents process visual information by relying only on current frames or short-term memory. ViLoMem's grow-and-refine mechanism allows it to build and maintain long-term, evolving visual semantic memories.
+- **vs. Static Knowledge Graphs (KGs)**: While static KGs can store structured knowledge, they lack flexibility in handling dynamically changing visual information and novel concepts. ViLoMem's memory mechanism is dynamic, continuously growing and refining with the agent's experience.
+- **vs. Agents primarily focused on linguistic memory**: Many agent memory systems are predominantly language-centric. ViLoMem emphasizes the independence of visual memory and its synergistic interaction with linguistic memory, leading to superior performance in multimodal tasks.
+
+*(Inferred from title/venue; full paper not read.)*
+
+## Experiments
+
+**Table. Main results across six multimodal reasoning benchmarks.**
+
+| Method | MMMU | MathVista | MathVision | HallusionBench | MMStar | RealWorldQA |
+| --- | --- | --- | --- | --- | --- | --- |
+| GPT-4.1 (baseline) | 74.00 | 70.40 | 46.12* | 58.50 | 69.80 | 73.72 |
+| GPT-4.1 (step) | 74.16 | 74.27 | 47.47 | 74.44 | 70.43 | 72.03 |
+| \rowcolorlightgold GPT-4.1 (+ ViLoMem) | 77.26 | 76.88 | 53.95 | 75.29 | 72.43 | 74.38 |
+| Qwen3-VL-235B-A22B-Instruct (baseline) | 78.70 | 84.90 | 61.28* | 63.20 | 78.40 | 79.30 |
+| Qwen3-VL-235B-A22B-Instruct (step) | 75.97 | 83.66 | 62.17 | 74.58 | 76.16 | 78.66 |
+| \rowcolorlightgold Qwen3-VL-235B-A22B-Instruct (+ ViLoMem) | 79.40 | 84.98 | 62.83 | 75.21 | 78.31 | 77.22 |
+| Qwen3-VL-8B-Instruct (baseline) | 66.38* | 77.20 | 48.13* | 61.10 | 70.91 | 71.50 |
+| Qwen3-VL-8B-Instruct (step) | 65.52 | 77.80 | 48.35 | 73.08 | 70.22 | 70.85 |
+| \rowcolorlightgold Qwen3-VL-8B-Instruct (+ ViLoMem) | 69.90 | 77.87 | 49.34 | 73.19 | 72.13 | 73.59 |
+
+- **Significant improvement in multimodal reasoning performance**: ViLoMem demonstrates consistent and notable performance gains over baseline models (including GPT-4.1 and Qwen3 series) across various multimodal reasoning benchmarks such as MMMU, MathVision, and HallusionBench.
+- **Particularly strong performance in visually intensive tasks**: For instance, on tasks requiring fine-grained visual understanding and hallucination avoidance, like MathVision and HallusionBench, ViLoMem yields improvements of several percentage points.
+- **Compatibility with different scales of LLMs**: Experimental results indicate that ViLoMem effectively enhances the memory and reasoning capabilities of agents across various scales, from 8B to 235B parameters.
+- **Validation of the grow-and-refine mechanism**: These improvements directly demonstrate that ViLoMem's proposed dynamic growth and refinement mechanism for visual memory is crucial for enhancing an agent's long-term understanding and decision-making in complex visual environments.

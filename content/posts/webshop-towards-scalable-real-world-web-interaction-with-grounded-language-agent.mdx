@@ -1,0 +1,145 @@
+---
+title: "WebShop: Towards Scalable Real-World Web Interaction with Grounded Language Agents"
+date: 2026-04-24
+paper_date: 2022-07-04
+excerpt: "WebShop是一个模拟电商环境，用于训练AI代理在真实世界产品和指令下进行网页交互"
+excerpt_en: "WebShop is a simulated e-commerce environment for training AI agents on real-world products and instructions for web interaction"
+tags:
+  - paper-notes
+  - Benchmark
+  - Web
+paper_id: webshop-towards-scalable-real-world-web-interaction-with-grounded-language-agent
+paper_venue: "NeurIPS22"
+paper_link: "https://arxiv.org/abs/2207.01206"
+paper_code: "https://github.com/princeton-nlp/WebShop"
+auto_generated: true
+notes_hash: 3a22864687ce10af
+---
+
+## Motivation
+
+* 现有语言接地（language grounding）基准要么缺乏真实世界的语言元素，要么由于数据收集或反馈信号需要大量人工参与而难以扩展。
+* 这导致难以开发和评估能够理解复杂指令并在真实网页环境中执行多样化操作的AI代理。
+* WebShop旨在通过提供一个大规模、真实的模拟电商环境来弥补这一差距，以推动语言理解和决策制定能力更强的代理的发展。
+
+## Contribution
+
+* **WebShop环境**: 开发了一个包含118万真实产品和12,087条众包文本指令的模拟电商网站环境。
+* **语言接地挑战**: 提出了理解组合指令、查询（重新）制定、理解和处理网页中嘈杂文本以及执行策略性探索等挑战。
+* **人类演示数据集**: 收集了超过1,600个人类演示，用于训练和评估各种代理。
+* **模型评估与分析**: 训练并评估了使用RL、IL以及预训练图像和语言模型的多种代理，并分析了代理和人类轨迹。
+* **Sim-to-real迁移**: 证明了在WebShop上训练的代理在amazon.com和ebay.com上表现出非平凡的sim-to-real迁移能力。
+
+## Method
+
+1.  **环境构建**:
+    *   WebShop是一个基于Python的模拟电商网站，使用Selenium WebDriver进行交互。
+    *   它包含118万真实产品，这些产品从多个电商网站抓取，并存储在本地数据库中。
+    *   网页渲染使用Jinja2模板引擎，确保了真实感和多样性。
+2.  **指令收集**:
+    *   通过众包平台收集了12,087条文本指令，每条指令描述了一个产品需求。
+    *   指令设计为具有组合性，要求代理理解多个属性和偏好。
+3.  **代理训练**:
+    *   **模仿学习 (Imitation Learning, IL)**: 代理通过模仿人类专家演示来学习行为。
+        *   使用BERT编码指令和网页文本，然后通过交叉注意力机制进行交互。
+        *   训练目标是最小化代理动作与人类动作之间的交叉熵损失。
+    *   **强化学习 (Reinforcement Learning, RL)**: 在IL模型基础上，使用策略梯度（Policy Gradient）方法进行微调。
+        *   奖励函数考虑了产品属性匹配、选项选择和价格匹配等因素。
+    *   **规则基线 (Rule-based Heuristics)**: 作为性能比较的基线，执行简单的搜索和选择策略。
+4.  **评估指标**:
+    *   任务成功率：代理能否成功找到、定制并购买符合指令要求的产品。
+    *   详细评分：根据属性匹配、选项选择、产品类型和价格匹配等细分维度进行评分。
+
+## Comparison with Previous Work
+
+*   **vs. 现有语言接地基准**:
+    *   WebShop提供了更丰富的真实世界语言元素和产品多样性，而许多现有基准要么过于简化，要么依赖合成数据。
+    *   WebShop通过自动化环境交互和奖励计算，解决了现有基准中因大量人工参与而导致的扩展性问题。
+*   **vs. 基于文本的游戏环境**:
+    *   WebShop的网页环境具有视觉和布局信息，而不仅仅是纯文本描述，更接近真实世界的网页交互。
+    *   WebShop的指令和产品是真实的，而非虚构的，这增加了语言理解的复杂性和实用性。
+*   **vs. 现有Web自动化工具**:
+    *   WebShop专注于语言理解和决策制定，以完成复杂的用户指令，而不仅仅是执行预定义脚本或简单的Web抓取任务。
+    *   WebShop的挑战在于处理嘈杂的网页文本和进行策略性探索，这超越了传统Web自动化工具的能力。
+
+## Experiments
+
+**Table.** WebShop上不同代理的得分细分以及轨迹统计。
+
+|  | Score | Count |  |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | All | Att | Opt | Type | Price | State | Item | Search |
+| Rule | 45.6 | 66.6 | 0.0 | 80.5 | 86.0 | 3.0 (3 / 3) | 1.0 (1 / 1) | 1.0 (1 / 1) |
+| IL | 59.9 | 69.3 | 45.2 | 86.4 | 84.0 | 9.4 (90 / 3) | 1.6 (11 / 1) | 1.3 (17 / 1) |
+| IL+RL | 62.4 | 74.0 | 38.9 | 89.7 | 88.7 | 4.5 (5 / 1) | 1.0 (1 / 1) | 1.0 ( 1 / 1) |
+| Human Expert | 82.1 | 81.8 | 73.9 | 94.4 | 97.7 | 11.3 (114 / 4) | 1.9 (16 / 1) | 1.4 (16 / 1) |
+
+*   **模型性能**: 最佳模型（IL+RL）实现了29%的任务成功率，显著优于规则基线（9.6%），但仍远低于人类专家水平（59%）。
+*   **人类与代理差距**: 人类专家在所有评分维度上都表现出色，尤其是在处理选项（Opt）方面，这表明代理在理解和操作复杂产品配置方面仍有很大提升空间。
+*   **RL的贡献**: 结合RL微调（IL+RL）在整体得分上略优于纯IL模型，尤其是在属性（Att）、类型（Type）和价格（Price）匹配方面有所提升。
+*   **Sim-to-real迁移**: 实验表明，在WebShop上训练的代理在amazon.com和ebay.com等真实网站上表现出非平凡的迁移能力，验证了WebShop在开发实用Web代理方面的潜力。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+*   Existing benchmarks for grounding language in interactive environments either lack real-world linguistic elements or are difficult to scale due to substantial human involvement in data collection or feedback.
+*   This makes it challenging to develop and evaluate AI agents capable of understanding complex instructions and performing diverse actions in real web environments.
+*   WebShop aims to bridge this gap by providing a large-scale, realistic simulated e-commerce environment to foster the development of agents with stronger language understanding and decision-making abilities.
+
+## Contribution
+
+*   **WebShop Environment**: Developed a simulated e-commerce website environment with 1.18 million real-world products and 12,087 crowd-sourced text instructions.
+*   **Language Grounding Challenges**: Identified challenges including understanding compositional instructions, query (re-)formulation, comprehending and acting on noisy text in webpages, and performing strategic exploration.
+*   **Human Demonstrations Dataset**: Collected over 1,600 human demonstrations for training and evaluating a diverse range of agents.
+*   **Model Evaluation and Analysis**: Trained and evaluated various agents using RL, IL, and pre-trained image and language models, and analyzed agent and human trajectories.
+*   **Sim-to-Real Transfer**: Demonstrated that agents trained on WebShop exhibit non-trivial sim-to-real transfer when evaluated on amazon.com and ebay.com.
+
+## Method
+
+1.  **Environment Construction**:
+    *   WebShop is a Python-based simulated e-commerce website, interacting via Selenium WebDriver.
+    *   It features 1.18 million real-world products scraped from various e-commerce sites and stored in a local database.
+    *   Webpages are rendered using the Jinja2 templating engine, ensuring realism and diversity.
+2.  **Instruction Collection**:
+    *   12,087 text instructions, each specifying a product requirement, were collected via crowdsourcing.
+    *   Instructions are designed to be compositional, requiring agents to understand multiple attributes and preferences.
+3.  **Agent Training**:
+    *   **Imitation Learning (IL)**: Agents learn behaviors by imitating human expert demonstrations.
+        *   BERT is used to encode instructions and webpage text, with cross-attention mechanisms for interaction.
+        *   Training aims to minimize the cross-entropy loss between agent actions and human actions.
+    *   **Reinforcement Learning (RL)**: Policy Gradient methods are used to fine-tune the IL model.
+        *   The reward function considers factors like product attribute matching, option selection, and price matching.
+    *   **Rule-based Heuristics**: Served as a baseline for performance comparison, executing simple search and selection strategies.
+4.  **Evaluation Metrics**:
+    *   Task success rate: Whether the agent successfully finds, customizes, and purchases a product meeting the instruction's requirements.
+    *   Detailed scoring: Scores are broken down by attribute matching, option selection, product type, and price matching.
+
+## Comparison with Previous Work
+
+*   **vs. Existing Language Grounding Benchmarks**:
+    *   WebShop offers richer real-world linguistic elements and product diversity, whereas many existing benchmarks are either oversimplified or rely on synthetic data.
+    *   WebShop addresses scalability issues in existing benchmarks, which often require extensive human involvement, through automated environment interaction and reward computation.
+*   **vs. Text-based Game Environments**:
+    *   WebShop's web environment includes visual and layout information, not just pure text descriptions, making it closer to real-world web interaction.
+    *   WebShop's instructions and products are real, not fictional, increasing the complexity and practical relevance of language understanding.
+*   **vs. Existing Web Automation Tools**:
+    *   WebShop focuses on language understanding and decision-making to fulfill complex user instructions, rather than just executing predefined scripts or simple web scraping tasks.
+    *   The challenges in WebShop involve handling noisy webpage text and performing strategic exploration, which goes beyond the capabilities of traditional web automation tools.
+
+## Experiments
+
+**Table.** Score breakdown and trajectory statistics for different agents on WebShop.
+
+|  | Score | Count |  |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  | All | Att | Opt | Type | Price | State | Item | Search |
+| Rule | 45.6 | 66.6 | 0.0 | 80.5 | 86.0 | 3.0 (3 / 3) | 1.0 (1 / 1) | 1.0 (1 / 1) |
+| IL | 59.9 | 69.3 | 45.2 | 86.4 | 84.0 | 9.4 (90 / 3) | 1.6 (11 / 1) | 1.3 (17 / 1) |
+| IL+RL | 62.4 | 74.0 | 38.9 | 89.7 | 88.7 | 4.5 (5 / 1) | 1.0 (1 / 1) | 1.0 ( 1 / 1) |
+| Human Expert | 82.1 | 81.8 | 73.9 | 94.4 | 97.7 | 11.3 (114 / 4) | 1.9 (16 / 1) | 1.4 (16 / 1) |
+
+*   **Model Performance**: The best model (IL+RL) achieved a task success rate of 29%, significantly outperforming rule-based heuristics (9.6%), but still far below human expert performance (59%).
+*   **Human-Agent Gap**: Human experts excelled across all scoring dimensions, particularly in handling options (Opt), indicating significant room for improvement in agents' ability to understand and manipulate complex product configurations.
+*   **Contribution of RL**: Combining RL fine-tuning (IL+RL) slightly outperformed the pure IL model in overall score, with improvements in attribute (Att), type (Type), and price (Price) matching.
+*   **Sim-to-Real Transfer**: Experiments showed that agents trained on WebShop exhibited non-trivial transfer capabilities to real websites like amazon.com and ebay.com, validating WebShop's potential for developing practical web-based agents.

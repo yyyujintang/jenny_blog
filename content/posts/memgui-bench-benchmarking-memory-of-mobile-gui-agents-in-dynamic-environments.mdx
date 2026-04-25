@@ -1,0 +1,136 @@
+---
+title: "MemGUI-Bench: Benchmarking Memory of Mobile GUI Agents in Dynamic Environments"
+date: 2026-04-25
+paper_date: 2026-02-03
+excerpt: "MemGUI-Bench是首个全面评估移动GUI智能体记忆能力的基准，包含跨时间、跨空间的记忆挑战和自动化评估。"
+excerpt_en: "MemGUI-Bench is the first comprehensive benchmark for evaluating mobile GUI agent memory, featuring cross-temporal and cross-spatial memory challenges with automated evaluation."
+tags:
+  - paper-notes
+  - Benchmark
+  - GUI
+paper_id: memgui-bench-benchmarking-memory-of-mobile-gui-agents-in-dynamic-environments
+paper_link: "https://arxiv.org/abs/2602.06075"
+paper_code: "https://github.com/lgy0404/MemGUI-Bench"
+auto_generated: true
+notes_hash: ae0807361434fe1b
+---
+
+## Motivation
+
+当前的移动GUI智能体基准测试在评估记忆能力方面存在系统性缺陷，记忆相关任务占比极低（仅5.2-11.8%），且缺乏跨会话学习的评估。这意味着我们无法真正了解智能体在复杂、动态的移动环境中如何保留和利用信息。
+
+这种评估不足阻碍了记忆增强型智能体的开发，因为研究人员缺乏一个可靠的工具来衡量和比较不同记忆机制的有效性。我们迫切需要一个专注于记忆的基准来推动该领域的发展。
+
+## Contribution
+
+- **系统性记忆分类法 (Memory Taxonomy)**：分析了11个智能体和5种架构的记忆机制。
+- **记忆中心基准 (Memory-Centric Benchmark)**：提出了MemGUI-Bench，包含128个任务，覆盖26个应用，其中89.8%的任务通过跨时间 (cross-temporal) 和跨空间 (cross-spatial) 的信息保留来挑战智能体的记忆能力。
+- **自动化评估流程 (Automated Evaluation Pipeline)**：引入MemGUI-Eval，一个具有Progressive Scrutiny和7个分层指标的自动化评估流程。
+- **基准评估 (RQ-driven Assessment)**：对11个SOTA智能体进行了RQ驱动的评估，揭示了显著的记忆缺陷、5种不同的失败模式，并总结了5项可操作的设计启示。
+- **资源开源 (Fully Open-Sourced Resources)**：所有代码、基准和评估结果将完全开源并持续维护。
+
+## Method
+
+### MemGUI-Bench 基准设计
+
+1.  **任务设计 (Task Design)**：设计了128个任务，覆盖26个真实移动应用。这些任务特别强调跨时间 (cross-temporal) 和跨空间 (cross-spatial) 的记忆需求，例如在不同会话或不同应用中记住之前的信息。
+2.  **记忆分类法 (Memory Taxonomy)**：对现有智能体的记忆架构进行了系统性分类，包括短期记忆 (Short-Term Memory) 和长期记忆 (Long-Term Memory) 的实现方式。
+
+### MemGUI-Eval 评估流程
+
+1.  **分阶段LLM-as-Judge评估 (Staged LLM-as-Judge Evaluation)**：采用pass@k和分阶段的LLM-as-Judge评估方法，以提高评估的准确性和效率。
+2.  **Progressive Scrutiny**：通过逐步细化的评估机制，确保对智能体行为的全面理解。
+3.  **分层记忆指标 (Hierarchical Memory Metrics)**：定义了7个分层指标，专门用于量化智能体的短期记忆和长期记忆表现。
+
+## Comparison with Previous Work
+
+- **vs. 现有移动GUI基准 (e.g., AndroidArena, SPA-Bench)**：MemGUI-Bench显著提高了记忆相关任务的比例（89.8% vs. 5.2-11.8%），并首次引入了跨会话学习评估。
+- **vs. 传统评估方法 (Rule-based Evaluation)**：MemGUI-Bench采用LLM-as-Judge的自动化评估流程，相比基于规则的评估更灵活、更准确，能够处理更复杂的任务场景。
+- **vs. 缺乏记忆评估的基准 (e.g., LlamaTouch, B-MoCA)**：这些基准完全没有记忆任务，无法评估智能体在动态环境中的信息保留能力。MemGUI-Bench填补了这一空白。
+
+## Experiments
+
+**Table.** 移动GUI智能体在MemGUI-Bench上的性能比较。
+
+| Agent | Short-Term Memory (pass@1) | Long-Term Memory (pass@3) | | | | | | |
+|---|---|---|---|---|---|---|---|---|
+| | Easy | Med | Hard | Overall | Easy | Med | Hard | Overall |
+| Agentic Workflow | | | | | | | | |
+| Agent-S2 | 41.7 | 19.0 | 18.4 | 27.3 | 64.6 | 42.9 | 36.8 | 49.2 |
+| Mobile-Agent-E | 12.5 | 2.4 | 0.0 | 5.5 | 22.9 | 2.4 | 2.6 | 10.2 |
+| T3A | 31.2 | 16.7 | 18.4 | 22.7 | 45.8 | 45.2 | 34.2 | 42.2 |
+| M3A | 39.6 | 35.7 | 21.1 | 32.8 | 47.9 | 50.0 | 44.7 | 47.7 |
+| Mobile-Agent-V2 | 8.3 | 0.0 | 0.0 | 3.1 | 10.4 | 0.0 | 0.0 | 3.9 |
+| SeeAct | 6.2 | 0.0 | 0.0 | 2.3 | 12.5 | 2.4 | 0.0 | 5.5 |
+| AppAgent | 8.3 | 0.0 | 0.0 | 3.1 | 22.9 | 2.4 | 0.0 | 9.4 |
+| Agent-as-a-Model | | | | | | | | |
+| UI-Venus-7B | 14.6 | 0.0 | 0.0 | 5.5 | 20.8 | 0.0 | 0.0 | 7.8 |
+| UI-TARS-1.5-7B | 8.3 | 0.0 | 0.0 | 3.1 | 16.7 | 0.0 | 0.0 | 6.2 |
+| GUI-Owl-7B | 14.6 | 0.0 | 2.6 | 6.2 | 22.9 | 2.4 | 2.6 | 10.2 |
+| CogAgent | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |
+
+- 实验结果表明，所有11个SOTA智能体在MemGUI-Bench上都存在显著的记忆缺陷，尤其是在处理复杂和跨会话任务时。
+- M3A在短期记忆和长期记忆方面表现相对较好，但总体成功率仍然较低。
+- 识别出5种不同的失败模式，例如无法在不同应用之间传递信息，或在长时间序列后遗忘关键细节。
+- 总结了5项可操作的设计启示，旨在指导未来记忆增强型GUI智能体的开发，例如需要更强大的长期记忆机制和跨应用信息共享能力。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Current mobile GUI agent benchmarks systematically fail to assess memory capabilities. Only 5.2-11.8% of tasks are memory-related, and there is no evaluation for cross-session learning. This severely limits our understanding of how agents retain and utilize information in complex, dynamic mobile environments.
+
+This lack of adequate evaluation hinders the development of memory-enhanced agents, as researchers lack a reliable tool to measure and compare the effectiveness of different memory mechanisms. A memory-centric benchmark is urgently needed to advance the field.
+
+## Contribution
+
+- **Systematic Memory Taxonomy**: Analyzing 11 agents across 5 architectures to categorize their memory mechanisms.
+- **Memory-Centric Benchmark**: Introducing MemGUI-Bench, with 128 tasks across 26 applications, where 89.8% challenge memory through cross-temporal and cross-spatial retention.
+- **Automated Evaluation Pipeline**: Presenting MemGUI-Eval, an automated pipeline featuring Progressive Scrutiny and 7 hierarchical metrics.
+- **RQ-driven Assessment**: Conducting an RQ-driven assessment of 11 state-of-the-art agents, revealing significant memory deficits, 5 distinct failure modes, and synthesizing 5 actionable design implications.
+- **Fully Open-Sourced Resources**: All resources, including code, benchmark, and evaluation results, will be fully open-sourced and continuously maintained.
+
+## Method
+
+### MemGUI-Bench Benchmark Design
+
+1.  **Task Design**: 128 tasks were designed across 26 real-world mobile applications. These tasks specifically emphasize cross-temporal and cross-spatial memory requirements, such such as recalling information across different sessions or applications.
+2.  **Memory Taxonomy**: A systematic taxonomy was developed to classify the memory architectures of existing agents, including their short-term and long-term memory implementations.
+
+### MemGUI-Eval Evaluation Pipeline
+
+1.  **Staged LLM-as-Judge Evaluation**: Employs pass@k and a staged LLM-as-judge evaluation approach to enhance evaluation accuracy and efficiency.
+2.  **Progressive Scrutiny**: Ensures a comprehensive understanding of agent behavior through a progressively refined evaluation mechanism.
+3.  **Hierarchical Memory Metrics**: Defines 7 hierarchical metrics specifically designed to quantify agent performance in both short-term and long-term memory.
+
+## Comparison with Previous Work
+
+- **vs. Existing Mobile GUI Benchmarks (e.g., AndroidArena, SPA-Bench)**: MemGUI-Bench significantly increases the proportion of memory-related tasks (89.8% vs. 5.2-11.8%) and introduces cross-session learning evaluation for the first time.
+- **vs. Traditional Evaluation Methods (Rule-based Evaluation)**: MemGUI-Bench utilizes an automated LLM-as-Judge evaluation pipeline, which is more flexible and accurate than rule-based methods, capable of handling more complex task scenarios.
+- **vs. Benchmarks Lacking Memory Evaluation (e.g., LlamaTouch, B-MoCA)**: These benchmarks completely lack memory tasks, making them unable to assess an agent's information retention capabilities in dynamic environments. MemGUI-Bench fills this critical gap.
+
+## Experiments
+
+**Table.** Performance comparison of Mobile GUI agents on MemGUI-Bench.
+
+| Agent | Short-Term Memory (pass@1) | Long-Term Memory (pass@3) | | | | | | |
+|---|---|---|---|---|---|---|---|---|
+| | Easy | Med | Hard | Overall | Easy | Med | Hard | Overall |
+| Agentic Workflow | | | | | | | | |
+| Agent-S2 | 41.7 | 19.0 | 18.4 | 27.3 | 64.6 | 42.9 | 36.8 | 49.2 |
+| Mobile-Agent-E | 12.5 | 2.4 | 0.0 | 5.5 | 22.9 | 2.4 | 2.6 | 10.2 |
+| T3A | 31.2 | 16.7 | 18.4 | 22.7 | 45.8 | 45.2 | 34.2 | 42.2 |
+| M3A | 39.6 | 35.7 | 21.1 | 32.8 | 47.9 | 50.0 | 44.7 | 47.7 |
+| Mobile-Agent-V2 | 8.3 | 0.0 | 0.0 | 3.1 | 10.4 | 0.0 | 0.0 | 3.9 |
+| SeeAct | 6.2 | 0.0 | 0.0 | 2.3 | 12.5 | 2.4 | 0.0 | 5.5 |
+| AppAgent | 8.3 | 0.0 | 0.0 | 3.1 | 22.9 | 2.4 | 0.0 | 9.4 |
+| Agent-as-a-Model | | | | | | | | |
+| UI-Venus-7B | 14.6 | 0.0 | 0.0 | 5.5 | 20.8 | 0.0 | 0.0 | 7.8 |
+| UI-TARS-1.5-7B | 8.3 | 0.0 | 0.0 | 3.1 | 16.7 | 0.0 | 0.0 | 6.2 |
+| GUI-Owl-7B | 14.6 | 0.0 | 2.6 | 6.2 | 22.9 | 2.4 | 2.6 | 10.2 |
+| CogAgent | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |
+
+- Experimental results indicate significant memory deficits across all 11 state-of-the-art agents on MemGUI-Bench, especially when handling complex and cross-session tasks.
+- M3A demonstrates relatively better performance in both short-term and long-term memory, though overall success rates remain low.
+- Five distinct failure modes were identified, such as the inability to transfer information between different applications or forgetting critical details after long sequences.
+- Five actionable design implications were synthesized to guide the development of future memory-enhanced GUI agents, emphasizing the need for more robust long-term memory mechanisms and cross-application information sharing capabilities.

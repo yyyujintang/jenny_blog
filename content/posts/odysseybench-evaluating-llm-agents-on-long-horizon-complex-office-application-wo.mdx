@@ -1,0 +1,131 @@
+---
+title: "OdysseyBench: Evaluating LLM Agents on Long-Horizon Complex Office Application Workflows"
+date: 2026-04-25
+paper_date: 2025-08-12
+excerpt: "OdysseyBench是一个用于评估LLM代理在Word、Excel等办公应用中长周期、复杂工作流的新基准"
+excerpt_en: "OdysseyBench is a new benchmark for evaluating LLM agents on long-horizon, complex workflows across office applications like Word and Excel"
+tags:
+  - paper-notes
+  - Benchmark
+  - Long-Horizon
+paper_id: odysseybench-evaluating-llm-agents-on-long-horizon-complex-office-application-wo
+paper_link: "https://arxiv.org/abs/2508.09124"
+auto_generated: true
+notes_hash: e56014caf9bba0b9
+---
+
+## Motivation
+
+现有的大语言模型（LLM）代理基准主要关注原子任务，这些任务是独立的且自包含的。然而，现实世界的应用通常需要LLM代理处理复杂、长周期的工作流。
+
+这些真实场景中的任务，要求代理能够识别长周期交互历史中的关键信息，并进行跨多个应用程序的多步骤推理。
+
+当前基准未能捕捉到这些现实场景所需的长期上下文依赖性和多交互协调能力，因此无法准确评估LLM代理的真实能力。
+
+## Contribution
+
+- **OdysseyBench基准**: 提出了一个全面的基准，用于评估LLM代理在Word、Excel、PDF、Email和Calendar等多样化办公应用中的长周期工作流。
+- **双重任务集**: 包含OdysseyBench+（300个源自真实用例的任务）和OdysseyBench-Neo（302个新合成的复杂任务）。
+- **HomerAgents框架**: 提出了一个多代理框架，通过系统性的环境探索、任务生成和对话合成，自动化生成长周期工作流基准。
+- **挑战性评估**: 实验证明OdysseyBench能有效挑战SOTA的LLM代理，提供比现有原子任务基准更准确的真实复杂场景能力评估。
+- **资源发布**: 发布了OdysseyBench和HomerAgents，以促进该领域的研究。
+
+## Method
+
+1.  **定义长周期工作流**: 明确了需要LLM代理在多个办公应用中执行多步骤推理、并依赖长期上下文信息来完成的任务。
+2.  **构建OdysseyBench+**:
+    *   从真实世界用例中提取300个任务。
+    *   这些任务要求代理从长周期交互历史中识别关键信息，并在Word、Excel、PDF、Email和Calendar等应用中进行多步骤推理。
+3.  **构建OdysseyBench-Neo**:
+    *   新合成了302个复杂的长周期任务。
+    *   旨在进一步测试代理在更复杂、更具挑战性场景下的能力。
+4.  **开发HomerAgents框架**:
+    *   **环境探索**: 模拟代理在各种办公应用中的操作。
+    *   **任务生成**: 自动化生成符合长周期工作流特征的任务。
+    *   **对话合成**: 生成与任务相关的多轮交互对话历史，以模拟真实的用户-代理交互。
+    *   该框架旨在实现基准的可扩展创建，降低人工标注成本。
+
+## Comparison with Previous Work
+
+- **vs. 现有原子任务基准**:
+    *   现有基准主要关注自包含、独立的原子任务，无法捕捉长期的上下文依赖和多交互协调。
+    *   OdysseyBench专注于长周期、复杂的工作流，更贴近现实世界的应用场景，能更准确地评估LLM代理的实际能力。
+- **vs. 缺乏真实办公应用集成**:
+    *   许多现有基准可能侧重于通用语言理解或特定领域的任务，但很少有基准能像OdysseyBench一样，全面整合Word、Excel、PDF、Email和Calendar等多样化的办公应用程序。
+- **vs. 手动基准创建**:
+    *   传统基准创建往往依赖大量人工标注，成本高昂且难以扩展。
+    *   OdysseyBench通过HomerAgents框架自动化生成任务和对话，大大提高了基准创建的效率和可扩展性。
+
+## Experiments
+
+**Table.** LLM代理在OdysseyBench+和OdysseyBench-Neo上的整体表现（Completeness, Appropriateness, Both）。
+
+| Metric | OdysseyBench+ | OdysseyBench-Neo |
+| --- | --- | --- |
+| Completeness | 81.33 | 93.71 |
+| Appropriateness | 88.33 | 88.08 |
+| Both | 72.67 | 83.77 |
+
+*   OdysseyBench有效挑战了SOTA的LLM代理，表明现有代理在处理长周期复杂办公工作流方面仍有显著提升空间。
+*   基准的两个任务集（OdysseyBench+和OdysseyBench-Neo）提供了多样化的挑战，其中OdysseyBench-Neo在Completeness指标上表现出更高的得分，可能暗示其在某些方面更易于代理完成，或任务定义更清晰。
+*   评估结果显示，LLM代理在“Appropriateness”（适当性）方面的表现相对稳定，但在“Completeness”（完整性）方面存在差异，这可能与任务的复杂度和所需步骤的多少有关。
+*   通过OdysseyBench的评估，可以更准确地识别LLM代理在真实世界生产力场景中的优势和劣势。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Existing benchmarks for large language model (LLM) agents predominantly focus on atomic tasks, which are self-contained and independent. However, real-world applications increasingly require LLM agents to handle complex, long-horizon workflows.
+
+These realistic scenarios demand that agents identify essential information from long-horizon interaction histories and perform multi-step reasoning across various applications.
+
+Current benchmarks fail to capture the long-term contextual dependencies and multi-interaction coordination required in these real-world settings, thus providing an inaccurate assessment of LLM agents' true capabilities.
+
+## Contribution
+
+- **OdysseyBench Benchmark**: Introduces a comprehensive benchmark for evaluating LLM agents on long-horizon workflows across diverse office applications including Word, Excel, PDF, Email, and Calendar.
+- **Dual Task Splits**: Comprises OdysseyBench+ with 300 tasks derived from real-world use cases, and OdysseyBench-Neo with 302 newly synthesized complex tasks.
+- **HomerAgents Framework**: Proposes a multi-agent framework that automates the generation of long-horizon workflow benchmarks through systematic environment exploration, task generation, and dialogue synthesis.
+- **Challenging Evaluation**: Extensive evaluation demonstrates that OdysseyBench effectively challenges state-of-the-art LLM agents, providing a more accurate assessment of their capabilities in complex, real-world contexts compared to existing atomic task benchmarks.
+- **Resource Release**: Releases OdysseyBench and HomerAgents to foster research along this line.
+
+## Method
+
+1.  **Define Long-Horizon Workflows**: Clearly outlines tasks requiring LLM agents to perform multi-step reasoning across multiple office applications, relying on long-term contextual information.
+2.  **Construct OdysseyBench+**:
+    *   Derived 300 tasks from real-world use cases.
+    *   These tasks require agents to identify essential information from long-horizon interaction histories and perform multi-step reasoning across applications like Word, Excel, PDF, Email, and Calendar.
+3.  **Construct OdysseyBench-Neo**:
+    *   Synthesized 302 new, complex long-horizon tasks.
+    *   Aimed at further testing agent capabilities in more intricate and challenging scenarios.
+4.  **Develop HomerAgents Framework**:
+    *   **Environment Exploration**: Simulates agent operations within various office applications.
+    *   **Task Generation**: Automates the creation of tasks characterized by long-horizon workflows.
+    *   **Dialogue Synthesis**: Generates multi-turn interaction histories relevant to the tasks, simulating realistic user-agent interactions.
+    *   This framework is designed to enable scalable benchmark creation, reducing manual annotation costs.
+
+## Comparison with Previous Work
+
+- **vs. Existing Atomic Task Benchmarks**:
+    *   Prior benchmarks primarily focus on self-contained, independent atomic tasks, failing to capture long-term contextual dependencies and multi-interaction coordination.
+    *   OdysseyBench focuses on long-horizon, complex workflows, more closely mirroring real-world application scenarios and providing a more accurate assessment of LLM agents' practical capabilities.
+- **vs. Lack of Real Office Application Integration**:
+    *   Many existing benchmarks might focus on general language understanding or domain-specific tasks, but few comprehensively integrate diverse office applications like Word, Excel, PDF, Email, and Calendar as OdysseyBench does.
+- **vs. Manual Benchmark Creation**:
+    *   Traditional benchmark creation often relies on extensive manual annotation, which is costly and difficult to scale.
+    *   OdysseyBench, through its HomerAgents framework, automates task and dialogue generation, significantly improving the efficiency and scalability of benchmark creation.
+
+## Experiments
+
+**Table.** Overall performance of LLM agents on OdysseyBench+ and OdysseyBench-Neo (Completeness, Appropriateness, Both).
+
+| Metric | OdysseyBench+ | OdysseyBench-Neo |
+| --- | --- | --- |
+| Completeness | 81.33 | 93.71 |
+| Appropriateness | 88.33 | 88.08 |
+| Both | 72.67 | 83.77 |
+
+*   OdysseyBench effectively challenges state-of-the-art LLM agents, indicating significant room for improvement in handling long-horizon complex office workflows.
+*   The benchmark's two task sets (OdysseyBench+ and OdysseyBench-Neo) offer diverse challenges, with OdysseyBench-Neo showing higher Completeness scores, potentially implying it's either easier for agents to complete in some aspects or tasks are more clearly defined.
+*   Evaluation results show relatively stable performance in "Appropriateness" but variations in "Completeness" across agents, which may correlate with task complexity and the number of required steps.
+*   Through evaluation with OdysseyBench, the strengths and weaknesses of LLM agents in real-world productivity scenarios can be more accurately identified.

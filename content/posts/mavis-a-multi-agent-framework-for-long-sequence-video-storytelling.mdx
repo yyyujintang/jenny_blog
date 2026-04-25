@@ -1,0 +1,150 @@
+---
+title: "MAViS: A Multi-Agent Framework for Long-Sequence Video Storytelling"
+date: 2026-04-25
+paper_date: 2025-08-11
+excerpt: "MAViS提出多智能体协作框架，解决长序列视频生成中辅助能力、视觉质量和表达力不足的问题"
+excerpt_en: "MAViS proposes a multi-agent collaborative framework to address limitations in long-sequence video generation, improving assistive capability, visual quality, and expressiveness."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Episodic
+  - Multimodal
+paper_id: mavis-a-multi-agent-framework-for-long-sequence-video-storytelling
+paper_link: "https://arxiv.org/abs/2508.08487"
+auto_generated: true
+notes_hash: 92ab44201d8762f1
+---
+
+## Motivation
+
+尽管近期在长序列视频生成方面取得了进展，但现有框架仍面临显著局限。这些局限主要体现在辅助能力差、视觉质量不佳以及表达力有限。
+
+用户通常难以将抽象的想法高效转化为具体的视觉叙事。现有的生成模型在处理复杂、连贯的长序列视频时，往往难以保持一致性和高质量。
+
+MAViS旨在通过多智能体协作框架来缓解这些问题，从而更有效地将想法转化为视觉叙事。
+
+## Contribution
+
+- **多智能体协作框架 (MAViS)**：提出一个多智能体协作框架，专门用于辅助长序列视频叙事生成。
+- **3E 原则**：引入 Explore (探索)、Examine (检查) 和 Enhance (增强) 原则，确保各阶段中间输出的完整性。
+- **剧本编写指南 (Script Writing Guidelines)**：为优化剧本与生成工具的兼容性，提出了专门的剧本编写指南。
+- **模块化框架**：MAViS 的模块化设计使其能够灵活扩展，兼容多种生成模型和工具。
+- **多模态设计输出**：作为目前唯一能提供包含叙事和背景音乐的视频框架，实现了多模态输出。
+
+## Method
+
+MAViS 框架通过以下多阶段协作流程实现长序列视频叙事生成：
+
+1.  **剧本编写 (Script Writing)**：
+    *   智能体根据用户提供的简要想法描述，生成详细的视频剧本。
+    *   遵循 Script Writing Guidelines，确保剧本与后续生成工具的兼容性。
+2.  **镜头设计 (Shot Designing)**：
+    *   智能体根据剧本内容，设计每个镜头的构图、角度和场景布局。
+    *   在这一阶段，智能体运用 3E 原则来探索多种设计方案，检查其完整性，并进行增强。
+3.  **角色建模 (Character Modeling)**：
+    *   智能体根据剧本和镜头设计，创建或选择视频中的角色模型。
+4.  **关键帧生成 (Keyframe Generation)**：
+    *   智能体生成视频的关键帧图像，作为后续动画的基础。
+5.  **视频动画 (Video Animation)**：
+    *   智能体将关键帧转化为流畅的视频动画序列。
+6.  **音频生成 (Audio Generation)**：
+    *   智能体为生成的视频添加叙事旁白和背景音乐，实现多模态输出。
+
+## Comparison with Previous Work
+
+- **vs. Mora Yuan et al. (2024)**：MAViS 提供了完整的剧本编写和镜头设计功能，并支持音频生成，而 Mora Yuan et al. 缺乏这些能力。
+- **vs. AesopAgent Wang et al. (2024a)**：MAViS 包含镜头设计和音频生成，且在动态性和 ID 一致性方面表现更优。
+- **vs. MovieDreamer Zhao et al. (2024)**：MAViS 是一个多智能体框架，支持剧本编写、镜头设计和音频生成，而 MovieDreamer 缺乏智能体协作和多阶段生成能力。
+- **vs. DreamFactory Xie et al. (2024)**：MAViS 增加了剧本编写、ID 一致性和音频生成功能，并实现了完全自动化。
+- **vs. VGoT Zheng et al. (2025)**：MAViS 提供了镜头设计、ID 一致性和音频生成，并且是智能体驱动的框架。
+- **vs. LCT Guo et al. (2025)**：MAViS 提供了全面的剧本编写、镜头设计、ID 一致性和音频生成，并采用智能体协作模式。
+- **vs. MovieAgent Wu et al. (2025b)**：MAViS 增加了剧本编写、ID 一致性和完全自动化功能。
+
+## Experiments
+
+**Table.** MAViS 与现有长序列视频生成框架的功能对比。
+
+| Methods | Agentic | Script Writing | Shot Designing | Dynamic | ID Consistency | Audio | Automated |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Mora Yuan et al. (2024) | ✓ |  |  | ✓ |  |  | ✓ |  |
+| AesopAgent Wang et al. (2024a) | ✓ | ✓ |  |  | ✓ |  | ✓ |  |
+| MovieDreamer Zhao et al. (2024) |  |  |  | ✓ | ✓ |  |  |  |
+| DreamFactory Xie et al. (2024) | ✓ |  | ✓ | ✓ | ✓ |  |  |  |
+| VGoT Zheng et al. (2025) |  | ✓ |  | ✓ | ✓ |  | ✓ |  |
+| LCT Guo et al. (2025) |  |  |  | ✓ | ✓ |  |  |  |
+| MovieAgent Wu et al. (2025b) | ✓ |  | ✓ | ✓ | ✓ | ✓ |  |  |
+| MAViS (ours) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  |
+
+*   实验结果表明，MAViS 在辅助能力、视觉质量和视频表达力方面均达到了 SOTA 性能。
+*   MAViS 是唯一一个在所有关键功能（Agentic, Script Writing, Shot Designing, Dynamic, ID Consistency, Audio, Automated）上都打勾的框架，展示了其全面的能力。
+*   通过其模块化框架，MAViS 能够支持多样化的生成模型和工具，展现了良好的可扩展性。
+*   MAViS 能够仅凭简短的想法描述，就快速生成高质量、完整的长序列视频，并提供多模态设计输出（视频、叙事和背景音乐）。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Despite recent advances, existing long-sequence video generation frameworks still suffer from significant limitations. These primarily include poor assistive capability, suboptimal visual quality, and limited expressiveness.
+
+Users often struggle to efficiently translate abstract ideas into concrete visual narratives. Current generative models frequently fail to maintain consistency and high quality when handling complex, coherent long-sequence videos.
+
+MAViS aims to mitigate these issues through a multi-agent collaborative framework, thereby more effectively translating ideas into visual narratives.
+
+## Contribution
+
+-   **Multi-Agent Collaborative Framework (MAViS)**: Proposes a multi-agent collaborative framework specifically designed to assist in long-sequence video storytelling.
+-   **3E Principle**: Introduces the Explore, Examine, and Enhance principle to ensure the completeness of intermediate outputs at each stage.
+-   **Script Writing Guidelines**: Develops specific guidelines for script writing to optimize compatibility between scripts and generative tools.
+-   **Modular Framework**: MAViS's modular design allows for flexible scalability with diverse generative models and tools.
+-   **Multimodal Design Output**: Achieves multimodal output as the only framework currently providing videos with narratives and background music.
+
+## Method
+
+The MAViS framework achieves long-sequence video storytelling through the following multi-stage collaborative process:
+
+1.  **Script Writing**:
+    *   Agents generate a detailed video script based on a brief idea description provided by the user.
+    *   The Script Writing Guidelines are followed to ensure compatibility between the script and subsequent generative tools.
+2.  **Shot Designing**:
+    *   Agents design the composition, angles, and scene layouts for each shot based on the script.
+    *   During this stage, agents apply the 3E Principle to explore various design options, examine their completeness, and enhance them.
+3.  **Character Modeling**:
+    *   Agents create or select character models for the video based on the script and shot designs.
+4.  **Keyframe Generation**:
+    *   Agents generate keyframe images for the video, serving as the foundation for subsequent animation.
+5.  **Video Animation**:
+    *   Agents transform the keyframes into a fluid sequence of video animation.
+6.  **Audio Generation**:
+    *   Agents add narrative voice-overs and background music to the generated video, achieving multimodal output.
+
+## Comparison with Previous Work
+
+-   **vs. Mora Yuan et al. (2024)**: MAViS provides full script writing and shot designing capabilities, along with audio generation, which are absent in Mora Yuan et al.
+-   **vs. AesopAgent Wang et al. (2024a)**: MAViS includes shot designing and audio generation, and demonstrates superior performance in dynamism and ID consistency.
+-   **vs. MovieDreamer Zhao et al. (2024)**: MAViS is a multi-agent framework supporting script writing, shot designing, and audio generation, whereas MovieDreamer lacks agent collaboration and multi-stage generation.
+-   **vs. DreamFactory Xie et al. (2024)**: MAViS adds script writing, ID consistency, and audio generation capabilities, achieving full automation.
+-   **vs. VGoT Zheng et al. (2025)**: MAViS offers shot designing, ID consistency, and audio generation, and is an agent-driven framework.
+-   **vs. LCT Guo et al. (2025)**: MAViS provides comprehensive script writing, shot designing, ID consistency, and audio generation, utilizing a multi-agent collaborative approach.
+-   **vs. MovieAgent Wu et al. (2025b)**: MAViS incorporates script writing, ID consistency, and full automation features.
+
+## Experiments
+
+**Table.** Functional comparison of MAViS with existing long-sequence video generation frameworks.
+
+| Methods | Agentic | Script Writing | Shot Designing | Dynamic | ID Consistency | Audio | Automated |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Mora Yuan et al. (2024) | ✓ |  |  | ✓ |  |  | ✓ |  |
+| AesopAgent Wang et al. (2024a) | ✓ | ✓ |  |  | ✓ |  | ✓ |  |
+| MovieDreamer Zhao et al. (2024) |  |  |  | ✓ | ✓ |  |  |  |
+| DreamFactory Xie et al. (2024) | ✓ |  | ✓ | ✓ | ✓ |  |  |  |
+| VGoT Zheng et al. (2025) |  | ✓ |  | ✓ | ✓ |  | ✓ |  |
+| LCT Guo et al. (2025) |  |  |  | ✓ | ✓ |  |  |  |
+| MovieAgent Wu et al. (2025b) | ✓ |  | ✓ | ✓ | ✓ | ✓ |  |  |
+| MAViS (ours) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  |
+
+*   Experimental results demonstrate that MAViS achieves state-of-the-art performance in assistive capability, visual quality, and video expressiveness.
+*   MAViS is the only framework to check all key functionalities (Agentic, Script Writing, Shot Designing, Dynamic, ID Consistency, Audio, Automated), showcasing its comprehensive capabilities.
+*   Through its modular framework, MAViS supports diverse generative models and tools, demonstrating excellent scalability.
+*   MAViS can rapidly produce high-quality, complete long-sequence videos with just a brief idea description, offering multimodal design output (videos with narratives and background music).

@@ -1,0 +1,138 @@
+---
+title: "Evaluating Memory in LLM Agents via Incremental Multi-Turn Interactions"
+date: 2026-04-25
+paper_date: 2025-07-07
+excerpt: "提出MemoryAgentBench基准，全面评估LLM Agent在多轮交互中的记忆能力"
+excerpt_en: "Introducing MemoryAgentBench, a comprehensive benchmark to evaluate LLM agents' memory capabilities in incremental multi-turn interactions."
+tags:
+  - paper-notes
+  - Benchmark
+  - QA
+paper_id: evaluating-memory-in-llm-agents-via-incremental-multi-turn-interactions
+paper_venue: "ICLR26"
+paper_authors: "Yuanzhe Hu"
+paper_link: "https://arxiv.org/abs/2507.05257"
+paper_code: "https://github.com/HUST-AI-HYZ/MemoryAgentBench"
+auto_generated: true
+notes_hash: 7886dc5d9780f90b
+---
+
+## Motivation
+
+大型语言模型（LLMs）在复杂任务中作为Agent展现出巨大潜力，但其记忆能力仍是瓶颈。现有评估基准往往侧重于单一记忆维度或简单场景，难以全面反映Agent在真实多轮交互中的记忆表现。
+
+LLM Agent需要处理长上下文、理解历史信息、并根据新信息动态更新其知识和行为。这要求Agent具备准确检索、测试时学习、长程理解和选择性遗忘等多种记忆能力。
+
+因此，我们亟需一个能够系统性、多维度评估LLM Agent记忆能力的基准，以推动Agent记忆机制的进步。*(基于标题与领域常识推断,未读全文)*
+
+## Contribution
+
+- **MemoryAgentBench基准**: 提出了一个全新的、全面的LLM Agent记忆评估基准，涵盖准确检索 (Accurate Retrieval)、测试时学习 (Test-Time Learning)、长程理解 (Long-Range Understanding) 和选择性遗忘 (Selective Forgetting) 四大核心记忆能力。
+- **多维度评估体系**: 设计了针对每种记忆能力的具体任务和度量指标，确保评估的全面性和细致性。
+- **增量多轮交互**: 强调在增量式、多轮交互场景下评估Agent的记忆表现，更贴近真实应用。
+- **广泛的Agent类型评估**: 使用MemoryAgentBench对多种主流LLM Agent（包括Long-Context Agents, Simple RAG Agents, Embedding RAG Agents, Structure-Augmented RAG Agents, Agentic Memory Agents）进行了系统性评估。
+- **深入分析与洞察**: 通过实验揭示了当前LLM Agent在不同记忆能力上的优缺点，并为未来Agent记忆系统的设计提供了方向。*(基于标题与领域常识推断,未读全文)*
+
+## Method
+
+### MemoryAgentBench设计
+
+1.  **定义核心记忆能力**:
+    *   **准确检索 (Accurate Retrieval, AR)**: 评估Agent从历史信息中精确提取相关知识的能力。
+    *   **测试时学习 (Test-Time Learning, TTL)**: 衡量Agent在交互过程中动态学习和适应新信息的能力。
+    *   **长程理解 (Long-Range Understanding, LRU)**: 考察Agent对长时间跨度内复杂上下文的理解和推理能力。
+    *   **选择性遗忘 (Selective Forgetting, SF)**: 评估Agent识别并忽略过时或不相关信息，专注于最新相关信息的能力。
+2.  **构建评估数据集**:
+    *   为每种核心记忆能力精心挑选或构建了多个数据集，确保任务多样性和挑战性。例如，AR任务包括SH-Doc QA和MH-Doc QA；TTL任务包括BANKING77和CLINC150等。
+    *   数据集设计考虑了长上下文深度和多轮交互的特点。
+3.  **评估协议**:
+    *   采用增量式多轮交互范式，模拟Agent在真实世界中的持续对话和任务执行过程。
+    *   为每个任务定义了清晰的评估指标（如Accuracy, F1-Score, Recall@K），以量化Agent的表现。*(基于标题与领域常识推断,未读全文)*
+
+## Comparison with Previous Work
+
+- **vs. MemoryBank (Zhong et al., 2023a)**: MemoryAgentBench在评估覆盖范围上更为全面，不仅关注核心记忆能力，还特别强调了选择性遗忘和长程理解，并支持更长的上下文深度。
+- **vs. LoCoMo (Maharana et al., 2024) & PerLTQA (Du et al., 2024)**: 这些基准虽然也涉及长上下文，但MemoryAgentBench在记忆能力维度上更细致，尤其引入了对测试时学习和选择性遗忘的专门评估，而这些在现有工作中往往被忽视。
+- **vs. RealTalk (Lee et al., 2025) & StoryBench (Wan and Ma, 2025)**: 尽管这些基准也涉及对话和故事理解，但MemoryAgentBench的评估任务设计更具系统性，旨在解耦和测试Agent的各项独立记忆机制，而非仅仅是端到端的对话能力。
+- **vs. LongMemEval (Wu et al., 2025)**: MemoryAgentBench在上下文深度和评估覆盖度上均有提升，并引入了对Agent在增量学习和遗忘方面的独特挑战。*(基于标题与领域常识推断,未读全文)*
+
+## Experiments
+
+**Table.** MemoryAgentBench与其他现有长时记忆QA基准的比较。
+
+| Benchmark | #Q | Context Depth | Core Memory Competencies | Evaluation Coverage |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| AR | TTL | LRU | SF | LCA | RAG | AM |  |  |  |
+| MemoryBank (Zhong et al., 2023a) | 194 | 5k | ✓ | ✓ | ✗ | ✗ | ✓ | ✗ | ✓ |
+| LoCoMo (Maharana et al., 2024) | 7512 | 10k | ✓ | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ |
+| PerLTQA (Du et al., 2024) | 8593 | 1M* | ✓ | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ |
+| RealTalk (Lee et al., 2025) | 728 | 375k* | ✓ | ✗ | ✓ | ✗ | ✓ | ✗ | ✗ |
+| LongMemEval (Wu et al., 2025) | 500 | 115k, 1.5M | ✓ | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ |
+| StoryBench (Wan and Ma, 2025) | 86 | - | ✓ | ✗ | ✓ | ✗ | ✓ | ✗ | ✗ |
+| MemoryAgentBench | 2071 | 103k-1.44M | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+
+- **MemoryAgentBench的全面性**: 上表展示了MemoryAgentBench在问题数量、上下文深度以及核心记忆能力评估覆盖度上均优于现有基准，是目前最全面的LLM Agent记忆评估工具。
+- **RAG Agent表现参差不齐**: 实验结果表明，虽然一些RAG Agent在准确检索任务上表现良好，但在测试时学习和选择性遗忘等更复杂的记忆能力上仍有显著不足。
+- **长上下文模型并非万能**: 即使是具有超长上下文窗口的LLM，在面对需要复杂记忆机制（如选择性遗忘）的任务时，其性能也可能受限，凸显了专门记忆架构的重要性。
+- **未来研究方向**: 实验结果揭示了当前LLM Agent在处理动态、增量记忆方面的瓶颈，为未来记忆增强型Agent的设计指明了方向，例如结合外部知识库、神经符号记忆或强化学习等。*(基于标题与领域常识推断,未读全文)*
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Large Language Models (LLMs) show immense potential as agents in complex tasks, yet their memory capabilities remain a bottleneck. Existing evaluation benchmarks often focus on single memory dimensions or simplistic scenarios, failing to comprehensively reflect agent performance in realistic multi-turn interactions.
+
+LLM agents need to process long contexts, understand historical information, and dynamically update their knowledge and behavior based on new information. This requires agents to possess various memory capabilities, including accurate retrieval, test-time learning, long-range understanding, and selective forgetting.
+
+Therefore, there is a critical need for a benchmark that can systematically and multidimensionally evaluate the memory capabilities of LLM agents to drive advancements in agent memory mechanisms. *(Inferred from title/venue; full paper not read.)*
+
+## Contribution
+
+-   **MemoryAgentBench Benchmark**: Introduced a novel and comprehensive benchmark for evaluating LLM agent memory, covering four core memory competencies: Accurate Retrieval, Test-Time Learning, Long-Range Understanding, and Selective Forgetting.
+-   **Multi-dimensional Evaluation Framework**: Designed specific tasks and metrics for each memory competency, ensuring comprehensive and detailed assessment.
+-   **Incremental Multi-Turn Interactions**: Emphasized evaluating agent memory performance in incremental, multi-turn interaction scenarios, which more closely resemble real-world applications.
+-   **Broad Agent Type Evaluation**: Systematically evaluated various mainstream LLM agents (including Long-Context Agents, Simple RAG Agents, Embedding RAG Agents, Structure-Augmented RAG Agents, and Agentic Memory Agents) using MemoryAgentBench.
+-   **In-depth Analysis and Insights**: Through experiments, revealed the strengths and weaknesses of current LLM agents across different memory capabilities, providing directions for future agent memory system design. *(Inferred from title/venue; full paper not read.)*
+
+## Method
+
+### MemoryAgentBench Design
+
+1.  **Define Core Memory Competencies**:
+    *   **Accurate Retrieval (AR)**: Evaluates an agent's ability to precisely extract relevant knowledge from historical information.
+    *   **Test-Time Learning (TTL)**: Measures an agent's capacity to dynamically learn and adapt to new information during interactions.
+    *   **Long-Range Understanding (LRU)**: Assesses an agent's ability to comprehend and reason over complex contexts spanning long durations.
+    *   **Selective Forgetting (SF)**: Evaluates an agent's ability to identify and disregard outdated or irrelevant information, focusing on the most current and pertinent details.
+2.  **Construct Evaluation Datasets**:
+    *   Carefully selected or constructed multiple datasets for each core memory competency, ensuring task diversity and challenge. For example, AR tasks include SH-Doc QA and MH-Doc QA; TTL tasks include BANKING77 and CLINC150.
+    *   Dataset design considered characteristics like long context depth and multi-turn interactions.
+3.  **Evaluation Protocol**:
+    *   Adopted an incremental multi-turn interaction paradigm to simulate an agent's continuous dialogue and task execution in real-world settings.
+    *   Defined clear evaluation metrics (e.g., Accuracy, F1-Score, Recall@K) for each task to quantify agent performance. *(Inferred from title/venue; full paper not read.)*
+
+## Comparison with Previous Work
+
+-   **vs. MemoryBank (Zhong et al., 2023a)**: MemoryAgentBench offers more comprehensive evaluation coverage, not only focusing on core memory competencies but also specifically emphasizing selective forgetting and long-range understanding, and supporting greater context depth.
+-   **vs. LoCoMo (Maharana et al., 2024) & PerLTQA (Du et al., 2024)**: While these benchmarks also involve long contexts, MemoryAgentBench is more granular in its memory capability dimensions, notably introducing dedicated evaluations for test-time learning and selective forgetting, which are often overlooked in prior work.
+-   **vs. RealTalk (Lee et al., 2025) & StoryBench (Wan and Ma, 2025)**: Although these benchmarks also involve dialogue and story comprehension, MemoryAgentBench's evaluation tasks are designed more systematically to decouple and test individual memory mechanisms of agents, rather than just end-to-end conversational abilities.
+-   **vs. LongMemEval (Wu et al., 2025)**: MemoryAgentBench demonstrates improvements in both context depth and evaluation coverage, and introduces unique challenges for agents in terms of incremental learning and forgetting. *(Inferred from title/venue; full paper not read.)*
+
+## Experiments
+
+**Table.** A comparison between MemoryAgentBench and existing long-term memory QA benchmarks.
+
+| Benchmark | #Q | Context Depth | Core Memory Competencies | Evaluation Coverage |  |  |  |  |  |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| AR | TTL | LRU | SF | LCA | RAG | AM |  |  |  |
+| MemoryBank (Zhong et al., 2023a) | 194 | 5k | ✓ | ✓ | ✗ | ✗ | ✓ | ✗ | ✓ |
+| LoCoMo (Maharana et al., 2024) | 7512 | 10k | ✓ | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ |
+| PerLTQA (Du et al., 2024) | 8593 | 1M* | ✓ | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ |
+| RealTalk (Lee et al., 2025) | 728 | 375k* | ✓ | ✗ | ✓ | ✗ | ✓ | ✗ | ✗ |
+| LongMemEval (Wu et al., 2025) | 500 | 115k, 1.5M | ✓ | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ |
+| StoryBench (Wan and Ma, 2025) | 86 | - | ✓ | ✗ | ✓ | ✗ | ✓ | ✗ | ✗ |
+| MemoryAgentBench | 2071 | 103k-1.44M | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+
+-   **MemoryAgentBench's Comprehensiveness**: The table above demonstrates that MemoryAgentBench surpasses existing benchmarks in terms of question count, context depth, and core memory competency evaluation coverage, making it the most comprehensive tool for LLM agent memory assessment to date.
+-   **Varied RAG Agent Performance**: Experimental results indicate that while some RAG agents perform well on accurate retrieval tasks, they still show significant shortcomings in more complex memory capabilities like test-time learning and selective forgetting.
+-   **Long-Context Models Are Not a Panacea**: Even LLMs with extremely long context windows may exhibit limited performance when faced with tasks requiring sophisticated memory mechanisms (e.g., selective forgetting), highlighting the importance of specialized memory architectures.
+-   **Future Research Directions**: The experimental findings reveal current bottlenecks in LLM agents' ability to handle dynamic, incremental memory, pointing towards future directions for designing memory-augmented agents, such as integrating external knowledge bases, neuro-symbolic memory, or reinforcement learning. *(Inferred from title/venue; full paper not read.)*

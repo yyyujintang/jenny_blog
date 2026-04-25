@@ -1,0 +1,122 @@
+---
+title: "Gated Memory Policy"
+date: 2026-04-25
+paper_date: 2026-04-21
+excerpt: "针对机器人操作任务中记忆需求多变的问题，我们提出了门控记忆策略，学习何时以及如何有效地利用历史信息"
+excerpt_en: "Addressing varying memory requirements in robotic manipulation, we propose Gated Memory Policy (GMP) to learn when and what to recall from history."
+tags:
+  - paper-notes
+  - Method
+  - Internal
+  - RL-based
+  - Episodic
+paper_id: gated-memory-policy
+paper_authors: "Shuran Song"
+paper_link: "https://arxiv.org/abs/2604.18933"
+auto_generated: true
+notes_hash: bd06c778e89d359d
+---
+
+## Motivation
+
+机器人操作任务的记忆需求差异很大，有些任务是无记忆的（Markovian），而有些则需要跨越多次交互的历史信息（non-Markovian）。
+
+简单地延长视觉运动策略的观测历史，往往会导致性能显著下降，原因在于分布偏移和过拟合。
+
+因此，需要一种更智能的机制来管理和利用记忆，以提高策略的鲁棒性和泛化能力。
+
+## Contribution
+
+- **门控记忆机制 (learned memory gate mechanism)**：学习何时激活历史上下文，只在必要时才使用记忆，从而提高策略的鲁棒性和反应性。
+- **轻量级交叉注意力模块 (lightweight cross-attention module)**：高效构建有效的潜在记忆表示，解决“回忆什么”的问题。
+- **扩散噪声注入 (diffusion noise injection)**：向历史动作中注入扩散噪声，以减轻训练和推理过程中对噪声或不准确历史的敏感性，进一步增强鲁棒性。
+- **基准测试 MemMimic**：提出了一个新的non-Markovian基准测试MemMimic，用于评估需要复杂记忆能力的机器人操作任务。
+
+## Method
+
+### Gated Memory Policy (GMP) 架构
+
+1.  **输入处理**：策略接收当前观测以及历史观测和动作序列作为输入。
+2.  **记忆门控机制**：
+    *   GMP包含一个学习到的记忆门 `μt`，它决定是否激活历史上下文。
+    *   当门激活时，策略会利用历史信息；否则，它会忽略历史信息，像一个无记忆策略一样运行。
+3.  **潜在记忆表示**：
+    *   引入一个轻量级的cross-attention模块，用于从历史信息中提取并构建有效的潜在记忆表示。
+    *   这个模块能够高效地压缩和编码相关的历史数据，以供策略使用。
+4.  **鲁棒性增强**：
+    *   在历史动作中注入扩散噪声，以提高策略对不准确或噪声历史的鲁棒性。
+    *   这有助于缓解分布偏移和过拟合问题。
+5.  **策略输出**：结合当前观测和（如果门控激活）潜在记忆表示，策略输出机器人操作的动作。
+
+## Comparison with Previous Work
+
+- **vs. 简单延长观测历史的基线 (long-history baselines)**：GMP通过选择性地使用记忆和高效地构建记忆表示，显著避免了因分布偏移和过拟合导致的性能下降，平均成功率提升30.1%。
+- **vs. 传统Markovian任务策略**：GMP在处理non-Markovian任务时表现出色，同时在RoboMimic的Markovian任务上保持了有竞争力的性能，表明其通用性。
+- **vs. 未使用记忆门控的策略**：GMP的记忆门控机制使其能够只在必要时激活记忆，避免了不必要的历史信息引入可能带来的干扰和性能下降。
+- **vs. 未使用扩散噪声的策略**：GMP通过注入扩散噪声，提高了对历史数据质量的鲁棒性，减少了对噪声或不准确历史的敏感性。
+
+## Experiments
+
+**Table.** 训练GMP不同组件所需的时间，以及总训练时间。
+
+| Train | Train _mem | Rollout | Train Gate | Train GMP |
+| --- | --- | --- | --- | --- |
+| 1.2h | 6.7h | 6.4h | 1.3h | 31.2h |
+
+-   **MemMimic 基准测试**：在提出的non-Markovian基准测试MemMimic上，GMP比长历史基线平均成功率提高了30.1%。
+-   **RoboMimic 性能**：在RoboMimic的Markovian任务上，GMP保持了有竞争力的性能，表明其在不同记忆需求任务上的通用性。
+-   **门控机制有效性**：实验证明，学习到的记忆门控机制能够有效判断何时需要回忆记忆，从而提高策略的鲁棒性和反应性。
+-   **鲁棒性提升**：通过注入扩散噪声，GMP在面对噪声或不准确的历史信息时表现出更强的鲁棒性。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Robotic manipulation tasks exhibit diverse memory requirements, ranging from Markovian tasks that need no memory to non-Markovian tasks that depend on historical information across single or multiple interaction trials.
+
+Surprisingly, simply extending the observation histories of a visuomotor policy often leads to a significant performance drop due to distribution shift and overfitting.
+
+Therefore, a more intelligent mechanism is needed to manage and utilize memory to improve policy robustness and generalization.
+
+## Contribution
+
+-   **Learned memory gate mechanism**: Learns when to activate history context, utilizing memory only when necessary, thereby improving policy robustness and reactivity.
+-   **Lightweight cross-attention module**: Efficiently constructs effective latent memory representations, addressing the question of "what to recall."
+-   **Diffusion noise injection**: Injects diffusion noise into historical actions to mitigate sensitivity to noisy or inaccurate histories during both training and inference, further enhancing robustness.
+-   **MemMimic benchmark**: Introduces a new non-Markovian benchmark, MemMimic, for evaluating robotic manipulation tasks that require complex memory capabilities.
+
+## Method
+
+### Gated Memory Policy (GMP) Architecture
+
+1.  **Input Processing**: The policy receives current observations along with sequences of historical observations and actions as input.
+2.  **Memory Gate Mechanism**:
+    *   GMP incorporates a learned memory gate `μt` that determines whether to activate the historical context.
+    *   When the gate is active, the policy leverages historical information; otherwise, it operates like a memory-less policy.
+3.  **Latent Memory Representation**:
+    *   A lightweight cross-attention module is introduced to extract and construct effective latent memory representations from historical information.
+    *   This module efficiently compresses and encodes relevant historical data for use by the policy.
+4.  **Robustness Enhancement**:
+    *   Diffusion noise is injected into historical actions to improve the policy's robustness to inaccurate or noisy histories.
+    *   This helps mitigate issues of distribution shift and overfitting.
+5.  **Policy Output**: Combining the current observation and (if the gate is active) the latent memory representation, the policy outputs actions for robotic manipulation.
+
+## Comparison with Previous Work
+
+-   **vs. Long-history baselines**: GMP significantly avoids performance degradation caused by distribution shift and overfitting by selectively using memory and efficiently constructing memory representations, achieving a 30.1% average success rate improvement.
+-   **vs. Traditional Markovian task policies**: GMP excels in handling non-Markovian tasks while maintaining competitive performance on Markovian tasks in RoboMimic, demonstrating its versatility.
+-   **vs. Policies without memory gating**: GMP's memory gate mechanism allows it to activate memory only when necessary, avoiding interference and performance degradation that might arise from introducing irrelevant historical information.
+-   **vs. Policies without diffusion noise**: GMP enhances robustness to the quality of historical data by injecting diffusion noise, reducing sensitivity to noisy or inaccurate histories.
+
+## Experiments
+
+**Table.** Training time for different components of GMP and total training time.
+
+| Train | Train _mem | Rollout | Train Gate | Train GMP |
+| --- | --- | --- | --- | --- |
+| 1.2h | 6.7h | 6.4h | 1.3h | 31.2h |
+
+-   **MemMimic Benchmark**: On the proposed non-Markovian benchmark MemMimic, GMP achieves a 30.1% average success rate improvement over long-history baselines.
+-   **RoboMimic Performance**: GMP maintains competitive performance on Markovian tasks in RoboMimic, demonstrating its versatility across tasks with varying memory requirements.
+-   **Effectiveness of Gating Mechanism**: Experiments show that the learned memory gate mechanism effectively determines when memory recall is necessary, thereby improving policy robustness and reactivity.
+-   **Enhanced Robustness**: By injecting diffusion noise, GMP demonstrates stronger robustness when faced with noisy or inaccurate historical information.

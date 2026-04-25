@@ -1,0 +1,133 @@
+---
+title: "WebArena: A Realistic Web Environment for Building Autonomous Agents"
+date: 2026-04-24
+paper_date: 2023-07-25
+excerpt: "WebArena构建了一个高真实度、可复现的Web环境，用于评估语言引导的自主AI代理在复杂网络任务中的表现"
+excerpt_en: "WebArena creates a realistic, reproducible web environment to evaluate language-guided autonomous AI agents on complex internet tasks."
+tags:
+  - paper-notes
+  - Benchmark
+  - Web
+paper_id: webarena-a-realistic-web-environment-for-building-autonomous-agents
+paper_venue: "ICLR24"
+paper_authors: "Shuyan Zhou, Duke"
+paper_link: "https://arxiv.org/abs/2307.13854"
+auto_generated: true
+notes_hash: b18fd6f2fa633b84
+---
+
+## Motivation
+
+随着生成式AI的进步，通过自然语言指令管理日常任务的自主代理潜力巨大。
+然而，当前的代理主要在简化的合成环境中创建和测试，导致与现实世界场景脱节。
+这限制了AI代理在真实Web环境中的实际应用和性能评估。
+
+## Contribution
+
+- **高真实度Web环境**: 构建了一个包含四个常见领域（电子商务、社交论坛、协作软件开发、内容管理）的全功能网站环境。
+- **丰富工具与知识库**: 环境中集成了工具（如地图）和外部知识库（如用户手册），以鼓励更像人类的任务解决方式。
+- **多样化基准任务**: 发布了一套侧重于评估任务功能正确性的基准任务，这些任务多样、长周期，并模拟人类日常上网行为。
+- **性能评估**: 对多个基线代理进行了实验，包括集成“先推理后行动”等最新技术，揭示了当前SOTA LLM在真实Web任务中的巨大挑战。
+
+## Method
+
+### 1. 环境构建
+- **网站选择**: 选择了来自电子商务、社交论坛、协作软件开发和内容管理四个领域的真实网站。
+- **功能集成**: 确保这些网站功能齐全，能够模拟真实用户交互。
+- **工具与知识库**: 为环境添加了辅助工具（如地图）和外部知识库（如用户手册），以支持复杂任务。
+
+### 2. 基准任务设计
+- **任务多样性**: 设计了涵盖信息查询、网站导航、内容管理等多种类型的任务。
+- **长周期性**: 任务通常需要多步操作和决策，模拟真实世界中的复杂性。
+- **功能正确性评估**: 评估标准侧重于任务是否被正确完成，而非仅仅是操作序列。
+
+### 3. 基线代理实现
+- **LLM集成**: 使用了GPT-3.5和GPT-4等大型语言模型作为代理的核心。
+- **推理机制**: 探索了“先推理后行动”（reasoning before acting）等技术，以提高代理的决策能力。
+- **交互策略**: 代理通过观察Web页面状态并生成相应的操作指令来与环境互动。
+
+## Comparison with Previous Work
+
+- **vs. Mind2Web/Form/QAWoB**: 这些环境在真实性、动态交互或任务多样性方面有所欠缺，WebArena在所有这些维度上都提供了更全面的支持。
+- **vs. MiniWoB++/Webshop/ALFRED**: 这些环境通常是合成的或过于简化，不具备WebArena所提供的真实网站和复杂交互。
+- **vs. VirtualHome/AndroidEnv**: 尽管这些环境在某些方面具有真实性，但它们并非专注于Web任务，且可能缺乏WebArena在任务多样性和功能正确性评估上的深度。
+- **WebArena**: 首次在一个环境中同时实现了动态交互、真实环境、多样化人类任务和功能正确性评估。
+
+## Experiments
+
+**Table.** GPT模型在WebArena基准测试上的任务成功率与人类表现对比。
+
+| CoT | UA Hint | Model | SR | SR_AC | SR_UA |
+| --- | --- | --- | --- | --- | --- |
+| ✓ | ✓ | text-bison-001 | 5.05 | 4.00 | 27.78 |
+| ✗ | ✓ | GPT-3.5 | 6.41 | 4.90 | 38.89 |
+| ✓ | ✓ | GPT-3.5 | 8.75 | 6.44 | 58.33 |
+| ✓ | ✓ | GPT-4 | 11.70 | 8.63 | 77.78 |
+| ✗ | ✗ | GPT-3.5 | 5.10 | 4.90 | 8.33 |
+| ✓ | ✗ | GPT-3.5 | 6.16 | 6.06 | 8.33 |
+| ✓ | ✗ | GPT-4 | 14.41 | 13.02 | 44.44 |
+| - | ✓ | Human | 78.24 | 77.30 | 100.00 |
+
+- **SOTA LLM表现不佳**: 即使是最佳的GPT-4代理，其端到端任务成功率也仅为14.41%，远低于人类的78.24%。
+- **“先推理后行动”的有效性**: 结合CoT（Chain of Thought）推理和UA Hint（用户行为提示）可以显著提高代理的成功率。
+- **真实环境的挑战性**: 实验结果凸显了在真实、复杂的Web环境中构建鲁棒代理的巨大挑战。
+- **WebArena作为衡量工具**: WebArena环境和基准测试能够有效衡量未来AI代理在真实世界任务中的进展。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+With advances in generative AI, there is now potential for autonomous agents to manage daily tasks via natural language commands.
+However, current agents are primarily created and tested in simplified synthetic environments, leading to a disconnect with real-world scenarios.
+This limits the practical application and performance evaluation of AI agents in genuine web environments.
+
+## Contribution
+
+- **Realistic Web Environment**: Built an environment with fully functional websites from four common domains: e-commerce, social forum discussions, collaborative software development, and content management.
+- **Enriched Tools and Knowledge Bases**: The environment is enriched with tools (e.g., a map) and external knowledge bases (e.g., user manuals) to encourage human-like task-solving.
+- **Diverse Benchmark Tasks**: Released a set of benchmark tasks focusing on evaluating the functional correctness of task completions, which are diverse, long-horizon, and emulate routine human internet tasks.
+- **Performance Evaluation**: Experimented with several baseline agents, integrating recent techniques like reasoning before acting, highlighting the significant challenges for current SOTA LLMs in real-life web tasks.
+
+## Method
+
+### 1. Environment Construction
+- **Website Selection**: Selected real websites from four domains: e-commerce, social forums, collaborative software development, and content management.
+- **Functionality Integration**: Ensured these websites are fully functional to simulate authentic user interactions.
+- **Tools and Knowledge Bases**: Added auxiliary tools (e.g., maps) and external knowledge bases (e.g., user manuals) to the environment to support complex tasks.
+
+### 2. Benchmark Task Design
+- **Task Diversity**: Designed tasks covering various types, including information seeking, site navigation, and content management.
+- **Long-Horizon Nature**: Tasks typically require multiple steps and decisions, mimicking real-world complexity.
+- **Functional Correctness Evaluation**: Evaluation criteria focus on whether tasks are completed correctly, rather than just the sequence of operations.
+
+### 3. Baseline Agent Implementation
+- **LLM Integration**: Utilized large language models such as GPT-3.5 and GPT-4 as the core of the agents.
+- **Reasoning Mechanisms**: Explored techniques like "reasoning before acting" (CoT) to improve agent decision-making capabilities.
+- **Interaction Strategy**: Agents interact with the environment by observing web page states and generating corresponding action commands.
+
+## Comparison with Previous Work
+
+- **vs. Mind2Web/Form/QAWoB**: These environments lack in realism, dynamic interaction, or task diversity, whereas WebArena provides more comprehensive support across all these dimensions.
+- **vs. MiniWoB++/Webshop/ALFRED**: These environments are often synthetic or overly simplified, lacking the real websites and complex interactions offered by WebArena.
+- **vs. VirtualHome/AndroidEnv**: While these environments offer some realism, they are not focused on web tasks and may lack the depth of WebArena in task diversity and functional correctness evaluation.
+- **WebArena**: The first environment to simultaneously achieve dynamic interaction, a realistic environment, diverse human tasks, and functional correctness evaluation.
+
+## Experiments
+
+**Table.** Comparison of task success rates for GPT models on the WebArena benchmark against human performance.
+
+| CoT | UA Hint | Model | SR | SR_AC | SR_UA |
+| --- | --- | --- | --- | --- | --- |
+| ✓ | ✓ | text-bison-001 | 5.05 | 4.00 | 27.78 |
+| ✗ | ✓ | GPT-3.5 | 6.41 | 4.90 | 38.89 |
+| ✓ | ✓ | GPT-3.5 | 8.75 | 6.44 | 58.33 |
+| ✓ | ✓ | GPT-4 | 11.70 | 8.63 | 77.78 |
+| ✗ | ✗ | GPT-3.5 | 5.10 | 4.90 | 8.33 |
+| ✓ | ✗ | GPT-3.5 | 6.16 | 6.06 | 8.33 |
+| ✓ | ✗ | GPT-4 | 14.41 | 13.02 | 44.44 |
+| - | ✓ | Human | 78.24 | 77.30 | 100.00 |
+
+- **SOTA LLMs Underperform**: Even the best GPT-4-based agent achieves an end-to-end task success rate of only 14.41%, significantly lower than human performance of 78.24%.
+- **Effectiveness of "Reasoning Before Acting"**: Integrating CoT (Chain of Thought) reasoning and UA Hint (User Action Hint) can substantially improve agent success rates.
+- **Challenges of Realistic Environments**: The experimental results highlight the significant challenges in building robust agents for realistic, complex web environments.
+- **WebArena as a Measurement Tool**: The WebArena environment and benchmarks effectively measure progress in future AI agents for real-world tasks.

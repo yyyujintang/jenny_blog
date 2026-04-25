@@ -1,0 +1,148 @@
+---
+title: "Visual Generation Unlocks Human-Like Reasoning through Multimodal World Models"
+date: 2026-04-25
+paper_date: 2026-01-27
+excerpt: "本文探讨视觉生成如何通过多模态世界模型提升AI推理能力，尤其在物理世界任务中展现出视觉优越性"
+excerpt_en: "This paper explores how visual generation enhances AI reasoning through multimodal world models, demonstrating visual superiority in physical world tasks."
+tags:
+  - paper-notes
+  - Method
+  - Internal
+  - SFT
+  - Multimodal
+paper_id: visual-generation-unlocks-human-like-reasoning-through-multimodal-world-models
+paper_authors: "Mingsheng Long  Bytedance Seed"
+paper_link: "https://arxiv.org/abs/2601.19834"
+auto_generated: true
+notes_hash: 379168cf7ff79a7c
+---
+
+## Motivation
+
+人类通过构建内部世界模型并操作其中的概念进行推理。AI中的CoT推理也近似这种能力，其世界模型被认为嵌入在大型语言模型中。
+
+然而，当前AI系统在数学和编程等抽象领域表现出色，但在物理和空间智能等需要丰富表征和先验知识的领域仍远落后于人类。
+
+统一多模态模型（UMMs）的出现，使得AI能够进行语言和视觉生成，这为更接近人类的、基于互补多模态路径的推理带来了新的可能性。
+
+## Contribution
+
+- **视觉优越性假说**: 提出并论证对于特定任务（特别是物理世界任务），视觉生成能更自然地充当世界模型，克服纯语言世界模型的表示局限性或先验知识不足。
+- **世界模型形式化**: 首次从原理上研究视觉生成如何以及何时有益于推理，将内部世界建模形式化为CoT推理的核心组件，并分析不同形式世界模型之间的区别。
+- **新评估基准VisWorld-Eval**: 构建了一个新的评估套件，VisWorld-Eval，用于识别需要交错视觉-语言CoT推理的任务。
+- **实证验证**: 通过在最先进的UMM上进行受控实验，证明交错CoT在有利于视觉世界建模的任务上显著优于纯语言CoT。
+
+## Method
+
+### 1. 内部世界模型的形式化
+- **CoT推理的分解**: 将CoT推理分解为一系列观察、动作和世界状态的序列。
+- **世界模型的定义**: 将世界模型定义为预测未来状态或结果的内部表示，可以是语言或视觉形式。
+- **不同世界模型的区分**: 分析纯语言世界模型与多模态（特别是视觉）世界模型在表示能力和先验知识方面的差异。
+
+### 2. 视觉生成作为世界模型
+- **视觉生成过程**: UMM通过视觉生成模块，根据当前情境和推理需求，生成中间视觉表征。
+- **视觉表征的优势**: 强调视觉表征在物理和空间任务中，能够更直接、更丰富地编码空间关系、物理属性和动态变化。
+
+### 3. 交错视觉-语言CoT推理
+- **推理流程**: 在推理过程中，根据任务需求，模型可以在语言CoT和视觉CoT之间进行切换或交错。
+- **决策机制**: UMM根据当前推理步骤的性质（例如，需要空间想象还是逻辑推导）决定是生成语言CoT还是视觉CoT。
+
+### 4. VisWorld-Eval评估套件
+- **任务设计**: 设计了一系列需要物理和空间推理的任务，这些任务在纯语言模型中难以解决，但通过视觉生成可以获得显著优势。
+- **评估指标**: 评估模型在这些任务上的准确性，以量化视觉生成带来的提升。
+*(基于标题与领域常识推断,未读全文)*
+
+## Comparison with Previous Work
+
+- **vs. 纯语言CoT推理**: 传统CoT主要依赖语言生成来构建世界模型和进行推理。本文提出，在物理和空间任务中，纯语言CoT存在表示局限性，而视觉生成能提供更丰富的世界模型。
+- **vs. 早期多模态模型**: 早期多模态模型可能仅限于多模态输入，或在输出端进行简单的多模态融合。本文则强调了**多模态生成**（特别是视觉生成）作为内部世界模型在推理中的核心作用。
+- **vs. 仅关注视觉理解的模型**: 许多视觉模型专注于图像理解和识别。本文超越了单纯的理解，强调了**视觉生成**在主动构建和操作世界模型方面的能力，从而实现更高级的推理。
+- **vs. 缺乏世界模型概念的模型**: 许多AI系统在没有明确内部世界模型概念的情况下进行任务。本文将内部世界模型形式化为CoT推理的关键组成部分，并探讨其多模态实现。
+*(基于标题与领域常识推断,未读全文)*
+
+## Experiments
+
+**Table. VisWorld-Eval上先进VLM的零样本评估结果。我们报告了五项任务（不包括Maze和Sokoban）以及所有七项任务的平均准确率。**
+
+| Paper | Folding | Multi-Hop | Manip. | Ball | Tracking | Cube | 3-View | MMSI | (Pos. Rel.) | Overall (5 tasks) | Overall (7 tasks) |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| Proprietary Models | | | | | | | | | | | |
+| Gemini 3 Flash | 25.6 | 75.4 | 55.3 | 52.7 | 41.3 | 73.9 | 99.3 | 50.0 | 60.5 |
+| Gemini 3 Pro | 27.0 | 74.5 | 44.7 | 53.3 | 49.6 | 33.5 | 90.2 | 49.8 | 53.2 |
+| Seed 1.8 | 10.6 | 75.2 | 24.4 | 42.5 | 38.8 | 83.9 | 68.3 | 38.3 | 49.1 |
+| GPT 5.1 | 6.4 | 73.9 | 34.8 | 44.5 | 44.8 | 0.6 | 62.8 | 40.8 | 38.2 |
+| o3 | 13.5 | 68.1 | 24.7 | 37.7 | 44.4 | 0.0 | 36.0 | 37.6 | 32.0 |
+| Open-Source Models | | | | | | | | | | | |
+| Qwen3-VL-8B-Thinking [5] | 11.0 | 49.3 | 17.8 | 21.2 | 27.7 | 0.0 | 5.8 | 25.4 | 18.9 |
+| BAGEL-7B-MoT [13] | 11.2 | 31.6 | 19.4 | 26.8 | 27.2 | 0.0 | 0.2 | 23.2 | 16.6 |
+
+- **VisWorld-Eval基准测试**: 构建了一个新的评估套件VisWorld-Eval，专门用于测试需要物理和空间推理的任务，这些任务对纯语言模型构成挑战。
+- **交错CoT的显著优势**: 在最先进的UMM上进行的受控实验表明，交错视觉-语言CoT在有利于视觉世界建模的任务上，显著优于纯语言CoT。
+- **任务依赖性**: 实验结果表明，视觉生成带来的优势并非普遍存在，而是在特定类型的任务（如物理世界任务）中更为突出，验证了“视觉优越性假说”。
+- **对未来AI的启示**: 这项工作为开发更强大、更像人类的多模态AI提供了清晰的方向，强调了多模态世界建模的潜力。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Humans construct internal world models and reason by manipulating concepts within them. Recent AI advancements, particularly Chain-of-Thought (CoT) reasoning, approximate these human cognitive abilities, with world models believed to be embedded within large language models.
+
+However, while current AI systems achieve expert-level performance in formal and abstract domains like mathematics and programming, they still lag significantly behind humans in areas such as physical and spatial intelligence, which demand richer representations and prior knowledge.
+
+The emergence of unified multimodal models (UMMs) capable of both verbal and visual generation has sparked interest in more human-like reasoning grounded in complementary multimodal pathways, though their benefits remain unclear.
+
+## Contribution
+
+- **Visual Superiority Hypothesis**: Proposes and demonstrates that for certain tasks—particularly those grounded in the physical world—visual generation more naturally serves as world models, overcoming representational limitations or insufficient prior knowledge encountered by purely verbal world models.
+- **Formalization of World Modeling**: Presents the first principled study of when and how visual generation benefits reasoning, formalizing internal world modeling as a core component of CoT reasoning and analyzing distinctions among different forms of world models.
+- **New Evaluation Suite VisWorld-Eval**: Constructs a new evaluation suite, VisWorld-Eval, specifically designed to identify tasks that necessitate interleaved visual-verbal CoT reasoning.
+- **Empirical Validation**: Conducts controlled experiments on a state-of-the-art UMM, showing that interleaved CoT significantly outperforms purely verbal CoT on tasks that favor visual world modeling.
+
+## Method
+
+### 1. Formalizing Internal World Models
+- **Decomposition of CoT Reasoning**: CoT reasoning is broken down into a sequence of observations, actions, and world states.
+- **Definition of World Models**: World models are defined as internal representations that predict future states or outcomes, which can be either verbal or visual.
+- **Distinction of World Model Forms**: Analysis of differences in representational capacity and prior knowledge between purely verbal and multimodal (especially visual) world models.
+
+### 2. Visual Generation as World Models
+- **Visual Generation Process**: UMMs leverage a visual generation module to produce intermediate visual representations based on the current context and reasoning requirements.
+- **Advantages of Visual Representation**: Emphasizes how visual representations can more directly and richly encode spatial relationships, physical properties, and dynamic changes in physical and spatial tasks.
+
+### 3. Interleaved Visual-Verbal CoT Reasoning
+- **Reasoning Flow**: During the reasoning process, the model can switch or interleave between verbal CoT and visual CoT based on task demands.
+- **Decision Mechanism**: The UMM decides whether to generate verbal or visual CoT depending on the nature of the current reasoning step (e.g., requiring spatial imagination versus logical deduction).
+
+### 4. VisWorld-Eval Evaluation Suite
+- **Task Design**: A series of tasks requiring physical and spatial reasoning are designed, which are challenging for purely verbal models but show significant advantages with visual generation.
+- **Evaluation Metrics**: Models are evaluated on their accuracy in these tasks to quantify the improvements brought by visual generation.
+*(Inferred from title/venue; full paper not read.)*
+
+## Comparison with Previous Work
+
+- **vs. Purely Verbal CoT Reasoning**: Traditional CoT primarily relies on verbal generation to construct world models and reason. This paper argues that purely verbal CoT faces representational limitations in physical and spatial tasks, where visual generation offers richer world models.
+- **vs. Early Multimodal Models**: Earlier multimodal models might have been limited to multimodal input or simple multimodal fusion at the output. This work, however, emphasizes the central role of **multimodal generation** (especially visual generation) as an internal world model in reasoning.
+- **vs. Models Focused Solely on Visual Understanding**: Many visual models concentrate on image understanding and recognition. This paper goes beyond mere understanding, highlighting the capacity of **visual generation** to actively construct and manipulate world models for more advanced reasoning.
+- **vs. Models Lacking Explicit World Model Concepts**: Many AI systems perform tasks without an explicit internal world model. This paper formalizes the internal world model as a critical component of CoT reasoning and explores its multimodal realization.
+*(Inferred from title/venue; full paper not read.)*
+
+## Experiments
+
+**Table. Table 1: Zero-shot evaluation of advanced VLMs on VisWorld-Eval. We report the average accuracy over five tasks (excluding Maze and Sokoban) and over all seven tasks.**
+
+| Paper | Folding | Multi-Hop | Manip. | Ball | Tracking | Cube | 3-View | MMSI | (Pos. Rel.) | Overall (5 tasks) | Overall (7 tasks) |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| Proprietary Models | | | | | | | | | | | |
+| Gemini 3 Flash | 25.6 | 75.4 | 55.3 | 52.7 | 41.3 | 73.9 | 99.3 | 50.0 | 60.5 |
+| Gemini 3 Pro | 27.0 | 74.5 | 44.7 | 53.3 | 49.6 | 33.5 | 90.2 | 49.8 | 53.2 |
+| Seed 1.8 | 10.6 | 75.2 | 24.4 | 42.5 | 38.8 | 83.9 | 68.3 | 38.3 | 49.1 |
+| GPT 5.1 | 6.4 | 73.9 | 34.8 | 44.5 | 44.8 | 0.6 | 62.8 | 40.8 | 38.2 |
+| o3 | 13.5 | 68.1 | 24.7 | 37.7 | 44.4 | 0.0 | 36.0 | 37.6 | 32.0 |
+| Open-Source Models | | | | | | | | | | | |
+| Qwen3-VL-8B-Thinking [5] | 11.0 | 49.3 | 17.8 | 21.2 | 27.7 | 0.0 | 5.8 | 25.4 | 18.9 |
+| BAGEL-7B-MoT [13] | 11.2 | 31.6 | 19.4 | 26.8 | 27.2 | 0.0 | 0.2 | 23.2 | 16.6 |
+
+- **VisWorld-Eval Benchmark**: A new evaluation suite, VisWorld-Eval, was constructed to specifically test tasks requiring physical and spatial reasoning, which are challenging for purely verbal models.
+- **Significant Interleaved CoT Advantage**: Controlled experiments on a state-of-the-art UMM showed that interleaved visual-verbal CoT significantly outperforms purely verbal CoT on tasks that favor visual world modeling.
+- **Task-Dependent Benefits**: The experimental results indicate that the benefits of visual generation are not universal but are particularly pronounced in specific types of tasks, such as those grounded in the physical world, validating the "visual superiority hypothesis."
+- **Implications for Future AI**: This work provides clear directions for developing more powerful, human-like multimodal AI, emphasizing the potential of multimodal world modeling.

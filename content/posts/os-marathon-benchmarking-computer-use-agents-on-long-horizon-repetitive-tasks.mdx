@@ -1,0 +1,133 @@
+---
+title: "OS-Marathon: Benchmarking Computer-Use Agents on Long-Horizon Repetitive Tasks"
+date: 2026-04-25
+paper_date: 2026-01-28
+excerpt: "引入OS-Marathon基准，评估AI代理在长周期、重复性计算机使用任务中的表现"
+excerpt_en: "Introducing OS-Marathon, a benchmark to evaluate AI agents on long-horizon, repetitive computer-use tasks"
+tags:
+  - paper-notes
+  - Benchmark
+  - GUI
+paper_id: os-marathon-benchmarking-computer-use-agents-on-long-horizon-repetitive-tasks
+paper_link: "https://arxiv.org/abs/2601.20650"
+auto_generated: true
+notes_hash: b5b19329232c5c19
+---
+
+## Motivation
+
+在专业环境中，长周期、重复性的工作流程非常普遍，例如处理费用报销或录入学生成绩。这些任务对人类来说往往枯燥乏味，且耗时漫长。
+
+然而，这类任务对于计算机使用代理（CUA）来说却非常理想。它们通常包含结构化、重复的子工作流程，其逻辑可以被系统地学习。
+
+当前缺乏一个专门的评估基准来衡量CUA在这些复杂、长周期任务中的表现，这成为了该领域发展的主要瓶颈。
+
+## Contribution
+
+*   **OS-Marathon基准的建立**: 提出了一个包含242个长周期、重复性任务的基准，涵盖两个领域，用于评估SOTA代理。
+*   **成本效益高的演示构建方法**: 引入了一种使用少量示例构建精简演示的方法，以教授代理底层工作流程逻辑。
+*   **有效执行复杂工作流程**: 使代理能够有效地在更大、未见过的数据集上执行类似的工作流程。
+*   **揭示固有挑战与方法有效性**: 通过广泛的实验，展示了这些任务固有的挑战以及所提出方法的有效性。
+
+## Method
+
+### OS-Marathon基准设计
+1.  **任务选择**: 收集了专业环境中常见的长周期、重复性任务，如费用报销和成绩录入。
+2.  **领域覆盖**: 基准涵盖了两个主要领域，以确保任务的多样性和通用性。
+3.  **任务数量**: 包含242个任务，旨在提供全面的评估。
+4.  **难度分级**: 任务根据数据量和每实例处理复杂性分为七个难度级别。
+
+### 演示构建方法
+1.  **少量示例**: 使用few-shot示例来演示任务的工作流程。
+2.  **精简演示**: 采用成本效益高的方法来构建一个浓缩的演示，突出核心逻辑。
+3.  **逻辑学习**: 代理通过这些精简的演示学习任务的底层工作流程逻辑。
+4.  **泛化能力**: 学习到的逻辑使代理能够泛化到更大的、未见过的数据集上。
+*(基于标题与领域常识推断,未读全文)*
+
+## Comparison with Previous Work
+
+*   **vs. 现有基准**: 现有基准通常侧重于短周期、单次性任务，缺乏对长周期、重复性工作流程的评估。OS-Marathon填补了这一空白。
+*   **vs. 传统RL环境**: 传统的RL环境往往是模拟的或结构化的，而OS-Marathon的任务更接近真实世界的计算机使用场景，涉及更复杂的UI交互和数据处理。
+*   **vs. 仅关注单步准确性**: 许多现有评估指标仅关注单步操作的准确性，而OS-Marathon强调整个长周期工作流程的端到端准确性和效率。
+*(基于标题与领域常识推断,未读全文)*
+
+## Experiments
+
+**Table. OS-Marathon的统计数据。任务根据数据量和每实例处理复杂性分为七个难度级别，涵盖七个执行环境和242个任务。**
+
+| \rowcolor[HTML]D9D9D9 \cellcolor[HTML]D9D9D9 | \cellcolor[HTML]D9D9D9 | \cellcolor[HTML]D9D9D9Difficulty Level Criteria | \cellcolor[HTML]D9D9D9 | \cellcolor[HTML]D9D9D9 | \cellcolor[HTML]D9D9D9 |  |
+| --- | --- | --- | --- | --- | --- | --- |
+| \rowcolor[HTML]D9D9D9 \cellcolor[HTML]D9D9D9Domain | \cellcolor[HTML]D9D9D9Difficulty Levels | #Receipt | Include Multi-Page PDF? | \cellcolor[HTML]D9D9D9#Execu Env | \cellcolor[HTML]D9D9D9#Task | \cellcolor[HTML]D9D9D9Task Scalable? |
+| Expense Report | L1 | 5 | ✗ | 5 | 30 | ✓ |
+| L2 | 5 | ✓ | 30 |  |  |  |
+| L3 | 15 | ✓ | 50 |  |  |  |
+| L4 | 30 | ✓ | 50 |  |  |  |
+| \rowcolor[HTML]D9D9D9 |  | #Doc Column | #Doc Page |  |  |  |
+| Transcript | L1 | 1 | 1 | 2 | 18 | ✓ |
+| L2 | 2 | 1 | 30 |  |  |  |
+| L3 | / | >1 | 34 |  |  |  |
+
+*   实验结果表明，即使是SOTA代理在OS-Marathon上的表现也面临显著挑战，远低于人类操作员的水平。
+*   所提出的使用few-shot示例构建精简演示的方法，显著提高了代理在长周期任务中的表现。
+*   基准任务的难度分级有效地区分了不同代理的能力，并揭示了随着任务复杂性增加，代理性能下降的趋势。
+*   OS-Marathon为未来AI代理在真实世界、重复性计算机使用任务中的研究和开发提供了坚实的基础。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Long-horizon, repetitive workflows are common in professional settings, such as processing expense reports or entering student grades. These tasks are often tedious and time-consuming for humans.
+
+However, such tasks are ideal for Computer-Use Agents (CUAs) due to their structured, recurring sub-workflows with logic that can be systematically learned.
+
+A primary bottleneck in this field is the absence of a dedicated evaluation benchmark to measure CUA performance on these complex, long-horizon tasks.
+
+## Contribution
+
+*   **Establishment of OS-Marathon Benchmark**: Introduced a benchmark comprising 242 long-horizon, repetitive tasks across two domains to evaluate state-of-the-art (SOTA) agents.
+*   **Cost-Effective Demonstration Construction**: Proposed a method to construct condensed demonstrations using only few-shot examples to teach agents underlying workflow logic.
+*   **Effective Execution of Complex Workflows**: Enabled agents to effectively execute similar workflows on larger, unseen data collections.
+*   **Demonstration of Inherent Challenges and Method Effectiveness**: Extensive experiments revealed both the inherent challenges of these tasks and the effectiveness of the proposed method.
+
+## Method
+
+### OS-Marathon Benchmark Design
+1.  **Task Selection**: Collected common long-horizon, repetitive tasks from professional settings, such as expense report processing and grade entry.
+2.  **Domain Coverage**: The benchmark spans two main domains to ensure task diversity and generality.
+3.  **Task Volume**: Comprises 242 tasks, designed to provide comprehensive evaluation.
+4.  **Difficulty Levels**: Tasks are organized into seven difficulty levels based on data volume and per-instance processing complexity.
+
+### Demonstration Construction Method
+1.  **Few-Shot Examples**: Utilizes a small number of examples to demonstrate the task workflow.
+2.  **Condensed Demonstration**: Employs a cost-effective method to build a condensed demonstration that highlights the core logic.
+3.  **Logic Learning**: Agents learn the underlying workflow logic of the tasks from these condensed demonstrations.
+4.  **Generalization Capability**: The learned logic allows agents to generalize effectively to larger, unseen data collections.
+*(Inferred from title/venue; full paper not read.)*
+
+## Comparison with Previous Work
+
+*   **vs. Existing Benchmarks**: Current benchmarks typically focus on short-horizon, one-off tasks, lacking evaluation for long-horizon, repetitive workflows. OS-Marathon fills this gap.
+*   **vs. Traditional RL Environments**: Traditional RL environments are often simulated or highly structured, whereas OS-Marathon tasks are closer to real-world computer-use scenarios, involving more complex UI interactions and data processing.
+*   **vs. Focus on Single-Step Accuracy**: Many existing evaluation metrics only focus on the accuracy of individual steps, while OS-Marathon emphasizes end-to-end accuracy and efficiency across the entire long-horizon workflow.
+*(Inferred from title/venue; full paper not read.)*
+
+## Experiments
+
+**Table. Statistics of OS-Marathon. Tasks are organized into seven difficulty levels based on data volume and per-instance processing complexity, covering seven execution environments and 242 tasks.**
+
+| \rowcolor[HTML]D9D9D9 \cellcolor[HTML]D9D9D9 | \cellcolor[HTML]D9D9D9 | \cellcolor[HTML]D9D9D9Difficulty Level Criteria | \cellcolor[HTML]D9D9D9 | \cellcolor[HTML]D9D9D9 | \cellcolor[HTML]D9D9D9 |  |
+| --- | --- | --- | --- | --- | --- | --- |
+| \rowcolor[HTML]D9D9D9 \cellcolor[HTML]D9D9D9Domain | \cellcolor[HTML]D9D9D9Difficulty Levels | #Receipt | Include Multi-Page PDF? | \cellcolor[HTML]D9D9D9#Execu Env | \cellcolor[HTML]D9D9D9#Task | \cellcolor[HTML]D9D9D9Task Scalable? |
+| Expense Report | L1 | 5 | ✗ | 5 | 30 | ✓ |
+| L2 | 5 | ✓ | 30 |  |  |  |
+| L3 | 15 | ✓ | 50 |  |  |  |
+| L4 | 30 | ✓ | 50 |  |  |  |
+| \rowcolor[HTML]D9D9D9 |  | #Doc Column | #Doc Page |  |  |  |
+| Transcript | L1 | 1 | 1 | 2 | 18 | ✓ |
+| L2 | 2 | 1 | 30 |  |  |  |
+| L3 | / | >1 | 34 |  |  |  |
+
+*   Experimental results indicate that even SOTA agents face significant challenges on OS-Marathon, performing well below human operators.
+*   The proposed method of constructing condensed demonstrations using few-shot examples significantly improved agent performance on long-horizon tasks.
+*   The benchmark's difficulty levels effectively differentiate agent capabilities and reveal a trend of decreasing agent performance as task complexity increases.
+*   OS-Marathon provides a solid foundation for future research and development of AI agents in real-world, repetitive computer-use tasks.

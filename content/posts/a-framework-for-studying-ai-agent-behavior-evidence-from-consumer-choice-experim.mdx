@@ -1,0 +1,141 @@
+---
+title: "A Framework for Studying AI Agent Behavior: Evidence from Consumer Choice Experiments"
+date: 2026-04-25
+paper_date: 2025-09-30
+excerpt: "本文引入ABxLab框架，通过系统性操纵选项属性和说服性线索，研究AI代理在现实消费决策中的行为偏差"
+excerpt_en: "This paper introduces ABxLab, a framework for systematically probing AI agent choice through controlled manipulations of option attributes and persuasive cues, revealing significant biases."
+tags:
+  - paper-notes
+  - Benchmark
+  - Long-Horizon
+paper_id: a-framework-for-studying-ai-agent-behavior-evidence-from-consumer-choice-experim
+paper_venue: "ICLR26"
+paper_authors: "Nikhil, ABxLab"
+paper_link: "https://arxiv.org/abs/2509.25609"
+auto_generated: true
+notes_hash: e349c0eb874dbc71
+---
+
+## Motivation
+
+当前对LLM驱动的软件代理的评估主要集中在任务能力上，但这些代理在代表我们做出购买、旅行或医疗选择时，其决策过程的深度评估却不足。
+我们认为，需要更深入地理解这些代理在面临现实决策时的选择方式，而不仅仅是它们能否完成任务。
+AI代理的决策行为可能继承并放大人类偏见，这既带来了风险，也提供了通过行为科学研究AI代理的机会。
+
+## Contribution
+
+- **ABxLab框架**: 引入一个用于系统性探测AI代理选择行为的框架，通过对选项属性和说服性线索进行受控操纵。
+- **现实网络购物环境**: 将ABxLab应用于一个模拟现实的网络购物环境，其中价格、评分和心理暗示等因素均可变。
+- **发现代理决策偏差**: 揭示AI代理的决策会随着这些因素的改变而发生可预测且显著的变化，表明代理即使不受人类认知限制，也存在强烈的选择偏见。
+- **开放基准**: 发布ABxLab作为开放基准，用于对代理决策进行严格、可扩展的评估。
+
+## Method
+
+### ABxLab框架
+1.  **构建现实决策环境**: 创建一个模拟现实的网络购物环境，代理在此环境中进行产品选择。
+2.  **操纵选项属性**: 系统性地改变产品属性，如价格（prices）和用户评分（ratings）。
+3.  **引入说服性线索**: 施加心理学上的“助推”（psychological nudges），这些因素已知会影响人类选择。
+4.  **记录代理决策**: 观察并记录不同LLM代理在不同操纵条件下的产品选择行为。
+5.  **分析行为模式**: 通过统计模型分析代理决策如何响应这些操纵，识别其偏见和敏感性。
+*(基于标题与领域常识推断,未读全文)*
+
+## Comparison with Previous Work
+
+- **vs. 传统任务能力评估**: 现有研究多关注LLM在特定任务（如问答、内容生成）上的表现，而本文则侧重于代理在复杂、多因素决策场景中的行为模式和偏见。
+- **vs. 人类行为经济学研究**: 本文借鉴了人类行为经济学中对消费选择的研究方法，将其应用于AI代理，揭示了AI代理与人类在决策偏见上的相似性，但强调AI代理不受认知约束。
+- **vs. 简单A/B测试**: 传统的A/B测试通常只改变一个变量，而ABxLab框架通过系统性操纵多个选项属性和心理暗示，提供了更全面的代理行为洞察。
+*(基于标题与领域常识推断,未读全文)*
+
+## Experiments
+
+**Table.** 不同LLM模型在不同条件下的产品选择概率边际变化（百分点）。
+
+| | Viewed 1st | Higher Rated | Cheaper | Nudged | | | | | | |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| | O | MR | MRaP | O | O | MR | MRaP | O | MR | MRaP |
+| Claude 3.5 Haiku | -35.4**** | -53.6**** | -42.7**** | 7.8 | 9.0 | 13.3* | -6.3 | 0.7 | -8.0** | -5.7 |
+| Claude Sonnet 4 | -9.2 | -38.3**** | -23.5**** | 46.7**** | 32.5**** | 20.4 | -10.2 | 37.2**** | 43.8**** | 55.9**** |
+| DeepSeek R1 | 2.2 | -25.6**** | -17.9*** | 61.0**** | 24.2*** | 33.4*** | -6.7 | 18.7**** | 29.1**** | 38.9**** |
+| Gemini 2.5 Flash | -13.6 | -22.1**** | -50.5**** | 43.1**** | 21.2*** | 55.2**** | -1.5 | 30.5**** | 25.8**** | 35.4**** |
+| Gemini 2.5 Pro | -2.0 | -10.5** | -47.4**** | 48.8**** | 33.8**** | 75.1**** | -3.6 | 31.2**** | 36.8**** | 55.8**** |
+| GPT-4.1 | 7.7 | -6.2** | -13.6* | 43.2**** | 32.4*** | 61.7**** | -3.8 | 30.0**** | 41.8**** | 57.2**** |
+| GPT-4.1 Mini | -2.0 | -19.4**** | -34.9**** | 65.6**** | 6.4 | -6.4 | -6.3 | 23.9**** | 44.4**** | 41.5**** |
+| GPT-4.1 Nano | 88.8**** | 92.0**** | 92.7**** | 2.9 | -0.9 | 1.3 | -0.3 | 0.5 | -2.0 | 0.0 |
+| GPT-4o | -10.0 | -26.5**** | -39.5**** | 33.8*** | 31.9**** | 53.1**** | 6.3 | 30.7**** | 34.4**** | 62.1**** |
+| GPT-4o Mini | -21.1 | -29.3**** | -50.5**** | 20.6* | 34.3**** | 51.9**** | -2.8 | -4.0 | 1.9 | 11.8** |
+| GPT-5 | 16.7* | -2.1 | -5.1 | 61.8**** | 24.5** | 75.5**** | -9.0 | 13.4**** | 21.7**** | 53.3**** |
+| GPT-5 Mini | 6.1 | -16.2*** | -27.0*** | 73.8**** | 16.2* | 50.1**** | -2.9 | 8.8**** | 18.7**** | 25.2**** |
+| GPT-5 Nano | -0.3 | -18.6*** | -43.9**** | 36.6**** | 28.2*** | 50.2**** | 1.5 | 3.7 | 7.0* | 11.7* |
+| Llama 4 Maverick | 5.2 | -2.2 | -12.8 | 64.7**** | 30.2**** | 93.2**** | -4.6 | 1.4 | 2.4 | 9.7* |
+| Llama 4 Scout | 23.1* | -3.2 | 8.5 | 50.6**** | 16.5* | 59.5**** | -6.2 | 8.1* | 6.2 | 8.7 |
+| o3 | 13.4 | -1.2 | -4.1 | 77.6**** | 15.2* | 83.3**** | -11.7 | 7.7**** | 18.7**** | 48.4**** |
+| o4 Mini | 11.1 | -11.6** | -15.6* | 81.2**** | 12.4 | 55.5**** | -14.5 | 8.5**** | 20.7*** | 38.5**** |
+| Human | 4.0 | — | — | 5.0 | 9.4 | — | — | 9.9* | — | — |
+
+- **AI代理对价格和评分高度敏感**: 实验结果表明，AI代理的决策会随着价格和评分的变化而显著改变，例如，在“Cheaper”和“Higher Rated”条件下，许多模型的产品选择概率有显著增加。
+- **心理暗示（Nudge）对AI代理影响显著**: 心理暗示（Nudged）对AI代理的选择产生了强大的影响，其效应甚至超过了价格和评分在某些模型上的影响，表明代理容易受到说服性线索的引导。
+- **不同LLM模型行为差异大**: 不同的LLM模型在面对相同操纵时表现出显著差异，例如GPT-4.1 Nano在“Viewed 1st”条件下表现出极高的选择概率，而其他模型则表现出负向或较小的影响。
+- **AI代理偏见可能放大**: 代理的决策行为揭示了它们强烈的偏见，即使没有人类的认知约束，这些偏见也可能被继承和放大，尤其是在被“助推”的情况下。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Current evaluations of LLM-powered software agents primarily focus on task competence, yet a deeper assessment of how these agents choose when making decisions on our behalf (e.g., purchases, travel, medical treatment) is largely missing.
+We argue for a more profound understanding of agent decision-making in realistic scenarios, beyond merely completing tasks.
+The susceptibility of AI agents to biases presents both risks, as they may inherit and amplify human biases, and opportunities for a behavioral science of AI agents.
+
+## Contribution
+
+- **ABxLab Framework**: Introduction of a framework for systematically probing agentic choice through controlled manipulations of option attributes and persuasive cues.
+- **Realistic Web-Based Shopping Environment**: Application of ABxLab to a realistic web-based shopping environment, where factors like prices, ratings, and psychological nudges are varied.
+- **Discovery of Agent Decision Biases**: Findings that agent decisions shift predictably and substantially in response to these factors, revealing that agents are strongly biased choosers even without human cognitive constraints.
+- **Open Benchmark Release**: Release of the ABxLab framework as an open benchmark for rigorous, scalable evaluation of agent decision-making.
+
+## Method
+
+### ABxLab Framework
+1.  **Construct Realistic Decision Environment**: Create a simulated web-based shopping environment where agents make product choices.
+2.  **Manipulate Option Attributes**: Systematically vary product attributes such as prices and user ratings.
+3.  **Introduce Persuasive Cues**: Apply psychological nudges, factors long known to shape human choice.
+4.  **Record Agent Decisions**: Observe and record the product selection behavior of various LLM agents under different manipulated conditions.
+5.  **Analyze Behavioral Patterns**: Use statistical models to analyze how agent decisions respond to these manipulations, identifying biases and sensitivities.
+*(Inferred from title/venue; full paper not read.)*
+
+## Comparison with Previous Work
+
+- **vs. Traditional Task Competence Evaluations**: Existing research often focuses on LLM performance in specific tasks (e.g., Q&A, content generation), whereas this paper emphasizes agent behavioral patterns and biases in complex, multi-factor decision scenarios.
+- **vs. Human Behavioral Economics Studies**: This work draws inspiration from human behavioral economics research on consumer choice, applying it to AI agents. It reveals similarities in decision biases between AI agents and humans, but highlights that AI agents are not subject to cognitive constraints.
+- **vs. Simple A/B Testing**: Traditional A/B testing typically alters only one variable. The ABxLab framework, by systematically manipulating multiple option attributes and psychological nudges, provides a more comprehensive insight into agent behavior.
+*(Inferred from title/venue; full paper not read.)*
+
+## Experiments
+
+**Table.** Estimated marginal change (pp) in product choice probability under each condition for various LLM models.
+
+| | Viewed 1st | Higher Rated | Cheaper | Nudged | | | | | | |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| | O | MR | MRaP | O | O | MR | MRaP | O | MR | MRaP |
+| Claude 3.5 Haiku | -35.4**** | -53.6**** | -42.7**** | 7.8 | 9.0 | 13.3* | -6.3 | 0.7 | -8.0** | -5.7 |
+| Claude Sonnet 4 | -9.2 | -38.3**** | -23.5**** | 46.7**** | 32.5**** | 20.4 | -10.2 | 37.2**** | 43.8**** | 55.9**** |
+| DeepSeek R1 | 2.2 | -25.6**** | -17.9*** | 61.0**** | 24.2*** | 33.4*** | -6.7 | 18.7**** | 29.1**** | 38.9**** |
+| Gemini 2.5 Flash | -13.6 | -22.1**** | -50.5**** | 43.1**** | 21.2*** | 55.2**** | -1.5 | 30.5**** | 25.8**** | 35.4**** |
+| Gemini 2.5 Pro | -2.0 | -10.5** | -47.4**** | 48.8**** | 33.8**** | 75.1**** | -3.6 | 31.2**** | 36.8**** | 55.8**** |
+| GPT-4.1 | 7.7 | -6.2** | -13.6* | 43.2**** | 32.4*** | 61.7**** | -3.8 | 30.0**** | 41.8**** | 57.2**** |
+| GPT-4.1 Mini | -2.0 | -19.4**** | -34.9**** | 65.6**** | 6.4 | -6.4 | -6.3 | 23.9**** | 44.4**** | 41.5**** |
+| GPT-4.1 Nano | 88.8**** | 92.0**** | 92.7**** | 2.9 | -0.9 | 1.3 | -0.3 | 0.5 | -2.0 | 0.0 |
+| GPT-4o | -10.0 | -26.5**** | -39.5**** | 33.8*** | 31.9**** | 53.1**** | 6.3 | 30.7**** | 34.4**** | 62.1**** |
+| GPT-4o Mini | -21.1 | -29.3**** | -50.5**** | 20.6* | 34.3**** | 51.9**** | -2.8 | -4.0 | 1.9 | 11.8** |
+| GPT-5 | 16.7* | -2.1 | -5.1 | 61.8**** | 24.5** | 75.5**** | -9.0 | 13.4**** | 21.7**** | 53.3**** |
+| GPT-5 Mini | 6.1 | -16.2*** | -27.0*** | 73.8**** | 16.2* | 50.1**** | -2.9 | 8.8**** | 18.7**** | 25.2**** |
+| GPT-5 Nano | -0.3 | -18.6*** | -43.9**** | 36.6**** | 28.2*** | 50.2**** | 1.5 | 3.7 | 7.0* | 11.7* |
+| Llama 4 Maverick | 5.2 | -2.2 | -12.8 | 64.7**** | 30.2**** | 93.2**** | -4.6 | 1.4 | 2.4 | 9.7* |
+| Llama 4 Scout | 23.1* | -3.2 | 8.5 | 50.6**** | 16.5* | 59.5**** | -6.2 | 8.1* | 6.2 | 8.7 |
+| o3 | 13.4 | -1.2 | -4.1 | 77.6**** | 15.2* | 83.3**** | -11.7 | 7.7**** | 18.7**** | 48.4**** |
+| o4 Mini | 11.1 | -11.6** | -15.6* | 81.2**** | 12.4 | 55.5**** | -14.5 | 8.5**** | 20.7*** | 38.5**** |
+| Human | 4.0 | — | — | 5.0 | 9.4 | — | — | 9.9* | — | — |
+
+- **AI Agents are Highly Sensitive to Price and Ratings**: Experimental results show that AI agent decisions change significantly with variations in price and ratings. For instance, under "Cheaper" and "Higher Rated" conditions, many models exhibit a substantial increase in product choice probability.
+- **Psychological Nudges Significantly Impact AI Agents**: Nudges have a powerful influence on AI agent choices, sometimes even surpassing the effects of price and ratings for certain models, indicating agents' susceptibility to persuasive cues.
+- **Significant Behavioral Differences Across LLM Models**: Different LLM models display considerable variation in their responses to the same manipulations. For example, GPT-4.1 Nano shows a very high choice probability under the "Viewed 1st" condition, while other models show negative or smaller effects.
+- **Potential for Amplified AI Agent Biases**: The agents' decision-making behavior reveals strong biases, which, even without human cognitive constraints, can be inherited and amplified, particularly when subjected to nudges.

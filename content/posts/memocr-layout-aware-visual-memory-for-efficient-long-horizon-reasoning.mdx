@@ -1,0 +1,122 @@
+---
+title: "MemOCR: Layout-Aware Visual Memory for Efficient Long-Horizon Reasoning"
+date: 2026-04-25
+paper_date: 2026-01-26
+excerpt: "MemOCR通过将结构化富文本记忆渲染为图像，以视觉布局自适应分配信息密度，提升长程推理效率"
+excerpt_en: "MemOCR improves long-horizon reasoning by rendering structured rich-text memory into an image, using visual layout to adaptively allocate information density."
+tags:
+  - paper-notes
+  - Method
+  - External
+  - Prompt-based
+  - Episodic
+  - Multimodal
+paper_id: memocr-layout-aware-visual-memory-for-efficient-long-horizon-reasoning
+paper_link: "https://arxiv.org/abs/2601.21468"
+auto_generated: true
+notes_hash: e3fd4cc5a76907e3
+---
+
+## Motivation
+
+长程AI智能体推理面临核心挑战：如何有效压缩不断增长的交互历史，使其适应有限的上下文窗口。
+现有记忆系统通常将历史序列化为纯文本，导致token成本与长度线性增长，且常常将宝贵的预算浪费在低价值的细节上。
+这限制了智能体在需要处理大量历史信息时的推理能力和效率。
+
+## Contribution
+
+- **多模态记忆智能体MemOCR**: 引入一种新的记忆系统，通过视觉布局自适应分配信息密度，从而在紧凑的上下文预算下改进长程推理。
+- **结构化富文本记忆**: MemOCR维护一种结构化的富文本记忆（例如，包含标题、高亮），能够更好地组织和表达信息。
+- **图像渲染与视觉优先级**: 将富文本记忆渲染成图像，智能体通过查阅该图像进行记忆访问，视觉上优先显示关键证据，同时积极压缩辅助细节。
+- **预算感知强化学习训练**: 通过强化学习在预算感知目标下训练MemOCR，使其适应不同的压缩水平，确保在各种记忆预算下的鲁棒性。
+
+## Method
+
+MemOCR的核心思想是将结构化的富文本记忆渲染成图像，并通过视觉布局来管理信息密度。
+
+1.  **构建结构化富文本记忆 (Structured Rich-Text Memory)**:
+    *   智能体维护一个内部的富文本记忆表示，其中包含标题、高亮等结构化元素。
+    *   这种表示允许更灵活地组织和突出重要信息，而不是简单的纯文本序列。
+
+2.  **记忆渲染为图像 (Memory Rendering to Image)**:
+    *   将结构化的富文本记忆渲染成一个图像。
+    *   这个渲染过程是关键，它允许通过视觉布局（例如，字体大小、颜色、位置）来强调关键信息，并压缩次要细节。
+
+3.  **智能体记忆访问 (Agent Memory Access)**:
+    *   智能体不直接读取文本token，而是“查阅”渲染出的记忆图像。
+    *   通过视觉处理，智能体能够识别图像中视觉上突出的关键证据，并忽略或快速浏览压缩的辅助信息。
+
+4.  **预算感知强化学习 (Budget-Aware Reinforcement Learning)**:
+    *   MemOCR通过RL进行训练，目标是优化在不同上下文预算下的性能。
+    *   训练过程中，智能体会暴露于各种压缩水平，学习如何在有限的记忆空间内最大化信息效用。
+
+## Comparison with Previous Work
+
+- **vs. 现有文本记忆系统**: 大多数现有系统将历史序列化为纯文本，token成本与长度线性增长，且对所有token一视同仁。MemOCR通过视觉布局实现信息密度的自适应分配，更有效地利用上下文预算。
+- **vs. 传统RAG方法**: 传统RAG通常检索并注入原始文本片段。MemOCR则通过渲染图像，允许智能体以更“全局”和“视觉优先”的方式访问记忆，而非仅仅是文本匹配。
+- **vs. 早期多模态记忆**: 早期多模态记忆可能只是简单地将文本和图像并列。MemOCR的创新在于将文本“转化为”视觉布局以实现信息压缩和优先级排序。
+
+## Experiments
+
+**Table. MemOCR在不同上下文长度下（10K, 30K, 100K token）的准确率（%）对比。**
+
+|  | A=_kKw_kA^(k)_kKw_k, |  | (8) |
+| --- | --- | --- | --- |
+
+*   MemOCR在长上下文多跳和单跳问答基准测试中，表现优于强大的文本基线模型。
+*   在极端预算下，MemOCR实现了更有效的上下文利用。
+*   强化学习训练确保了MemOCR在不同记忆预算下的鲁棒性和性能。
+*   通过视觉布局进行信息密度分配，MemOCR能够更有效地压缩低价值细节，同时保留关键信息。
+
+<!-- LANG:EN -->
+
+## Motivation
+
+Long-horizon agentic reasoning faces a core challenge: effectively compressing growing interaction histories to fit within a limited context window.
+Most existing memory systems serialize history as plain text, leading to token costs that scale linearly with length and often wasting scarce budget on low-value details.
+This limitation hinders agents' reasoning capabilities and efficiency when extensive historical information needs to be processed.
+
+## Contribution
+
+- **Multimodal Memory Agent MemOCR**: Introduces a novel memory system that adaptively allocates information density through visual layout, thereby improving long-horizon reasoning under tight context budgets.
+- **Structured Rich-Text Memory**: MemOCR maintains a structured rich-text memory (e.g., with headings, highlights) that allows for better organization and expression of information.
+- **Image Rendering and Visual Prioritization**: Renders the rich-text memory into an image that the agent consults for memory access, visually prioritizing crucial evidence while aggressively compressing auxiliary details.
+- **Budget-Aware Reinforcement Learning Training**: Trains MemOCR with reinforcement learning under budget-aware objectives, exposing the agent to diverse compression levels to ensure robustness across varying memory budgets.
+
+## Method
+
+MemOCR's core idea is to render structured rich-text memory into an image and manage information density through visual layout.
+
+1.  **Construct Structured Rich-Text Memory**:
+    *   The agent maintains an internal rich-text memory representation, incorporating structured elements like headings and highlights.
+    *   This representation allows for more flexible organization and emphasis of important information compared to a simple plain text sequence.
+
+2.  **Memory Rendering to Image**:
+    *   The structured rich-text memory is rendered into an image.
+    *   This rendering process is crucial, as it enables emphasizing key information and compressing secondary details through visual layout (e.g., font size, color, position).
+
+3.  **Agent Memory Access**:
+    *   Instead of directly reading text tokens, the agent "consults" the rendered memory image.
+    *   Through visual processing, the agent can identify visually prominent key evidence in the image, while ignoring or quickly scanning compressed auxiliary information.
+
+4.  **Budget-Aware Reinforcement Learning**:
+    *   MemOCR is trained using RL, with the objective of optimizing performance under various context budgets.
+    *   During training, the agent is exposed to diverse compression levels, learning how to maximize information utility within limited memory space.
+
+## Comparison with Previous Work
+
+- **vs. Existing Text-Based Memory Systems**: Most existing systems serialize history as plain text, incurring linear token costs and treating all tokens uniformly. MemOCR adaptively allocates information density via visual layout, utilizing context budgets more efficiently.
+- **vs. Traditional RAG Methods**: Traditional RAG typically retrieves and injects raw text snippets. MemOCR, by rendering an image, allows the agent to access memory in a more "global" and "visually prioritized" manner, rather than just through text matching.
+- **vs. Earlier Multimodal Memory**: Earlier multimodal memory might simply juxtapose text and images. MemOCR's innovation lies in transforming text into a visual layout to achieve information compression and prioritization.
+
+## Experiments
+
+**Table. Comparison of accuracy (%) across different context lengths (10K, 30K, and 100K tokens) for MemOCR.**
+
+|  | A=_kKw_kA^(k)_kKw_k, |  | (8) |
+| --- | --- | --- | --- |
+
+*   MemOCR outperforms strong text-based baselines across long-context multi-hop and single-hop question-answering benchmarks.
+*   It achieves more effective context utilization under extreme budgets.
+*   Reinforcement learning training ensures MemOCR's robustness and performance across varying memory budgets.
+*   By allocating information density through visual layout, MemOCR effectively compresses low-value details while preserving crucial information.
