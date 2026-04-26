@@ -25,6 +25,7 @@ const CATEGORIES: { key: string; label: string; icon: string }[] = [
   { key: 'multimodal-learning', label: 'Multimodal Learning', icon: '🌐' },
   { key: 'technical-report', label: 'Technical Report', icon: '📑' },
   { key: 'vibe-coding', label: 'Vibe Coding', icon: '💻' },
+  { key: 'research-philosophy', label: 'Research Philosophy', icon: '💭' },
   { key: 'agi-2030', label: 'AGI2030', icon: '🚀' },
 ]
 const CATEGORY_LABEL_TO_KEY: Record<string, string> = {}
